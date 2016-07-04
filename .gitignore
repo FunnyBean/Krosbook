@@ -243,3 +243,18 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# krosbook
+**/wwwroot/app
+
+**/wwwroot/lib
+_references.js
+
+appsettings
+.*.json
+
+*.DPack
+
+project.lock.json
+
+PublishProfiles
