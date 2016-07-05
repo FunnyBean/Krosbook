@@ -37,7 +37,22 @@ gulp.task("systemjs", function () {
         .pipe(gulp.dest(paths.lib + "systemjs/"));
 });
 
-gulp.task("libs", ["rxjs", "anuglar", "systemjs"]);
+gulp.task("core-js", function () {
+    return gulp.src(paths.npm + "core-js/**/*.js")
+        .pipe(gulp.dest(paths.lib + "core-js/"));
+});
+
+gulp.task("reflect-metadata", function () {
+    return gulp.src(paths.npm + "reflect-metadata/**/*.js")
+        .pipe(gulp.dest(paths.lib + "reflect-metadata/"));
+});
+
+gulp.task("zone.js", function () {
+    return gulp.src(paths.npm + "zone.js/**/*.js")
+        .pipe(gulp.dest(paths.lib + "zone.js/"));
+});
+
+gulp.task("libs", ["rxjs", "anuglar", "systemjs", "core-js", "reflect-metadata", "zone.js"]);
 
 gulp.task("clean", function () {
     return gulp.src(paths.app + "**/*.*", { read: false })
@@ -70,4 +85,4 @@ gulp.task("css", function () {
         .pipe(gulp.dest(paths.app));
 });
 
-gulp.task("build", ["libs", "html", "js", "css"]);
+gulp.task("build", ["html", "js", "css"]);
