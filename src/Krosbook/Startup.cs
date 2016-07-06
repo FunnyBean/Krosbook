@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -54,7 +55,9 @@ namespace Krosbook
 
             app.MapWhen(context =>
             {
-                return !System.IO.Path.HasExtension(context.Request.Path.Value) && !context.Request.Path.Value.Contains("/api/");
+                var requestPath = context.Request.Path.Value;
+
+                return !(Path.HasExtension(requestPath) && requestPath.Contains("/api/"));
             },
             branch =>
             {
