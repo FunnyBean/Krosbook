@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Krosbook
 {
@@ -48,9 +49,25 @@ namespace Krosbook
             }
 
             app.UseDefaultFiles();
-            app.UseStaticFiles();
 
             app.UseMvc();
+
+            app.MapWhen(context =>
+            {
+                var path = context.Request.Path.Value.ToLower();
+                return path.Contains(".js");
+            },
+            branch =>
+            {
+                branch.Use((context, next) =>
+                {
+                    context.Request.Path = new PathString("/index.html");
+                    return next();
+                });
+
+                branch.UseStaticFiles();
+            });
+
         }
     }
 }
