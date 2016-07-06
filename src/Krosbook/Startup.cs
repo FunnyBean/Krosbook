@@ -48,14 +48,13 @@ namespace Krosbook
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseMvc();
 
             app.MapWhen(context =>
             {
-                var path = context.Request.Path.Value.ToLower();
-                return path.Contains(".js");
+                return !System.IO.Path.HasExtension(context.Request.Path.Value) && !context.Request.Path.Value.Contains("/api/");
             },
             branch =>
             {
@@ -67,6 +66,7 @@ namespace Krosbook
 
                 branch.UseStaticFiles();
             });
+
 
         }
     }
