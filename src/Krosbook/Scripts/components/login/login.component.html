@@ -1,2 +1,25 @@
-﻿<login>Loading...</login>
-asfdafadsfdfafadsfafs
+<div id="form_background" class="col-md-12 col-xs-12">
+    <div id="form_login" class="ui form col-lg-3 col-md-3 col-sm-4 col-xs-12">
+        <img src="../images/logo_big.png" alt="logo" id="logo" class="col-md-8 col-xs-6 col-md-offset-2 col-xs-offset-3" />
+
+        <div *ngIf="error" class="alert alert-danger col-md-12">
+            <strong>{{ error }}</strong>
+        </div>
+
+        <div class="field col-md-12 col-xs-12">
+            <input type="text" id="email" class="" placeholder="priezvisko@kros.sk" name="email" [(ngModel)]="email">
+        </div>
+
+        <div class="field col-md-12 col-xs-12">
+            <input type="password" id="password" class="" placeholder="heslo" name="password" [(ngModel)]="password">
+        </div>
+
+        <div class="field col-md-12 col-xs-12">
+            <button type="submit" id="login_button" class="ui button" (click)="onSubmit()">Prihlásiť</button>
+        </div>
+    </div>
+
+    <div id="footer" class="col-md-12 text-center">
+        &#169; {{ year }} KROS a.s
+    </div>
+</div>
