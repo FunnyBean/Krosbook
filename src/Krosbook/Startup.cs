@@ -168,7 +168,7 @@ namespace Krosbook
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<RoomsMappingProfile>();
-                cfg.AddProfile<UsersMappingProfile>();
+                cfg.AddProfile<UsersMappingProfile>();          
             });
 
             services.AddTransient<IMapper>(x => config.CreateMapper());

@@ -46,14 +46,6 @@ namespace Krosbook.Controllers.Api.v1
             #region Api
            
          
-
-           // [Authorize]
-            [HttpGet]        
-            public IActionResult Test2()
-            {
-                return new ObjectResult("Huraaa");
-            }
-
             [HttpGet]          
             public async Task<IActionResult> Login(string userName, string password)
             {
@@ -82,10 +74,10 @@ namespace Krosbook.Controllers.Api.v1
 
             #region Helpers
 
-            private async Task<IActionResult> SignInCore(string userName, string password)
+            private async Task<IActionResult> SignInCore(string Email, string password)
             {
                 User user = null;
-                var resultSignIn = PasswordSignIn(userName, password, out user);
+                var resultSignIn = PasswordSignIn(Email, password, out user);
                 if (resultSignIn.Succeeded)
                 {
                     await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
@@ -95,9 +87,9 @@ namespace Krosbook.Controllers.Api.v1
             }
 
 
-            private Microsoft.AspNetCore.Identity.SignInResult PasswordSignIn(string userName, string password, out User user)
+            private Microsoft.AspNetCore.Identity.SignInResult PasswordSignIn(string Email, string password, out User user)
             {
-                user = _userRepository.GetSingleByUsername(userName);
+                user = _userRepository.GetSingleByEmail(Email);
                 if (user != null)
                 {
                     if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))

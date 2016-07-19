@@ -7,10 +7,12 @@ using Microsoft.Extensions.Logging;
 using Krosbook.Models.Users;
 using Krosbook.ViewModels.Users;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/roles")]
+    [EnableCors("AllowAll")]
     public class RolesController : BaseController
     {
         #region Private Fields
@@ -41,6 +43,7 @@ namespace Krosbook.Controllers.Api.v1
         /// </summary>
         /// <returns>All roles</returns>
         [HttpGet]
+        [EnableCors("AllowAll")]
         public IEnumerable<RoleViewModel> Get()
         {
             return _mapper.Map<IEnumerable<RoleViewModel>>(_roleRepository.GetAll());

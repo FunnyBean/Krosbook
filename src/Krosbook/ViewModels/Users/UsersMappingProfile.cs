@@ -22,6 +22,7 @@ namespace Krosbook.ViewModels.Users
                 });
             this.CreateMap<Role, RoleViewModel>().ReverseMap();
             this.CreateMap<UserRole, UserRoleViewModel>().ReverseMap();
+           
         }
     }
 }
