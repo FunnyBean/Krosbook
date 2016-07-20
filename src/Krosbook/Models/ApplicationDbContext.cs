@@ -79,7 +79,6 @@ namespace Krosbook.Models
 
         private void OnUserModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>().HasIndex(u => u.UserName).IsUnique();
             builder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
             builder.Entity<Role>().HasIndex(r => r.Name).IsUnique();

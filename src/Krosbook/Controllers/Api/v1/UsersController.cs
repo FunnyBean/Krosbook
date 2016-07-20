@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System;
 using Krosbook.Filters;
@@ -8,10 +9,12 @@ using Krosbook.Models.Users;
 using Krosbook.ViewModels.Users;
 using Krosbook.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/users")]
+    [EnableCors("AllowAll")]
     public class UsersController : BaseController
     {
         #region Private Fields
@@ -42,6 +45,8 @@ namespace Krosbook.Controllers.Api.v1
         /// </summary>
         /// <returns>All users</returns>
         [HttpGet]
+    //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<UserViewModel> Get()
         {
             return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetAll());
@@ -54,7 +59,7 @@ namespace Krosbook.Controllers.Api.v1
         /// <returns>Added user.</returns>
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+  //      [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IActionResult Post([FromBody] UserViewModel userVm)
         {
             return this.CreateNewUser(userVm);
@@ -79,6 +84,7 @@ namespace Krosbook.Controllers.Api.v1
                 {
                     user.Photo = DbInitializer.GetDefaultAvatar();
                 }
+                user.Password = "12545454";
 
                 return SaveData(() =>
                 {
@@ -126,6 +132,37 @@ namespace Krosbook.Controllers.Api.v1
 
             return result;
         }
+
+
+        /// <summary>
+        /// Gets user by id.
+        /// </summary>
+        /// <returns>user</returns>
+        [HttpGet("{userId}")]
+        //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        public IActionResult GetUser(int userId)
+        {
+            var user = _userRepository.GetItem(userId);
+
+        //    return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetItem(userId));                    
+
+
+            if (user == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            else
+            {
+                return this.Json(_mapper.Map<UserViewModel>(user));
+            }
+        }
+
+
+
+       
+
 
         /// <summary>
         /// Update the user.

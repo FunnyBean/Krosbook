@@ -40,21 +40,31 @@ namespace Krosbook.Models
                 _context.SaveChanges();
             }
 
-            if (!_context.User.Any())
-            {
+          if (!_context.User.Any())
+           {
                 // Create users
-                _context.User.Add(new User()
+             _context.User.Add(new User()
                 {
                     Email = "demo@demo.com",
-                    UserName = "demo",
-                    Name = "demo",
-                    Surname = "demo",
+                    Name = "Adam",
+                    Surname = "Novák",
                     PasswordHash = "$2a$06$U5imXrHtrfmHjDKUkxsWKepaY2xVlhlCE.PlbkS9PBkp4npUCQ9zi", //string.Empty teraz tam je demo
                     IsLocked = false,
                     DateCreated = DateTime.Now,
                     Photo = GetDefaultAvatar()
                 });
-
+                _context.SaveChanges();
+                _context.User.Add(new User()
+                {
+                    Email = "user@user.sk",
+                    Name = "Boris",
+                    Surname = "Kollár",
+                    PasswordHash = "$2a$06$gF/DQUqo0z8xD3kzEketk.XGRt8PZP3fvbEUVbOcmWxeVI8jaH0OG", //string.Empty teraz tam je demo
+                    IsLocked = false,
+                    DateCreated = DateTime.Now,
+                    Photo = GetDefaultAvatar()
+                });
+                _context.SaveChanges();
                 // Add role for user
                 _context.UserRole.AddRange(new UserRole[] {
                     new UserRole() {
@@ -62,9 +72,17 @@ namespace Krosbook.Models
                         UserId = 1  // demo
                     }
                 });
-
                 _context.SaveChanges();
-            }
+                _context.UserRole.AddRange(new UserRole[] {
+                    new UserRole() {
+                        RoleId = 1, // admin
+                        UserId = 2  // demo
+                    }
+                });
+
+           
+              _context.SaveChanges();
+          }
         }
 
         public static byte[] GetDefaultAvatar()

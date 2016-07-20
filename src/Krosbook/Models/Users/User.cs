@@ -49,16 +49,6 @@ namespace Krosbook.Models.Users
         public string Email { get; set; }
 
         /// <summary>
-        /// Gets or sets the nickname.
-        /// </summary>
-        /// <value>
-        /// The nickname.
-        /// </value>
-        [Required()]
-        [MaxLength(UserNameMaxLength)]
-        public string UserName { get; set; }
-
-        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>
