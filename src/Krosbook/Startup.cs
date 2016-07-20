@@ -19,8 +19,10 @@ using AutoMapper;
 using Krosbook.Models;
 using Krosbook.Models.Rooms;
 using Krosbook.Models.Users;
+using Krosbook.Models.Cars;
 using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Users;
+using Krosbook.ViewModels.Cars;
 
 namespace Krosbook
 {
@@ -161,6 +163,7 @@ namespace Krosbook
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ICarRepository, CarRepository>();
         }
 
         private static void InitializeAutoMapper(IServiceCollection services)
@@ -168,7 +171,8 @@ namespace Krosbook
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<RoomsMappingProfile>();
-                cfg.AddProfile<UsersMappingProfile>();          
+                cfg.AddProfile<UsersMappingProfile>();
+                cfg.AddProfile<CarsMappingProfile>();    
             });
 
             services.AddTransient<IMapper>(x => config.CreateMapper());

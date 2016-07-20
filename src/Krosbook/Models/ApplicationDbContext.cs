@@ -1,3 +1,4 @@
+using Krosbook.Models.Cars;
 using Krosbook.Models.Rooms;
 using Krosbook.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,10 @@ namespace Krosbook.Models
         /// DbSet for user's roles.
         /// </summary>
         public DbSet<UserRole> UserRole { get; set; }
+        /// <summary>
+        /// DbSet for cars.
+        /// </summary>
+        public DbSet<Car> Car { get; set; }
 
         #endregion
 
@@ -57,6 +62,7 @@ namespace Krosbook.Models
 
             OnRoomModelCreating(builder);
             OnUserModelCreating(builder);
+            OnCarModelCreating(builder);
         }
 
         private void OnRoomModelCreating(ModelBuilder builder)
@@ -79,7 +85,7 @@ namespace Krosbook.Models
 
         private void OnUserModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+            builder.Entity<User>().HasIndex(u => u.Email).IsUnique();     
 
             builder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
 
@@ -94,5 +100,15 @@ namespace Krosbook.Models
                 .WithMany(ur => ur.Users)
                 .HasForeignKey(ur => ur.RoleId);
         }
+
+
+        private void OnCarModelCreating(ModelBuilder builder) {
+            builder.Entity<Car>().HasKey(r => r.Id);
+            builder.Entity<Car>().HasIndex(r => r.Plate).IsUnique();
+        }
+
+
+
+
     }
 }
