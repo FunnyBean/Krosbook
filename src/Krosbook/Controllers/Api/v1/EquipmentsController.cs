@@ -7,10 +7,12 @@ using Krosbook.Models.Rooms;
 using Krosbook.ViewModels.Rooms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/equipment")]
+    [EnableCors("AllowAll")]
     public class EquipmentController : BaseController
     {
         #region Private Field
