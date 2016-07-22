@@ -80,6 +80,35 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
+
+
+
+        /// <summary>
+        /// Gets role by id.
+        /// </summary>
+        /// <returns>role</returns>
+        [HttpGet("{roleId}")]
+        //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        public IActionResult GetRole(int roleId)
+        {
+            var role = _roleRepository.GetItem(roleId);
+
+            if (role == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            else
+            {
+                return this.Json(_mapper.Map<RoleViewModel>(role));
+            }
+        }
+
+
+
+
+
         /// <summary>
         /// Update the role.
         /// </summary>
