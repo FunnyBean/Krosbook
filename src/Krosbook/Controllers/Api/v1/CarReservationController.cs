@@ -58,6 +58,20 @@ namespace Krosbook.Controllers.Api.v1
 
 
         /// <summary>
+        /// Gets car by id.
+        /// </summary>
+        /// <returns>car</returns>
+        [HttpGet("byCar/{carId}")]
+        //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        public IEnumerable<CarReservationViewModel> GetReservationById(int carId)
+        {
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsByCar(carId));
+        }
+
+
+
+        /// <summary>
         /// Post new car.
         /// </summary>
         /// <param name="reservationVm">New user.</param>

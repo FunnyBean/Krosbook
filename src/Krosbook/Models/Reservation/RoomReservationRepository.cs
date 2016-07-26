@@ -1,6 +1,8 @@
 ﻿using Krosbook.Models.Base;
 using Krosbook.Models.Reservation;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace Krosbook.Models.Reservation
 {
@@ -41,9 +43,13 @@ namespace Krosbook.Models.Reservation
             base.Edit(item);
         }
 
+        public IQueryable<RoomReservation> GetReservationsByRoom(int roomId)
+        {
+            return this.Get(r => r.RoomId == roomId);
+        }
 
 
-
+        
     }
 
 }

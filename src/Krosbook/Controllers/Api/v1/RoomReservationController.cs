@@ -101,10 +101,24 @@ namespace Krosbook.Controllers.Api.v1
         /// Gets car by id.
         /// </summary>
         /// <returns>car</returns>
+        [HttpGet("byRoom/{roomId}")]
+        //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        public IEnumerable<RoomReservationViewModel> GetUser(int roomId)
+        {
+            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoom(roomId));
+        }
+
+
+
+        /// <summary>
+        /// Gets car by id.
+        /// </summary>
+        /// <returns>car</returns>
         [HttpGet("{reservationId}")]
         //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult GetUser(int reservationId)
+        public IActionResult GetReservation(int reservationId)
         {
             var reservation = _reservationRepository.GetItem(reservationId);
 
@@ -118,6 +132,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(_mapper.Map<RoomReservationViewModel>(reservation));
             }
         }
+
 
 
 

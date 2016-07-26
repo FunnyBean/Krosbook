@@ -42,6 +42,10 @@ namespace Krosbook.Models.Reservation
         }
 
 
+        public IQueryable<CarReservation> GetReservationsByCar(int carId)
+        {
+            return this.Get(r => r.CarId == carId);
+        }
 
 
     }
