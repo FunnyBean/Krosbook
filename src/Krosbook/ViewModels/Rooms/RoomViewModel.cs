@@ -55,14 +55,6 @@ namespace Krosbook.ViewModels.Rooms
         public ICollection<RoomEquipmentViewModel> Equipment { get; set; }
 
 
-        /// <summary>
-        /// Gets or sets the reserva.
-        /// </summary>
-        /// <value>
-        /// The equipment.
-        /// </value>
-        public ICollection<RoomReservationViewModel> Reservations { get; set; }
-
 
         public override string ToString()
         {

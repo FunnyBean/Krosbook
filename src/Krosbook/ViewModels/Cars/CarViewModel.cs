@@ -21,8 +21,6 @@ namespace Krosbook.ViewModels.Cars
         [MaxLength(100)]
         public string Name { get; set; }
 
-        public ICollection<CarReservationViewModel> Reservations { get; set; }
-
 
         public override string ToString()
         {
