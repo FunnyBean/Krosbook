@@ -48,7 +48,7 @@ namespace Krosbook.Models.Cars
         /// <value>
         /// The users.
         /// </value>
-        public ICollection<CarUser> Users { get; set; }
+        public ICollection<CarReservation> Reservations { get; set; }
 
 
     }

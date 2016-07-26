@@ -162,6 +162,7 @@ namespace Krosbook
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IEquipmentRepository, EquipmentRepository>();
             services.AddScoped<IRoomReservationRepository, RoomReservationRepository>();
+            services.AddScoped<ICarReservationRepository, CarReservationRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICarRepository, CarRepository>();

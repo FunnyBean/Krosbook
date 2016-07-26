@@ -113,6 +113,6 @@ namespace Krosbook.Models.Users
         /// <value>
         /// The cars.
         /// </value>
-        public ICollection<CarUser> Cars { get; set; } = new List<CarUser>();
+        public ICollection<CarReservation> Cars { get; set; } = new List<CarReservation>();
     }
 }

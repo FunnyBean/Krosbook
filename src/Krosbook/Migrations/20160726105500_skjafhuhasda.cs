@@ -5,10 +5,24 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Krosbook.Migrations
 {
-    public partial class MyFirstMigration55 : Migration
+    public partial class skjafhuhasda : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Car",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 20, nullable: false),
+                    Plate = table.Column<string>(maxLength: 20, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Car", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Equipment",
                 columns: table => new
@@ -95,6 +109,61 @@ namespace Krosbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CarReservation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CarId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    dateTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CarReservation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CarReservation_Car_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Car",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CarReservation_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomReservation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoomId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    dateTime = table.Column<DateTime>(nullable: false),
+                    length = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomReservation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoomReservation_Room_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Room",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoomReservation_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -117,6 +186,32 @@ namespace Krosbook.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Car_Plate",
+                table: "Car",
+                column: "Plate",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarReservation_CarId",
+                table: "CarReservation",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarReservation_UserId",
+                table: "CarReservation",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomReservation_RoomId",
+                table: "RoomReservation",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomReservation_UserId",
+                table: "RoomReservation",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomEquipment_EquipmentId",
@@ -154,10 +249,19 @@ namespace Krosbook.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CarReservation");
+
+            migrationBuilder.DropTable(
+                name: "RoomReservation");
+
+            migrationBuilder.DropTable(
                 name: "RoomEquipment");
 
             migrationBuilder.DropTable(
                 name: "UserRole");
+
+            migrationBuilder.DropTable(
+                name: "Car");
 
             migrationBuilder.DropTable(
                 name: "Equipment");

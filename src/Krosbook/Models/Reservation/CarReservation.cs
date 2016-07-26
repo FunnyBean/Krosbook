@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Krosbook.Models.Cars;
 using Krosbook.Models.Users;
+using Krosbook.Models.Base;
 
 namespace Krosbook.Models.Reservation
 {
-    public class CarUser
+    public class CarReservation:IModel
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -33,7 +34,7 @@ namespace Krosbook.Models.Reservation
         /// The car.
         /// </value>
         /// <remarks>Navigation property.</remarks>
-        public RoomReservation Car { get; set; }
+        public Car Car { get; set; }
 
 
         /// <summary>

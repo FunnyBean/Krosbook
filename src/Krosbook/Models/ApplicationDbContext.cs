@@ -61,7 +61,7 @@ namespace Krosbook.Models
         /// <summary>
         /// Gets or sets the room users reservation.
         /// </summary>
-        public DbSet<CarUser> CarUser { get; set; }
+        public DbSet<CarReservation> CarReservation { get; set; }
 
         #endregion
 
@@ -135,11 +135,20 @@ namespace Krosbook.Models
 
 
 
-            builder.Entity<CarUser>().HasKey(re => new {re.Id });
-    //        builder.Entity<CarUser>()
-      //          .HasOne(re => re.User);
-        //    builder.Entity<CarUser>()
-          //     .HasOne(re => re.Car);
+
+            builder.Entity<CarReservation>().HasKey(re => (new { re.Id }));
+
+
+            builder.Entity<CarReservation>()
+                .HasOne(re => re.Car)
+                .WithMany(r => r.Reservations)
+                .HasForeignKey(re => re.CarId);
+
+
+            builder.Entity<CarReservation>()
+                .HasOne(re => re.User)
+                .WithMany(r => r.Cars)
+                .HasForeignKey(re => re.UserId);
         }
 
 

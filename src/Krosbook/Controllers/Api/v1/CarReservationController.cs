@@ -15,26 +15,26 @@ using Krosbook.ViewModels.Rooms;
 
 namespace Krosbook.Controllers.Api.v1
 {
-    [Route("api/reservations/rooms")]
+    [Route("api/reservations/cars")]
     [EnableCors("AllowAll")]
-    public class RoomReservationController: BaseController
+    public class CarReservationController : BaseController
     {
         #region Private Fields
 
-        private IRoomReservationRepository _reservationRepository;
-        private ILogger<RoomReservationController> _logger;
+        private ICarReservationRepository _reservationRepository;
+        private ILogger<CarReservationController> _logger;
         private IMapper _mapper;
 
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoomReservationController"/> class.
+        /// Initializes a new instance of the <see cref="RoomReservationCCarReservationControllerontroller"/> class.
         /// </summary>
         /// <param name="carsRepository">The car repository.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
-        public RoomReservationController(IRoomReservationRepository reservationRepository,
-                      ILogger<RoomReservationController> logger,
+        public CarReservationController(ICarReservationRepository reservationRepository,
+                      ILogger<CarReservationController> logger,
                                        IMapper mapper)
         {
             _reservationRepository = reservationRepository;
@@ -50,9 +50,9 @@ namespace Krosbook.Controllers.Api.v1
         [HttpGet]
     //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IEnumerable<RoomReservationViewModel> Get()
+        public IEnumerable<CarReservationViewModel> Get()
         {
-            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetAll());
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetAll());
         }
 
 
@@ -65,7 +65,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
         //      [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Post([FromBody] RoomReservationViewModel reservationVm)
+        public IActionResult Post([FromBody] CarReservationViewModel reservationVm)
         {
             return this.CreateNewReservation(reservationVm);
         }
@@ -75,9 +75,9 @@ namespace Krosbook.Controllers.Api.v1
         /// </summary>
         /// <param name="reservationVm">New car.</param>
         /// <returns>Info about creating of car.</returns>
-        private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)
+        private IActionResult CreateNewReservation(CarReservationViewModel reservationVm)
         {
-           RoomReservation reservation = _mapper.Map<RoomReservation>(reservationVm);    
+           CarReservation reservation = _mapper.Map<CarReservation>(reservationVm);    
 
                 return SaveData(() =>
                 {
@@ -87,7 +87,7 @@ namespace Krosbook.Controllers.Api.v1
                 {
                     this.Response.StatusCode = (int)HttpStatusCode.Created;
 
-                    return this.Json(new JsonResult(this.Json(_mapper.Map<RoomReservationViewModel>(reservation)))
+                    return this.Json(new JsonResult(this.Json(_mapper.Map<CarReservationViewModel>(reservation)))
                     {
                         StatusCode = this.Response.StatusCode
                     });
@@ -115,7 +115,7 @@ namespace Krosbook.Controllers.Api.v1
             }
             else
             {
-                return this.Json(_mapper.Map<RoomReservationViewModel>(reservation));
+                return this.Json(_mapper.Map<CarReservationViewModel>(reservation));
             }
         }
 
@@ -131,7 +131,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPut("{reservationId}")]
         [ValidateModelState, CheckArgumentsForNull]
         //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Put(int reservationId, [FromBody] RoomReservationViewModel reservationVm)
+        public IActionResult Put(int reservationId, [FromBody] CarReservationViewModel reservationVm)
         {
             if (reservationVm.Id != reservationId)
             {
@@ -142,7 +142,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(new { Message = message });
             }
 
-            Models.Reservation.RoomReservation oldReservation = _reservationRepository.GetItem(reservationId);
+            CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
             if (oldReservation == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -151,7 +151,7 @@ namespace Krosbook.Controllers.Api.v1
 
  
                 IActionResult result;
-            Models.Reservation.RoomReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
+            CarReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
 
                 result = SaveData(() =>
                 {
