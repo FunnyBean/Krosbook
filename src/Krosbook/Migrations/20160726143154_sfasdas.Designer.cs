@@ -8,8 +8,8 @@ using Krosbook.Models;
 namespace Krosbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160726105500_skjafhuhasda")]
-    partial class skjafhuhasda
+    [Migration("20160726143154_sfasdas")]
+    partial class sfasdas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,10 @@ namespace Krosbook.Migrations
 
                     b.Property<DateTime>("dateTime");
 
+                    b.Property<int>("length");
+
+                    b.Property<string>("name");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
@@ -70,6 +74,8 @@ namespace Krosbook.Migrations
                     b.Property<DateTime>("dateTime");
 
                     b.Property<int>("length");
+
+                    b.Property<string>("name");
 
                     b.HasKey("Id");
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Krosbook.Migrations
 {
-    public partial class skjafhuhasda : Migration
+    public partial class sfasdas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -116,7 +116,9 @@ namespace Krosbook.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CarId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    dateTime = table.Column<DateTime>(nullable: false)
+                    dateTime = table.Column<DateTime>(nullable: false),
+                    length = table.Column<int>(nullable: false),
+                    name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -144,7 +146,8 @@ namespace Krosbook.Migrations
                     RoomId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     dateTime = table.Column<DateTime>(nullable: false),
-                    length = table.Column<int>(nullable: false)
+                    length = table.Column<int>(nullable: false),
+                    name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

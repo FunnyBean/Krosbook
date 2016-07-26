@@ -58,5 +58,11 @@ namespace Krosbook.Models.Reservation
         /// Date and Time.
         /// </summary>       
         public DateTime dateTime { get; set; }
+
+
+        public int length { get; set; }
+
+
+        public string name { get; set; }
     }
 }

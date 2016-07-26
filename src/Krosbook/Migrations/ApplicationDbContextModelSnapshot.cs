@@ -48,6 +48,10 @@ namespace Krosbook.Migrations
 
                     b.Property<DateTime>("dateTime");
 
+                    b.Property<int>("length");
+
+                    b.Property<string>("name");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
@@ -69,6 +73,8 @@ namespace Krosbook.Migrations
                     b.Property<DateTime>("dateTime");
 
                     b.Property<int>("length");
+
+                    b.Property<string>("name");
 
                     b.HasKey("Id");
 

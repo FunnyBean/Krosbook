@@ -23,5 +23,8 @@ namespace Krosbook.ViewModels.Rooms
         [Required()]
         public int length { get; set; }
 
+        [Required()]
+        public string name { get; set; }
+
     }
 }

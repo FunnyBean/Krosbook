@@ -57,5 +57,8 @@ namespace Krosbook.Models.Reservation
 
         ///length of reservation
         public int length { get; set; }
+
+
+        public string name { get; set; }
     }
 }
