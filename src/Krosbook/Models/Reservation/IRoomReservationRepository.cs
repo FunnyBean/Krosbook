@@ -1,5 +1,6 @@
 ﻿using Krosbook.Models.Base;
 using Krosbook.Models.Reservation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,5 +12,7 @@ namespace Krosbook.Models.Reservation
     public interface IRoomReservationRepository : IRepository<RoomReservation>
     {
         IQueryable<RoomReservation> GetReservationsByRoom(int roomId);
+
+        IQueryable<RoomReservation> GetReservationsByRoomInTimeInterval(int roomId, DateTime from, DateTime to);
     }
 }

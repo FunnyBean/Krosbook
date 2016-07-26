@@ -12,6 +12,7 @@ using Krosbook.Models.Cars;
 using Krosbook.ViewModels.Cars;
 using Krosbook.Models.Reservation;
 using Krosbook.ViewModels.Rooms;
+using Krosbook.ViewModels.Reservation;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -101,12 +102,12 @@ namespace Krosbook.Controllers.Api.v1
         /// Gets car by id.
         /// </summary>
         /// <returns>car</returns>
-        [HttpGet("byRoom/{roomId}")]
+        [HttpPost("byRoom/{roomId}")]
         //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IEnumerable<RoomReservationViewModel> GetUser(int roomId)
+        public IEnumerable<RoomReservationViewModel> GetUser([FromBody] RoomReservationIntervalViewModel reservation, int roomId)
         {
-            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoom(roomId));
+            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoomInTimeInterval(roomId, reservation.from, reservation.to));
         }
 
 

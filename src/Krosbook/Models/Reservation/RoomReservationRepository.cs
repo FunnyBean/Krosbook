@@ -48,8 +48,9 @@ namespace Krosbook.Models.Reservation
             return this.Get(r => r.RoomId == roomId);
         }
 
+        public IQueryable<RoomReservation> GetReservationsByRoomInTimeInterval(int roomId, DateTime from, DateTime to)
+        }
 
-        
     }
 
 }
