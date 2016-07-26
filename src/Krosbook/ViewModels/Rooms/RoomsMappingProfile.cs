@@ -31,14 +31,7 @@ namespace Krosbook.ViewModels.Rooms
 
 
             this.CreateMap<Room, RoomViewModel>().ReverseMap();
-                /*.
-               AfterMap((m, vm) =>
-               {
-                   foreach (var user in vm.Reservations)
-                   {
-                       user.UserId = m.Id;
-                   }
-               })*/;
+
             this.CreateMap<User, UserViewModel>().ReverseMap();
 
             this.CreateMap<RoomReservation, RoomReservationViewModel>().ReverseMap();

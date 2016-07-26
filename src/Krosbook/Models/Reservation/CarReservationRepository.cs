@@ -1,5 +1,6 @@
 ﻿using Krosbook.Models.Base;
 using Krosbook.Models.Reservation;
+using System;
 using System.Linq;
 
 namespace Krosbook.Models.Reservation
@@ -45,6 +46,11 @@ namespace Krosbook.Models.Reservation
         public IQueryable<CarReservation> GetReservationsByCar(int carId)
         {
             return this.Get(r => r.CarId == carId);
+        }
+
+        public IQueryable<CarReservation> GetReservationsByCarInTimeInterval(int roomId, DateTime from, DateTime to)
+        {
+            return this.Get(r => r.CarId == roomId && r.dateTime >= from && r.dateTime <= to);
         }
 
 

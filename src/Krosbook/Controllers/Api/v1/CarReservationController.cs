@@ -12,6 +12,7 @@ using Krosbook.Models.Cars;
 using Krosbook.ViewModels.Cars;
 using Krosbook.Models.Reservation;
 using Krosbook.ViewModels.Rooms;
+using Krosbook.ViewModels.Reservation;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -64,9 +65,9 @@ namespace Krosbook.Controllers.Api.v1
         [HttpGet("byCar/{carId}")]
         //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IEnumerable<CarReservationViewModel> GetReservationById(int carId)
+        public IEnumerable<CarReservationViewModel> GetReservationById([FromBody] CarReservationIntervalViewModel reservation, int carId)
         {
-            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsByCar(carId));
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsByCarInTimeInterval(carId, DateTime.Parse(reservation.from), DateTime.Parse(reservation.to)));
         }
 
 

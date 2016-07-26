@@ -13,14 +13,7 @@ namespace Krosbook.ViewModels.Cars
     {
         protected override void Configure()
         {
-            this.CreateMap<Car, CarViewModel>().ReverseMap()
-                   .AfterMap((m, vm) =>
-                   {
-                       foreach (var reservation in vm.Reservations)
-                       {
-                           reservation.CarId = m.Id;
-                       }
-                   });
+            this.CreateMap<Car, CarViewModel>().ReverseMap();
             this.CreateMap<CarReservation, CarReservationViewModel>().ReverseMap();
         }
     }
