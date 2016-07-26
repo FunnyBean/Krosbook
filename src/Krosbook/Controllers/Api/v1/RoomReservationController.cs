@@ -107,7 +107,7 @@ namespace Krosbook.Controllers.Api.v1
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<RoomReservationViewModel> GetUser([FromBody] RoomReservationIntervalViewModel reservation, int roomId)
         {
-            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoomInTimeInterval(roomId, reservation.from, reservation.to));
+            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoomInTimeInterval(roomId, DateTime.Parse(reservation.from), DateTime.Parse(reservation.to)));
         }
 
 

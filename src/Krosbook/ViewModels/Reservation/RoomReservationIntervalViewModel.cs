@@ -9,9 +9,9 @@ namespace Krosbook.ViewModels.Reservation
     public class RoomReservationIntervalViewModel
     {
         [Required()]    
-        public DateTime from { get; set; }
+        public string from { get; set; }
 
         [Required()]
-        public DateTime to { get; set; }
+        public string to { get; set; }
     }
 }
