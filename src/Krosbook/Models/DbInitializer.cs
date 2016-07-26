@@ -1,4 +1,5 @@
 ﻿using Krosbook.Models.Users;
+using Krosbook.Models.Reservation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -18,7 +19,23 @@ namespace Krosbook.Models
             _context = serviceProvider.GetService<ApplicationDbContext>();
 
             InitializeUserRoles();
+         //   InitRoomUser();
         }
+
+        private static void InitRoomUser() {
+            _context.Room.Add(new Rooms.Room()
+            { Name="MyRoom",Description="moja miestnost",Type="premietacia"});
+           // _context.SaveChanges();
+
+            _context.Add(new RoomUser() {
+                RoomId = 1,
+                UserId=1,
+                dateTime=DateTime.Now
+            });
+            _context.SaveChanges();
+
+        }
+
 
         private static void InitializeUserRoles()
         {

@@ -2,6 +2,7 @@
 using Krosbook.Models.Base;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Models.Users
 {
@@ -95,5 +96,23 @@ namespace Krosbook.Models.Users
         /// The roles.
         /// </value>
         public ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
+
+
+
+
+        /// <summary>
+        /// Gets or sets the rooms.
+        /// </summary>
+        /// <value>
+        /// The cars.
+        /// </value>
+        public ICollection<RoomUser> Rooms { get; set; }
+        /// <summary>
+        /// Gets or sets the cars.
+        /// </summary>
+        /// <value>
+        /// The cars.
+        /// </value>
+        public ICollection<CarUser> Cars { get; set; } = new List<CarUser>();
     }
 }

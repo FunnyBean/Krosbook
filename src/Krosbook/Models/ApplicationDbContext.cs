@@ -1,6 +1,7 @@
 using Krosbook.Models.Cars;
 using Krosbook.Models.Rooms;
 using Krosbook.Models.Users;
+using Krosbook.Models.Reservation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Krosbook.Models
@@ -53,6 +54,15 @@ namespace Krosbook.Models
         /// </summary>
         public DbSet<Car> Car { get; set; }
 
+        /// <summary>
+        /// Gets or sets the room users reservation.
+        /// </summary>
+        public DbSet<RoomUser> RoomUser { get; set; }
+        /// <summary>
+        /// Gets or sets the room users reservation.
+        /// </summary>
+        public DbSet<CarUser> CarUser { get; set; }
+
         #endregion
 
 
@@ -81,6 +91,23 @@ namespace Krosbook.Models
                 .HasOne(re => re.Room)
                 .WithMany(r => r.Equipment)
                 .HasForeignKey(re => re.RoomId);
+
+
+
+            builder.Entity<RoomUser>().HasKey(re => new {re.UserId, re.RoomId});
+
+
+            builder.Entity<RoomUser>()
+                .HasOne(re => re.Room)
+                .WithMany(r => r.Reservations)
+                .HasForeignKey(re => re.RoomId);
+              
+
+            builder.Entity<RoomUser>()
+                .HasOne(re => re.User)
+                .WithMany(r => r.Rooms)
+                .HasForeignKey(re => re.UserId);
+
         }
 
         private void OnUserModelCreating(ModelBuilder builder)
@@ -105,6 +132,14 @@ namespace Krosbook.Models
         private void OnCarModelCreating(ModelBuilder builder) {
             builder.Entity<Car>().HasKey(r => r.Id);
             builder.Entity<Car>().HasIndex(r => r.Plate).IsUnique();
+
+
+
+            builder.Entity<CarUser>().HasKey(re => new {re.Id });
+    //        builder.Entity<CarUser>()
+      //          .HasOne(re => re.User);
+        //    builder.Entity<CarUser>()
+          //     .HasOne(re => re.Car);
         }
 
 

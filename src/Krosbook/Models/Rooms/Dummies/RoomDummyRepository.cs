@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Krosbook.Models.Base;
+using Krosbook.Models.Users;
 
 namespace Krosbook.Models.Rooms.Dummies
 {
@@ -58,5 +59,8 @@ namespace Krosbook.Models.Rooms.Dummies
         {
             return _data.Select(p => p.Type).Distinct();
         }
+
+
+
     }
 }

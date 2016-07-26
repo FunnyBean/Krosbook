@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Krosbook.Models.Base;
+using Krosbook.Models.Users;
 
 namespace Krosbook.Models.Rooms
 {
@@ -20,5 +21,7 @@ namespace Krosbook.Models.Rooms
         /// </summary>
         /// <returns>Types of rooms.</returns>
         IEnumerable<string> GetTypes();
+
+
     }
 }

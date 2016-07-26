@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Krosbook.Models.Base;
 using System.ComponentModel.DataAnnotations;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Models.Cars
 {
@@ -40,6 +41,14 @@ namespace Krosbook.Models.Cars
         [MaxLength(20)]
         [Required()]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Users.
+        /// </summary>
+        /// <value>
+        /// The users.
+        /// </value>
+        public ICollection<CarUser> Users { get; set; }
 
 
     }

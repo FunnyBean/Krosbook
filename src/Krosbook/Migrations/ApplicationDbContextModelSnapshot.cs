@@ -37,6 +37,45 @@ namespace Krosbook.Migrations
                     b.ToTable("Car");
                 });
 
+            modelBuilder.Entity("Krosbook.Models.Reservation.CarUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CarId");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<DateTime>("dateTime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CarUser");
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Reservation.RoomUser", b =>
+                {
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("RoomId");
+
+                    b.Property<DateTime>("dateTime");
+
+                    b.Property<int>("length");
+
+                    b.HasKey("UserId", "RoomId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomUser");
+                });
+
             modelBuilder.Entity("Krosbook.Models.Rooms.Equipment", b =>
                 {
                     b.Property<int>("Id")
@@ -154,6 +193,32 @@ namespace Krosbook.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Reservation.CarUser", b =>
+                {
+                    b.HasOne("Krosbook.Models.Cars.Car", "Car")
+                        .WithMany("Users")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Krosbook.Models.Users.User", "User")
+                        .WithMany("Cars")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Reservation.RoomUser", b =>
+                {
+                    b.HasOne("Krosbook.Models.Rooms.Room", "Room")
+                        .WithMany("Reservations")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Krosbook.Models.Users.User", "User")
+                        .WithMany("Rooms")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Krosbook.Models.Rooms.RoomEquipment", b =>

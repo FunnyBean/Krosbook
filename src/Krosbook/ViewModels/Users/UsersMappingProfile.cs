@@ -1,6 +1,11 @@
 ﻿using AutoMapper;
 using Krosbook.Models;
 using Krosbook.Models.Users;
+using Krosbook.Models.Reservation;
+using Krosbook.Models.Rooms;
+using Krosbook.Models.Cars;
+using Krosbook.ViewModels.Rooms;
+using Krosbook.ViewModels.Cars;
 
 namespace Krosbook.ViewModels.Users
 {
@@ -22,7 +27,6 @@ namespace Krosbook.ViewModels.Users
                 });
             this.CreateMap<Role, RoleViewModel>().ReverseMap();
             this.CreateMap<UserRole, UserRoleViewModel>().ReverseMap();
-           
         }
     }
 }

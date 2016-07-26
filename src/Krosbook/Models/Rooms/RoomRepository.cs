@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Krosbook.Models.Base;
 using Microsoft.EntityFrameworkCore;
+using Krosbook.Models.Users;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Models.Rooms
 {
@@ -13,13 +15,13 @@ namespace Krosbook.Models.Rooms
     /// <seealso cref="Krosbook.Models.Base.BaseRepository{T}" />
     public class RoomRepository : BaseRepository<Room>, IRoomRepository
     {
-        /// <summary>
+             /// <summary>
         /// Initializes a new instance of the <see cref="RoomRepository"/> class.
         /// </summary>
         /// <param name="dbCondext">The database context.</param>
-        public RoomRepository(ApplicationDbContext dbContext)
-            : base(dbContext)
+        public RoomRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+
         }
 
         /// <summary>
@@ -46,6 +48,8 @@ namespace Krosbook.Models.Rooms
             return _dbContext.Set<Room>().
                 Include(r => r.Equipment).
                 ThenInclude(e => e.Equipment).
+                Include(r => r.Reservations).
+                ThenInclude(e => e.User).
                 AsNoTracking().
                 FirstOrDefault(r => r.Id == roomId);
         }
@@ -58,6 +62,13 @@ namespace Krosbook.Models.Rooms
         {
             return _dbContext.Set<Room>().Select(p => p.Type).Distinct();
         }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Edits the specified item.
@@ -78,6 +89,21 @@ namespace Krosbook.Models.Rooms
 
                 SetDeleteStateForNotUsedEquipment(roomEquipment, oldEquipment);
             }
+
+
+            var roomUser = room.Reservations;
+
+            room.Reservations = null;
+            base.Edit(room);
+
+            if (roomUser != null)
+            {
+                var oldUsers = _dbContext.Set<RoomUser>().Where(p => p.RoomId == room.Id);
+
+                SetAddOrModifiedStatesForUser(room, roomUser);
+
+                SetDeleteStateForNotUsedUser(roomUser, oldUsers);
+            }        
 
         }
 
@@ -102,5 +128,35 @@ namespace Krosbook.Models.Rooms
         {
             return _dbContext.Set<RoomEquipment>().Any(p => p.RoomId == roomId && p.EquipmentId == equipmentId);
         }
+
+
+
+
+
+
+
+        private bool HasRoomUser(int roomId, int userId)
+        {
+            return _dbContext.Set<RoomUser>().Any(p => p.RoomId == roomId && p.UserId == userId);
+        }
+
+        private void SetAddOrModifiedStatesForUser(Room room, ICollection<RoomUser> roomUser)
+        {
+            foreach (var usr in roomUser)
+            {
+                _dbContext.Entry(usr).State =
+                    HasRoomEquipment(room.Id, usr.UserId) ? EntityState.Modified : EntityState.Added;
+            }
+        }
+
+        private void SetDeleteStateForNotUsedUser(ICollection<RoomUser> roomUser, IQueryable<RoomUser> oldUsers)
+        {
+            foreach (var equipment in oldUsers.Where((r) => !roomUser.Any(p => (p.UserId == r.UserId))))
+            {
+                _dbContext.Entry(equipment).State = EntityState.Deleted;
+            }
+        }
+
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Krosbook.Models.Base;
+using Krosbook.Models.Users;
 
 namespace Krosbook.Models.Cars
 {
@@ -11,5 +12,7 @@ namespace Krosbook.Models.Cars
         Car GetSingleByName(string name);
 
         Car GetSingleByPlate(string plate);
+
+     //   IEnumerable<User> GetUsers(int carId);
     }
 }

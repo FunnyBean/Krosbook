@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Krosbook.Models.Base;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Models.Rooms
 {
@@ -54,5 +55,14 @@ namespace Krosbook.Models.Rooms
         /// </value>
         public ICollection<RoomEquipment> Equipment { get; set; }
 
+        /// <summary>
+        /// Gets or sets the Users.
+        /// </summary>
+        /// <value>
+        /// The users.
+        /// </value>
+        public ICollection<RoomUser> Reservations { get; set; }
     }
+
 }
+

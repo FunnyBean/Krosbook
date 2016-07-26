@@ -1,3 +1,4 @@
+using Krosbook.ViewModels.Reservation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -53,6 +54,16 @@ namespace Krosbook.ViewModels.Rooms
         /// The equipment.
         /// </value>
         public ICollection<RoomEquipmentViewModel> Equipment { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the reserva.
+        /// </summary>
+        /// <value>
+        /// The equipment.
+        /// </value>
+        public ICollection<RoomUserViewModel> Reservations { get; set; }
+
 
         public override string ToString()
         {

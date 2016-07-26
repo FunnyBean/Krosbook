@@ -48,5 +48,9 @@ namespace Krosbook.ViewModels.Users
         }
 
         public ICollection<UserRoleViewModel> Roles { get; set; }
+
+        public ICollection<UserCarViewModel> Cars { get; set; }
+
+        public ICollection<UserRoomViewModel> Rooms { get; set; }
     }
 }
