@@ -57,23 +57,26 @@ namespace Krosbook.Migrations
                     b.ToTable("CarUser");
                 });
 
-            modelBuilder.Entity("Krosbook.Models.Reservation.RoomUser", b =>
+            modelBuilder.Entity("Krosbook.Models.Reservation.RoomReservation", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("RoomId");
+
+                    b.Property<int>("UserId");
 
                     b.Property<DateTime>("dateTime");
 
                     b.Property<int>("length");
 
-                    b.HasKey("UserId", "RoomId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RoomId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RoomUser");
+                    b.ToTable("RoomReservation");
                 });
 
             modelBuilder.Entity("Krosbook.Models.Rooms.Equipment", b =>
@@ -208,7 +211,7 @@ namespace Krosbook.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Krosbook.Models.Reservation.RoomUser", b =>
+            modelBuilder.Entity("Krosbook.Models.Reservation.RoomReservation", b =>
                 {
                     b.HasOne("Krosbook.Models.Rooms.Room", "Room")
                         .WithMany("Reservations")

@@ -106,7 +106,7 @@ namespace Krosbook.Models.Users
         /// <value>
         /// The cars.
         /// </value>
-        public ICollection<RoomUser> Rooms { get; set; }
+        public ICollection<RoomReservation> Rooms { get; set; }
         /// <summary>
         /// Gets or sets the cars.
         /// </summary>

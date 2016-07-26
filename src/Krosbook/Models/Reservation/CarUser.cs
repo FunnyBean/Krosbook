@@ -33,7 +33,7 @@ namespace Krosbook.Models.Reservation
         /// The car.
         /// </value>
         /// <remarks>Navigation property.</remarks>
-        public Car Car { get; set; }
+        public RoomReservation Car { get; set; }
 
 
         /// <summary>

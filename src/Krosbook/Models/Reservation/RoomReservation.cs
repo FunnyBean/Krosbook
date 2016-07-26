@@ -9,8 +9,12 @@ using Krosbook.Models.Base;
 
 namespace Krosbook.Models.Reservation
 {
-    public class RoomUser
+    public class RoomReservation:IModel
     {
+
+        public int Id { get; set; }
+
+
         /// <summary>
         /// Gets or sets the room identifier.
         /// </summary>

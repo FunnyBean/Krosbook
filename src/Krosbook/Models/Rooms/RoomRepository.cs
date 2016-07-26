@@ -90,7 +90,7 @@ namespace Krosbook.Models.Rooms
                 SetDeleteStateForNotUsedEquipment(roomEquipment, oldEquipment);
             }
 
-
+/*
             var roomUser = room.Reservations;
 
             room.Reservations = null;
@@ -98,13 +98,13 @@ namespace Krosbook.Models.Rooms
 
             if (roomUser != null)
             {
-                var oldUsers = _dbContext.Set<RoomUser>().Where(p => p.RoomId == room.Id);
+                var oldUsers = _dbContext.Set<RoomReservation>().Where(p => p.RoomId == room.Id);
 
                 SetAddOrModifiedStatesForUser(room, roomUser);
 
                 SetDeleteStateForNotUsedUser(roomUser, oldUsers);
             }        
-
+            */
         }
 
         private void SetAddOrModifiedStatesForEquipment(Room room, ICollection<RoomEquipment> roomEquipment)
@@ -133,14 +133,14 @@ namespace Krosbook.Models.Rooms
 
 
 
-
+        /*
 
         private bool HasRoomUser(int roomId, int userId)
         {
-            return _dbContext.Set<RoomUser>().Any(p => p.RoomId == roomId && p.UserId == userId);
+            return _dbContext.Set<RoomReservation>().Any(p => p.RoomId == roomId && p.UserId == userId);
         }
 
-        private void SetAddOrModifiedStatesForUser(Room room, ICollection<RoomUser> roomUser)
+        private void SetAddOrModifiedStatesForUser(Room room, ICollection<RoomReservation> roomUser)
         {
             foreach (var usr in roomUser)
             {
@@ -149,7 +149,7 @@ namespace Krosbook.Models.Rooms
             }
         }
 
-        private void SetDeleteStateForNotUsedUser(ICollection<RoomUser> roomUser, IQueryable<RoomUser> oldUsers)
+        private void SetDeleteStateForNotUsedUser(ICollection<RoomReservation> roomUser, IQueryable<RoomReservation> oldUsers)
         {
             foreach (var equipment in oldUsers.Where((r) => !roomUser.Any(p => (p.UserId == r.UserId))))
             {
@@ -157,6 +157,6 @@ namespace Krosbook.Models.Rooms
             }
         }
 
-
+    */
     }
 }

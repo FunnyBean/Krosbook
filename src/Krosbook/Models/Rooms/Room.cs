@@ -61,7 +61,7 @@ namespace Krosbook.Models.Rooms
         /// <value>
         /// The users.
         /// </value>
-        public ICollection<RoomUser> Reservations { get; set; }
+        public ICollection<RoomReservation> Reservations { get; set; }
     }
 
 }

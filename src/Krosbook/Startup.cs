@@ -23,6 +23,7 @@ using Krosbook.Models.Cars;
 using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Users;
 using Krosbook.ViewModels.Cars;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook
 {
@@ -160,7 +161,7 @@ namespace Krosbook
 
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IEquipmentRepository, EquipmentRepository>();
-
+            services.AddScoped<IRoomReservationRepository, RoomReservationRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICarRepository, CarRepository>();

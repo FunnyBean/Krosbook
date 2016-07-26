@@ -21,13 +21,13 @@ namespace Krosbook.Models
             InitializeUserRoles();
          //   InitRoomUser();
         }
-
+        /*
         private static void InitRoomUser() {
             _context.Room.Add(new Rooms.Room()
             { Name="MyRoom",Description="moja miestnost",Type="premietacia"});
            // _context.SaveChanges();
 
-            _context.Add(new RoomUser() {
+            _context.Add(new RoomReservation() {
                 RoomId = 1,
                 UserId=1,
                 dateTime=DateTime.Now
@@ -35,7 +35,7 @@ namespace Krosbook.Models
             _context.SaveChanges();
 
         }
-
+        */
 
         private static void InitializeUserRoles()
         {

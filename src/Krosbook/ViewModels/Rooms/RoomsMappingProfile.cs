@@ -3,7 +3,6 @@ using Krosbook.Models;
 using Krosbook.Models.Reservation;
 using Krosbook.Models.Rooms;
 using Krosbook.Models.Users;
-using Krosbook.ViewModels.Reservation;
 using Krosbook.ViewModels.Users;
 
 namespace Krosbook.ViewModels.Rooms
@@ -31,16 +30,18 @@ namespace Krosbook.ViewModels.Rooms
 
 
 
-            this.CreateMap<Room, RoomViewModel>().ReverseMap().
+            this.CreateMap<Room, RoomViewModel>().ReverseMap();
+                /*.
                AfterMap((m, vm) =>
                {
                    foreach (var user in vm.Reservations)
                    {
                        user.UserId = m.Id;
                    }
-               });
+               })*/;
             this.CreateMap<User, UserViewModel>().ReverseMap();
-            this.CreateMap<RoomUser, RoomUserViewModel>().ReverseMap();
+
+            this.CreateMap<RoomReservation, RoomReservationViewModel>().ReverseMap();
              //   ForMember(vm => vm.dateTime, map => map.MapFrom(m => m.User.)).
             //    ReverseMap();
         }

@@ -57,7 +57,7 @@ namespace Krosbook.Models
         /// <summary>
         /// Gets or sets the room users reservation.
         /// </summary>
-        public DbSet<RoomUser> RoomUser { get; set; }
+        public DbSet<RoomReservation> RoomReservation { get; set; }
         /// <summary>
         /// Gets or sets the room users reservation.
         /// </summary>
@@ -94,16 +94,16 @@ namespace Krosbook.Models
 
 
 
-            builder.Entity<RoomUser>().HasKey(re => new {re.UserId, re.RoomId});
+            builder.Entity<RoomReservation>().HasKey(re => (new { re.Id}));
 
 
-            builder.Entity<RoomUser>()
+            builder.Entity<RoomReservation>()
                 .HasOne(re => re.Room)
                 .WithMany(r => r.Reservations)
                 .HasForeignKey(re => re.RoomId);
               
 
-            builder.Entity<RoomUser>()
+            builder.Entity<RoomReservation>()
                 .HasOne(re => re.User)
                 .WithMany(r => r.Rooms)
                 .HasForeignKey(re => re.UserId);
