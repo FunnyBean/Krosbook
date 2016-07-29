@@ -20,6 +20,8 @@ namespace Krosbook.ViewModels.Rooms
         [Required()]
         public DateTime dateTime { get; set; }
 
+        public string date { get; set; }
+
         [Required()]
         public int length { get; set; }
 

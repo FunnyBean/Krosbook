@@ -68,6 +68,7 @@ namespace Krosbook.Controllers.Api.v1
         //      [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IActionResult Post([FromBody] RoomReservationViewModel reservationVm)
         {
+            reservationVm.dateTime = DateTime.Parse(reservationVm.date);
             return this.CreateNewReservation(reservationVm);
         }
 
