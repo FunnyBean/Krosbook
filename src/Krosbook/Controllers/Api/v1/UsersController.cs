@@ -10,8 +10,11 @@ using Krosbook.ViewModels.Users;
 using Krosbook.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using System.IdentityModel.Claims;
 
-namespace Krosbook.Controllers.Api.v1
+namespace Krosbook.Controllers.Api.v1    
 {
     [Route("api/users")]
     [EnableCors("AllowAll")]
@@ -22,7 +25,8 @@ namespace Krosbook.Controllers.Api.v1
         private IUserRepository _userRepository;
         private ILogger<UsersController> _logger;
         private IMapper _mapper;
-
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         #endregion
 
         /// <summary>
@@ -31,14 +35,21 @@ namespace Krosbook.Controllers.Api.v1
         /// <param name="userRepository">The user repository.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
-        public UsersController(IUserRepository userRepository,
-                      ILogger<UsersController> logger,
-                                       IMapper mapper)
+        public UsersController(
+            IUserRepository userRepository,                      
+            ILogger<UsersController> logger,                                       
+            IMapper mapper,                                         
+            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager)
         {
             _userRepository = userRepository;
             _logger = logger;
             _mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
+
+
 
         /// <summary>
         /// Gets all users.
@@ -48,7 +59,7 @@ namespace Krosbook.Controllers.Api.v1
     //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<UserViewModel> Get()
-        {
+        {            
             return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetAll());
         }
 
@@ -138,7 +149,9 @@ namespace Krosbook.Controllers.Api.v1
         /// Gets user by id.
         /// </summary>
         /// <returns>user</returns>
-        [HttpGet("{userId}")]
+        /// 
+
+                [HttpGet("{userId}")]
         //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IActionResult GetUser(int userId)
@@ -160,9 +173,41 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
+        [HttpGet("profile")]
+        //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        public IActionResult GetUser()
+        {
+            /*
+            var usr = _userManager.GetUserAsync(HttpContext.User);
+            var a = _userManager.GetUserId(User);
+            var sign=_signInManager.IsSignedIn(User);
 
-       
+            var userId = User.Claims;
+            */
+            var user = _userRepository.GetItem(1);
+            //    return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetItem(userId));                    
 
+
+            if (user == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            else
+            {
+                return this.Json(_mapper.Map<UserViewModel>(user));
+            }
+        }
+
+        [HttpGet("Id")]
+        //    [Authorize]
+        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        public IActionResult GetUserId()
+        {
+            var userId = 1;  //treba zistit id prihlaseneho pouzivatela
+            return this.Json(userId);          
+        }
 
         /// <summary>
         /// Update the user.
