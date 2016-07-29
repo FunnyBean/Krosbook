@@ -62,7 +62,7 @@ namespace Krosbook.Controllers.Api.v1
         /// Gets car by id.
         /// </summary>
         /// <returns>car</returns>
-        [HttpGet("byCar/{carId}")]
+        [HttpPost("byCar/{carId}")]
         //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<CarReservationViewModel> GetReservationById([FromBody] CarReservationIntervalViewModel reservation, int carId)
@@ -82,7 +82,8 @@ namespace Krosbook.Controllers.Api.v1
         //      [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IActionResult Post([FromBody] CarReservationViewModel reservationVm)
         {
-            return this.CreateNewReservation(reservationVm);
+            reservationVm.dateTime = DateTime.Parse(reservationVm.date);
+              return this.CreateNewReservation(reservationVm);
         }
 
         /// <summary>
