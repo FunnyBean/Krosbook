@@ -24,6 +24,7 @@ using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Users;
 using Krosbook.ViewModels.Cars;
 using Krosbook.Models.Reservation;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Krosbook
 {
@@ -80,9 +81,17 @@ namespace Krosbook
             services.AddMvc();
 
 
-            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
-                                                                        .AllowAnyMethod()
-                                                                         .AllowAnyHeader()));
+
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin();
+            corsBuilder.AllowCredentials();
+            
+
+            services.AddCors(options => {
+                options.AddPolicy("AllowAll", corsBuilder.Build());
+                });
             
 
             // Add application services
@@ -117,7 +126,7 @@ namespace Krosbook
                 ExpireTimeSpan = TimeSpan.FromMinutes(20),
                 LoginPath = "/login",
                 AutomaticAuthenticate = true,
-                AutomaticChallenge = false
+                AutomaticChallenge = true
             });
 
             app.UseStaticFiles();
@@ -126,8 +135,7 @@ namespace Krosbook
 
             app.UseMvc();
 
-            app.UseCors("AllowAll");
-
+            app.UseCors("AllowAll");            
 
             app.MapWhen(context =>
             {

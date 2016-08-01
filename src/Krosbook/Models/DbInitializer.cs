@@ -76,7 +76,7 @@ namespace Krosbook.Models
                     Email = "user@user.sk",
                     Name = "Boris",
                     Surname = "Kollár",
-                    PasswordHash = "$2a$06$gF/DQUqo0z8xD3kzEketk.XGRt8PZP3fvbEUVbOcmWxeVI8jaH0OG", //string.Empty teraz tam je demo
+                    PasswordHash = "$2a$06$gF/DQUqo0z8xD3kzEketk.XGRt8PZP3fvbEUVbOcmWxeVI8jaH0OG", //string.Empty teraz tam je user
                     IsLocked = false,
                     DateCreated = DateTime.Now,
                     Photo = GetDefaultAvatar()

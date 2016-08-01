@@ -27,6 +27,8 @@ namespace Krosbook.Controllers.Api.v1
         private IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+
+
         #endregion
 
         /// <summary>
@@ -151,7 +153,7 @@ namespace Krosbook.Controllers.Api.v1
         /// <returns>user</returns>
         /// 
 
-                [HttpGet("{userId}")]
+       [HttpGet("{userId}")]
         //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IActionResult GetUser(int userId)
@@ -174,21 +176,11 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpGet("profile")]
-        //    [Authorize]
+        [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult GetUser()
+        public IActionResult GetUserProfile()
         {
-            /*
-            var usr = _userManager.GetUserAsync(HttpContext.User);
-            var a = _userManager.GetUserId(User);
-            var sign=_signInManager.IsSignedIn(User);
-
-            var userId = User.Claims;
-            */
-            var user = _userRepository.GetItem(1);
-            //    return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetItem(userId));                    
-
-
+             var user = _userRepository.GetItem(GetUserId());  
             if (user == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -199,15 +191,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(_mapper.Map<UserViewModel>(user));
             }
         }
-
-        [HttpGet("Id")]
-        //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult GetUserId()
-        {
-            var userId = 1;  //treba zistit id prihlaseneho pouzivatela
-            return this.Json(userId);          
-        }
+        
 
         /// <summary>
         /// Update the user.
@@ -298,5 +282,16 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(new { Message = $"Saving data throw Exception '{ex.Message}'" });
             }
         }
+
+
+        public int GetUserId()
+        {
+            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value }).ToArray();
+            var userId = claims[0].Value;
+            int id;
+            int.TryParse(userId, out id);
+            return id;
+        }
+
     }
 }
