@@ -18,6 +18,7 @@ namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/users")]
     [EnableCors("AllowAll")]
+    [Authorize]
     public class UsersController : BaseController
     {
         #region Private Fields
@@ -31,12 +32,7 @@ namespace Krosbook.Controllers.Api.v1
 
         #endregion
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UsersController"/> class.
-        /// </summary>
-        /// <param name="userRepository">The user repository.</param>
-        /// <param name="logger">Logger.</param>
-        /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
+        #region Constructor
         public UsersController(
             IUserRepository userRepository,                      
             ILogger<UsersController> logger,                                       
@@ -50,92 +46,30 @@ namespace Krosbook.Controllers.Api.v1
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        #endregion
 
 
-
-        /// <summary>
-        /// Gets all users.
-        /// </summary>
-        /// <returns>All users</returns>
+        #region API
         [HttpGet]
-    //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<UserViewModel> Get()
         {            
             return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetAll());
         }
 
-        /// <summary>
-        /// Post new user.
-        /// </summary>
-        /// <param name="userVm">New user.</param>
-        /// <returns>Added user.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
-  //      [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Post([FromBody] UserViewModel userVm)
+        public IActionResult PostNewUser([FromBody] UserViewModel userVm)
         {
             return this.CreateNewUser(userVm);
         }
 
-        /// <summary>
-        /// Create new user.
-        /// </summary>
-        /// <param name="userVm">New user.</param>
-        /// <returns>Info about creating of user.</returns>
-        private IActionResult CreateNewUser(UserViewModel userVm)
-        {
-            if (_userRepository.GetItem(u => u.Email == userVm.Email) == null)
-            {
-                User user = _mapper.Map<User>(userVm);
-                user.DateCreated = DateTime.Now;
-
-                if (userVm.Photo != null)
-                {
-                    user.Photo = userVm.Photo;
-                } else
-                {
-                    user.Photo = DbInitializer.GetDefaultAvatar();
-                }
-                user.Password = "12545454";
-
-                return SaveData(() =>
-                {
-                    _userRepository.Add(user);
-                },
-                () =>
-                {
-                    this.Response.StatusCode = (int)HttpStatusCode.Created;
-
-                    return this.Json(new JsonResult(this.Json(_mapper.Map<UserViewModel>(user)))
-                    {
-                        StatusCode = this.Response.StatusCode
-                    });
-                });
-            }
-            else
-            {
-                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-                return this.Json(new JsonResult($"User with email '{userVm.Email}' already exist.")
-                {
-                    StatusCode = this.Response.StatusCode
-                });
-            }
-        }
-
-        /// <summary>
-        /// Post new users.
-        /// </summary>
-        /// <param name="userVms">New users.</param>
-        /// <returns>Added users.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("BulkInsert")]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IEnumerable<IActionResult> Post([FromBody] IEnumerable<UserViewModel> userVms)
+        public IEnumerable<IActionResult> PostNewUserByBulkInsert([FromBody] IEnumerable<UserViewModel> userVms)
         {
             List<IActionResult> result = new List<IActionResult>();
-
             foreach (UserViewModel item in userVms)
             {
                 JsonResult ret = (JsonResult)this.CreateNewUser(item);
@@ -146,23 +80,11 @@ namespace Krosbook.Controllers.Api.v1
             return result;
         }
 
-
-        /// <summary>
-        /// Gets user by id.
-        /// </summary>
-        /// <returns>user</returns>
-        /// 
-
-       [HttpGet("{userId}")]
-        //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult GetUser(int userId)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{userId}")]
+        public IActionResult GetUserById(int userId)
         {
-            var user = _userRepository.GetItem(userId);
-
-        //    return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetItem(userId));                    
-
-
+            var user = _userRepository.GetItem(userId);  
             if (user == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -175,9 +97,7 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpGet("profile")]
-        [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
+        [HttpGet("profile")]        
         public IActionResult GetUserProfile()
         {
              var user = _userRepository.GetItem(GetUserId());  
@@ -193,16 +113,9 @@ namespace Krosbook.Controllers.Api.v1
         }
         
 
-        /// <summary>
-        /// Update the user.
-        /// </summary>
-        /// <param name="userId">User id for update.</param>
-        /// <param name="userVm">User view model, with new properties.</param>
-        /// <returns>Updated user.</returns>
         [HttpPut("{userId}")]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Put(int userId, [FromBody] UserViewModel userVm)
+        public IActionResult UpdateUser(int userId, [FromBody] UserViewModel userVm)
         {
             if (userVm.Id != userId)
             {
@@ -234,25 +147,67 @@ namespace Krosbook.Controllers.Api.v1
                 {
                     _userRepository.Edit(editedUser);
                 });
-
-
                 return result;
             }
         }
 
-        /// <summary>
-        /// Deletes the specified user.
-        /// </summary>
-        /// <param name="userId">The user identifier.</param>
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{userId}")]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Delete(int userId)
+        public IActionResult DeleteUser(int userId)
         {
             return SaveData(() =>
             {
                 _userRepository.Delete(userId);
             });
         }
+
+        #endregion
+
+        #region Helpers
+
+        private IActionResult CreateNewUser(UserViewModel userVm)
+        {
+            if (_userRepository.GetItem(u => u.Email == userVm.Email) == null)
+            {
+                User user = _mapper.Map<User>(userVm);
+                user.DateCreated = DateTime.Now;
+
+                if (userVm.Photo != null)
+                {
+                    user.Photo = userVm.Photo;
+                }
+                else
+                {
+                    user.Photo = DbInitializer.GetDefaultAvatar();
+                }
+                user.Password = "12545454";
+
+                return SaveData(() =>
+                {
+                    _userRepository.Add(user);
+                },
+                () =>
+                {
+                    this.Response.StatusCode = (int)HttpStatusCode.Created;
+
+                    return this.Json(new JsonResult(this.Json(_mapper.Map<UserViewModel>(user)))
+                    {
+                        StatusCode = this.Response.StatusCode
+                    });
+                });
+            }
+            else
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                return this.Json(new JsonResult($"User with email '{userVm.Email}' already exist.")
+                {
+                    StatusCode = this.Response.StatusCode
+                });
+            }
+        }
+
 
         private bool ExistAnotherUserWithEmail(string userEmail, int userId)
         {
@@ -293,5 +248,6 @@ namespace Krosbook.Controllers.Api.v1
             return id;
         }
 
+        #endregion
     }
 }

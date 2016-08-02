@@ -114,5 +114,6 @@ namespace Krosbook.Models.Users
         /// The cars.
         /// </value>
         public ICollection<CarReservation> Cars { get; set; } = new List<CarReservation>();
+        public static object Claims { get; internal set; }
     }
 }

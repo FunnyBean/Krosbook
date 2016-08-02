@@ -14,12 +14,14 @@ using Krosbook.Models.Reservation;
 using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Reservation;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/reservations/rooms")]
     [EnableCors("AllowAll")]
-    public class RoomReservationController: BaseController
+    [Authorize]
+    public class RoomReservationController : BaseController
     {
         #region Private Fields
 
@@ -29,12 +31,7 @@ namespace Krosbook.Controllers.Api.v1
 
         #endregion
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoomReservationController"/> class.
-        /// </summary>
-        /// <param name="carsRepository">The car repository.</param>
-        /// <param name="logger">Logger.</param>
-        /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
+        #region Constructor
         public RoomReservationController(IRoomReservationRepository reservationRepository,
                       ILogger<RoomReservationController> logger,
                                        IMapper mapper)
@@ -44,88 +41,40 @@ namespace Krosbook.Controllers.Api.v1
             _mapper = mapper;
         }
 
+        #endregion
 
-        /// <summary>
-        /// Gets all cars.
-        /// </summary>
-        /// <returns>All cars</returns>
+        #region API
+
         [HttpGet]
-    //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IEnumerable<RoomReservationViewModel> Get()
+        public IEnumerable<RoomReservationViewModel> GetAllRoomReservations()
         {
             return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetAll());
         }
 
-
-
-        /// <summary>
-        /// Post new car.
-        /// </summary>
-        /// <param name="reservationVm">New user.</param>
-        /// <returns>Added car.</returns>
+        
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
-        //      [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Post([FromBody] RoomReservationViewModel reservationVm)
+        public IActionResult CreateNewRoomReservation([FromBody] RoomReservationViewModel reservationVm)
         {
             reservationVm.dateTime = DateTime.Parse(reservationVm.date);
             return this.CreateNewReservation(reservationVm);
         }
 
-        /// <summary>
-        /// Create new car.
-        /// </summary>
-        /// <param name="reservationVm">New car.</param>
-        /// <returns>Info about creating of car.</returns>
-        private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)
-        {
-            reservationVm.UserId = GetUserId();
-           RoomReservation reservation = _mapper.Map<RoomReservation>(reservationVm);    
-
-                return SaveData(() =>
-                {
-                    _reservationRepository.Add(reservation);
-                },
-                () =>
-                {
-                    this.Response.StatusCode = (int)HttpStatusCode.Created;
-
-                    return this.Json(new JsonResult(this.Json(_mapper.Map<RoomReservationViewModel>(reservation)))
-                    {
-                        StatusCode = this.Response.StatusCode
-                    });
-                });
-
-        }
+        
 
 
-
-        /// <summary>
-        /// Gets car by id.
-        /// </summary>
-        /// <returns>car</returns>
         [HttpPost("byRoom/{roomId}")]
-        //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IEnumerable<RoomReservationViewModel> GetUser([FromBody] RoomReservationIntervalViewModel reservation, int roomId)
+        public IEnumerable<RoomReservationViewModel> GetReservationByRoom([FromBody] RoomReservationIntervalViewModel reservation, int roomId)
         {
             return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoomInTimeInterval(roomId, DateTime.Parse(reservation.from), DateTime.Parse(reservation.to)));
         }
 
 
 
-        /// <summary>
-        /// Gets car by id.
-        /// </summary>
-        /// <returns>car</returns>
         [HttpGet("{reservationId}")]
-        //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult GetReservation(int reservationId)
+        public IActionResult GetReservationById(int reservationId)
         {
             var reservation = _reservationRepository.GetItem(reservationId);
-
             if (reservation == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -139,24 +88,14 @@ namespace Krosbook.Controllers.Api.v1
 
 
 
-
-
-        /// <summary>
-        /// Update the car.
-        /// </summary>
-        /// <param name="reservationId">Car id for update.</param>
-        /// <param name="reservationVm">Car view model, with new properties.</param>
-        /// <returns>Updated car.</returns>
         [HttpPut("{reservationId}")]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Put(int reservationId, [FromBody] RoomReservationViewModel reservationVm)
+        public IActionResult UpdateReservation(int reservationId, [FromBody] RoomReservationViewModel reservationVm)
         {
             if (reservationVm.Id != reservationId)
             {
                 var message = $"Invalid argument. Id '{reservationId}' and userVm.Id '{reservationVm.Id}' are not equal.";
                 _logger.LogWarning(message);
-
                 this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return this.Json(new { Message = message });
             }
@@ -168,30 +107,18 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(null);
             }
 
- 
-                IActionResult result;
+            IActionResult result;
             Models.Reservation.RoomReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
-
-                result = SaveData(() =>
-                {
-                    _reservationRepository.Edit(editedReservation);
-                });
-
-                return result;
-          
+            result = SaveData(() =>
+            {
+                _reservationRepository.Edit(editedReservation);
+            });
+            return result;
         }
 
 
-
-
-
-        /// <summary>
-        /// Deletes the specified car.
-        /// </summary>
-        /// <param name="reservationId">The car identifier.</param>
         [HttpDelete("{reservationId}")]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Delete(int reservationId)
+        public IActionResult DeleteReservation(int reservationId)
         {
             return SaveData(() =>
             {
@@ -200,12 +127,42 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        
+        #endregion
+
+
+
+
+        #region Helpers
+
+        private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)
+        {
+            reservationVm.UserId = GetUserId();
+            RoomReservation reservation = _mapper.Map<RoomReservation>(reservationVm);
+
+            return SaveData(() =>
+            {
+                _reservationRepository.Add(reservation);
+            },
+            () =>
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.Created;
+
+                return this.Json(new JsonResult(this.Json(_mapper.Map<RoomReservationViewModel>(reservation)))
+                {
+                    StatusCode = this.Response.StatusCode
+                });
+            });
+
+        }
+
+
 
         private IActionResult SaveData(Action beforeAction)
         {
             return SaveData(beforeAction, () => this.Json(null));
         }
+
+
 
         private IActionResult SaveData(Action beforeAction, Func<IActionResult> result)
         {
@@ -213,7 +170,6 @@ namespace Krosbook.Controllers.Api.v1
             {
                 beforeAction();
                 _reservationRepository.Save();
-
                 return result();
             }
             catch (Exception ex)
@@ -223,6 +179,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(new { Message = $"Saving data throw Exception '{ex.Message}'" });
             }
         }
+
 
 
         public int GetUserId()
@@ -235,5 +192,6 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
+        #endregion
     }
 }

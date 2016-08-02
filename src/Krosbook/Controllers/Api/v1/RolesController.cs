@@ -8,11 +8,13 @@ using Krosbook.Models.Users;
 using Krosbook.ViewModels.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/roles")]
     [EnableCors("AllowAll")]
+    [Authorize(Roles = "Admin")]
     public class RolesController : BaseController
     {
         #region Private Fields
@@ -23,12 +25,7 @@ namespace Krosbook.Controllers.Api.v1
 
         #endregion
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RolesController"/> class.
-        /// </summary>
-        /// <param name="roleRepository">The role repository.</param>
-        /// <param name="logger">Logger.</param>
-        /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
+        #region Constructor
         public RolesController(IRoleRepository roleRepository,
                       ILogger<RolesController> logger,
                                        IMapper mapper)
@@ -37,32 +34,25 @@ namespace Krosbook.Controllers.Api.v1
             _logger = logger;
             _mapper = mapper;
         }
+        #endregion
 
-        /// <summary>
-        /// Gets all roles.
-        /// </summary>
-        /// <returns>All roles</returns>
+
+        #region API
+
         [HttpGet]
-        [EnableCors("AllowAll")]
-        public IEnumerable<RoleViewModel> Get()
+        public IEnumerable<RoleViewModel> GetAllRoles()
         {
             return _mapper.Map<IEnumerable<RoleViewModel>>(_roleRepository.GetAll());
         }
 
-        /// <summary>
-        /// Post new role.
-        /// </summary>
-        /// <param name="roleVm">New role.</param>
-        /// <returns>Added role.</returns>
+
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Post([FromBody] RoleViewModel roleVm)
+        public IActionResult CreateNewRole([FromBody] RoleViewModel roleVm)
         {
             if (_roleRepository.GetItem(u => u.Name == roleVm.Name) == null)
             {
                 Role role = _mapper.Map<Role>(roleVm);
-
                 return SaveData(() =>
                 {
                     _roleRepository.Add(role);
@@ -83,14 +73,8 @@ namespace Krosbook.Controllers.Api.v1
 
 
 
-        /// <summary>
-        /// Gets role by id.
-        /// </summary>
-        /// <returns>role</returns>
         [HttpGet("{roleId}")]
-        //    [Authorize]
-        //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult GetRole(int roleId)
+        public IActionResult GetRoleById(int roleId)
         {
             var role = _roleRepository.GetItem(roleId);
 
@@ -107,23 +91,14 @@ namespace Krosbook.Controllers.Api.v1
 
 
 
-
-
-        /// <summary>
-        /// Update the role.
-        /// </summary>
-        /// <param name="roleId">Role id for update.</param>
-        /// <param name="roleVm">Role view model, with new properties.</param>
         [HttpPut("{roleId}")]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Put(int roleId, [FromBody] RoleViewModel roleVm)
+        public IActionResult UpdateRole(int roleId, [FromBody] RoleViewModel roleVm)
         {
             if (roleVm.Id != roleId)
             {
                 var message = $"Invalid argument. Id '{roleId}' and roleVm.Id '{roleVm.Id}' are not equal.";
                 _logger.LogWarning(message);
-
                 this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return this.Json(new { Message = message });
             }
@@ -143,7 +118,6 @@ namespace Krosbook.Controllers.Api.v1
             else
             {
                 editedRole = _mapper.Map(roleVm, editedRole);
-
                 return SaveData(() =>
                 {
                     _roleRepository.Edit(editedRole);
@@ -151,19 +125,20 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        /// <summary>
-        /// Deletes the specified role.
-        /// </summary>
-        /// <param name="roleId">The role identifier.</param>
+
         [HttpDelete("{roleId}")]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Delete(int roleId)
+        public IActionResult DeleteRole(int roleId)
         {
             return SaveData(() =>
             {
                 _roleRepository.Delete(roleId);
             });
         }
+
+
+        #endregion
+
+        #region Helpers
 
         private bool ExistAnotherRoleWithName(string roleName, int roleId)
         {
@@ -183,7 +158,6 @@ namespace Krosbook.Controllers.Api.v1
             {
                 beforeAction();
                 _roleRepository.Save();
-
                 return result();
             }
             catch (Exception ex)
@@ -193,5 +167,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(new { Message = $"Saving data throw Exception '{ex.Message}'" });
             }
         }
+
+        #endregion
     }
 }

@@ -8,11 +8,13 @@ using Krosbook.ViewModels.Rooms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/equipment")]
     [EnableCors("AllowAll")]
+    [Authorize(Roles = "Admin")]
     public class EquipmentController : BaseController
     {
         #region Private Field
@@ -23,12 +25,7 @@ namespace Krosbook.Controllers.Api.v1
 
         #endregion
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EquipmentController"/> class.
-        /// </summary>
-        /// <param name="equipmentRepository">The equipment repository.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
+        #region Constructor
         public EquipmentController(IEquipmentRepository equipmentRepository,
                            ILogger<EquipmentController> logger,
                                                  IMapper mapper)
@@ -38,26 +35,21 @@ namespace Krosbook.Controllers.Api.v1
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Gets all equipment.
-        /// </summary>
-        /// <returns>All equipment</returns>
+        #endregion
+
+        #region API
+
         [HttpGet]
-        public IEnumerable<EquipmentViewModel> Get()
+        public IEnumerable<EquipmentViewModel> GetAllEquipmets()
         {
             return _mapper.Map<IEnumerable<EquipmentViewModel>>(_equipmentRepository.GetAll());
         }
 
-        /// <summary>
-        /// Gets equipment by Id.
-        /// </summary>
-        /// <param name="equipmentId">Equipment Id.</param>
-        /// <returns>Equipment with specific Id. Null if doesn't exist.</returns>
+
         [HttpGet("{equipmentId}", Name = "GetEquipment")]
-        public IActionResult Get(int equipmentId)
+        public IActionResult GetEquipmentById(int equipmentId)
         {
             var equipment = _equipmentRepository.GetItem(equipmentId);
-
             if (equipment == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -69,15 +61,9 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        /// <summary>
-        /// Post new equipment.
-        /// </summary>
-        /// <param name="equipmentVm">New equipment.</param>
-        /// <returns>Added equipment.</returns>
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokia¾ sa nespraví autorizácia
-        public IActionResult Post([FromBody] EquipmentViewModel equipmentVm)
+        public IActionResult CreateNewEquipment([FromBody] EquipmentViewModel equipmentVm)
         {
             if (!ExistsEquipment(equipmentVm.Description))
             {
@@ -100,27 +86,17 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        private bool ExistsEquipment(string description)
-        {
-            return _equipmentRepository.GetItem(p => p.Description.Equals(description, StringComparison.CurrentCultureIgnoreCase)) != null;
-        }
+ 
 
-        /// <summary>
-        /// Update the equipment.
-        /// </summary>
-        /// <param name="equipmentId">Equipment id for update.</param>
-        /// <param name="equipmentVm">Equipment view model, with new properties.</param>
         [HttpPut("{equipmentId}")]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Put(int equipmentId, [FromBody] EquipmentViewModel equipmentVm)
+        public IActionResult UpdateEquipment(int equipmentId, [FromBody] EquipmentViewModel equipmentVm)
         {
             if (equipmentVm.Id != equipmentId)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 var message = $"Invalid argument. Id '{equipmentId}' and equipmentVm.Id '{equipmentVm.Id}' are not equal.";
                 _logger.LogWarning(message);
-
                 return this.Json(new { Message = message });
             }
 
@@ -139,7 +115,6 @@ namespace Krosbook.Controllers.Api.v1
             else
             {
                 editedEquipment = _mapper.Map(equipmentVm, editedEquipment);
-
                 return SaveData(() =>
                 {
                     _equipmentRepository.Edit(editedEquipment);
@@ -147,19 +122,26 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        /// <summary>
-        /// Deletes the specified equipment.
-        /// </summary>
-        /// <param name="equipmentId">The equipment identifier.</param>
+
         [HttpDelete("{equipmentId}")]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokia¾ sa nespraví autorizácia
-        public IActionResult Delete(int equipmentId)
+        public IActionResult DeleteEquipmentById(int equipmentId)
         {
             return SaveData(() =>
             {
                 _equipmentRepository.Delete(equipmentId);
             });
         }
+
+
+        #endregion
+
+
+        #region Helpers
+        private bool ExistsEquipment(string description)
+        {
+            return _equipmentRepository.GetItem(p => p.Description.Equals(description, StringComparison.CurrentCultureIgnoreCase)) != null;
+        }
+
 
         private IActionResult SaveData(Action beforeAction)
         {
@@ -190,5 +172,7 @@ namespace Krosbook.Controllers.Api.v1
 
             return equipment != null && equipment.Id != equipmentId;
         }
+
+        #endregion
     }
 }

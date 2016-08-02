@@ -8,11 +8,13 @@ using Krosbook.ViewModels.Rooms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/rooms")]
     [EnableCors("AllowAll")]
+    [Authorize(Roles = "Admin")]
     public class RoomsController : BaseController
     {
         #region Private Fields
@@ -23,12 +25,7 @@ namespace Krosbook.Controllers.Api.v1
 
         #endregion
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoomsController"/> class.
-        /// </summary>
-        /// <param name="roomRepository">The room repository.</param>
-        /// <param name="logger">Logger.</param>
-        /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
+        #region Constructor
         public RoomsController(IRoomRepository roomRepository,
                       ILogger<RoomsController> logger,
                                        IMapper mapper)
@@ -37,28 +34,21 @@ namespace Krosbook.Controllers.Api.v1
             _logger = logger;
             _mapper = mapper;
         }
+        #endregion
 
-        /// <summary>
-        /// Gets all rooms.
-        /// </summary>
-        /// <returns>All rooms</returns>
+        #region API
         [HttpGet]
-        public IEnumerable<RoomViewModel> Get()
+        public IEnumerable<RoomViewModel> GetAllRooms()
         {
             var rooms = _mapper.Map<IEnumerable<RoomViewModel>>(_roomRepository.GetAll());
             return rooms;
         }
 
-        /// <summary>
-        /// Gets room by Id.
-        /// </summary>
-        /// <param name="roomId">Room Id.</param>
-        /// <returns>Room with specific Id. Null if doesn't exist.</returns>
+
         [HttpGet("{roomId}", Name = "GetRoom")]
-        public IActionResult Get(int roomId)
+        public IActionResult GetRoomById(int roomId)
         {
             var room = _roomRepository.GetItem(roomId);
-
             if (room == null)
             {
                 this.Response.StatusCode = (int) HttpStatusCode.NotFound;
@@ -70,31 +60,23 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        /// <summary>
-        /// Get types of rooms.
-        /// </summary>
-        /// <returns>Types of rooms.</returns>
+
+
         [HttpGet("GetTypes")]
-        public IEnumerable<string> GetTypes()
+        public IEnumerable<string> GetAllTypes()
         {
             return _roomRepository.GetTypes();
         }
 
-        /// <summary>
-        /// Post new room.
-        /// </summary>
-        /// <param name="roomVm">New room.</param>
-        /// <returns>Added room.</returns>
+
+
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokia¾ sa nespraví autorizácia
-        public IActionResult Post([FromBody] RoomViewModel roomVm)
+        public IActionResult CreateNewRoom([FromBody] RoomViewModel roomVm)
         {
-
             if (_roomRepository.GetItem(roomVm.Name) == null)
             {
                 var room = _mapper.Map<Room>(roomVm);
-
                 return SaveData(() =>
                 {
                     _roomRepository.Add(room);
@@ -112,15 +94,11 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        /// <summary>
-        /// Update the room.
-        /// </summary>
-        /// <param name="roomId">Room id for update.</param>
-        /// <param name="roomVm">Room view model, with new properties.</param>
+       
+
         [HttpPut("{roomId}")]
         [ValidateModelState, CheckArgumentsForNull]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
-        public IActionResult Put(int roomId, [FromBody] RoomViewModel roomVm)
+        public IActionResult UpdateRoom(int roomId, [FromBody] RoomViewModel roomVm)
         {
             if (roomVm.Id != roomId)
             {
@@ -154,19 +132,22 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        /// <summary>
-        /// Deletes the specified room.
-        /// </summary>
-        /// <param name="roomId">The room identifier.</param>
+
+
         [HttpDelete("{roomId}")]
-        //[Authorize(Roles = "Administrator")] - ToDo: Zakomentovane pokia¾ sa nespraví autorizácia
-        public IActionResult Delete(int roomId)
+        public IActionResult DeleteRoom(int roomId)
         {
             return SaveData(() =>
             {
                 _roomRepository.Delete(roomId);
             });
         }
+
+        #endregion
+
+
+
+        #region Helpers
 
         private bool ExistAnotherRoomWithName(string roomName, int roomId)
         {
@@ -196,5 +177,9 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(new { Message = $"Saving data throw Exception '{ex.Message}'" });
             }
         }
+
+        #endregion
+
+
     }
 }
