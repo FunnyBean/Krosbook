@@ -14,7 +14,7 @@ namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/rooms")]
     [EnableCors("AllowAll")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class RoomsController : BaseController
     {
         #region Private Fields
@@ -71,6 +71,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpPost()]
+        [Authorize(Roles = "Admin")]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewRoom([FromBody] RoomViewModel roomVm)
         {
@@ -97,6 +98,7 @@ namespace Krosbook.Controllers.Api.v1
        
 
         [HttpPut("{roomId}")]
+        [Authorize(Roles = "Admin")]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult UpdateRoom(int roomId, [FromBody] RoomViewModel roomVm)
         {
@@ -135,6 +137,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpDelete("{roomId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteRoom(int roomId)
         {
             return SaveData(() =>

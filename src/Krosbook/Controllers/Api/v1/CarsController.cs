@@ -14,7 +14,7 @@ namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/cars")]
     [EnableCors("AllowAll")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class CarsController : BaseController
     {
         #region Private Fields
@@ -47,6 +47,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpPost()]
+        [Authorize(Roles = "Admin")]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult PostNewCar([FromBody] CarViewModel carVm)
         {
@@ -73,6 +74,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpPut("{carId}")]
+        [Authorize(Roles = "Admin")]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult UpdateCar(int carId, [FromBody] CarViewModel carVm)
         {
@@ -111,6 +113,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpDelete("{carId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteCar(int carId)
         {
             return SaveData(() =>
