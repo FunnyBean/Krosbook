@@ -126,7 +126,8 @@ namespace Krosbook
                 ExpireTimeSpan = TimeSpan.FromMinutes(20),
                 LoginPath = "/login",
                 AutomaticAuthenticate = true,
-                AutomaticChallenge = true
+                AutomaticChallenge = true,
+                CookieHttpOnly = false //ak je false tak mozno editovat cookie v prehliadaci
             });
 
             app.UseStaticFiles();

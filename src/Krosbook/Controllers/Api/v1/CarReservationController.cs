@@ -13,6 +13,7 @@ using Krosbook.ViewModels.Cars;
 using Krosbook.Models.Reservation;
 using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Reservation;
+using System.Linq;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -25,6 +26,7 @@ namespace Krosbook.Controllers.Api.v1
         private ICarReservationRepository _reservationRepository;
         private ILogger<CarReservationController> _logger;
         private IMapper _mapper;
+      //  private UsersController _userController;
 
         #endregion
 
@@ -36,11 +38,13 @@ namespace Krosbook.Controllers.Api.v1
         /// <param name="mapper">Mapper for mapping domain classes to model classes and reverse.</param>
         public CarReservationController(ICarReservationRepository reservationRepository,
                       ILogger<CarReservationController> logger,
-                                       IMapper mapper)
+                                       IMapper mapper//, UsersController userController
+            )
         {
             _reservationRepository = reservationRepository;
             _logger = logger;
             _mapper = mapper;
+        //    _userController = userController;
         }
 
 
@@ -49,7 +53,7 @@ namespace Krosbook.Controllers.Api.v1
         /// </summary>
         /// <returns>All cars</returns>
         [HttpGet]
-    //    [Authorize]
+          //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<CarReservationViewModel> Get()
         {
@@ -63,7 +67,7 @@ namespace Krosbook.Controllers.Api.v1
         /// </summary>
         /// <returns>car</returns>
         [HttpPost("byCar/{carId}")]
-        //    [Authorize]
+            //    [Authorize]
         //     [Authorize(Roles = "Admin")] //- ToDo: Zakomentovane pokiaľ sa nespraví autorizácia
         public IEnumerable<CarReservationViewModel> GetReservationById([FromBody] CarReservationIntervalViewModel reservation, int carId)
         {
@@ -93,7 +97,10 @@ namespace Krosbook.Controllers.Api.v1
         /// <returns>Info about creating of car.</returns>
         private IActionResult CreateNewReservation(CarReservationViewModel reservationVm)
         {
-           CarReservation reservation = _mapper.Map<CarReservation>(reservationVm);    
+           
+           reservationVm.UserId=GetUserId();
+
+            CarReservation reservation = _mapper.Map<CarReservation>(reservationVm);    
 
                 return SaveData(() =>
                 {
@@ -222,7 +229,14 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-
+        public int GetUserId()
+        {
+            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value }).ToArray();
+            var userId = claims[0].Value;
+            int id;
+            int.TryParse(userId, out id);
+            return id;
+        }
 
     }
 }

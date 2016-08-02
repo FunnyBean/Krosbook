@@ -13,6 +13,7 @@ using Krosbook.ViewModels.Cars;
 using Krosbook.Models.Reservation;
 using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Reservation;
+using System.Linq;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -79,6 +80,7 @@ namespace Krosbook.Controllers.Api.v1
         /// <returns>Info about creating of car.</returns>
         private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)
         {
+            reservationVm.UserId = GetUserId();
            RoomReservation reservation = _mapper.Map<RoomReservation>(reservationVm);    
 
                 return SaveData(() =>
@@ -223,6 +225,14 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
+        public int GetUserId()
+        {
+            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value }).ToArray();
+            var userId = claims[0].Value;
+            int id;
+            int.TryParse(userId, out id);
+            return id;
+        }
 
 
     }

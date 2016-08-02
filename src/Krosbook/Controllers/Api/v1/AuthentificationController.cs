@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Krosbook.ViewModels.Users;
 using Microsoft.AspNetCore.Cors;
+using System.Linq;
 
 namespace Krosbook.Controllers.Api.v1
 {
-        [Route("api/authentification")]
+    [Route("api/authentification")]
     [EnableCors("AllowAll")]
     public class AuthenticationController : BaseController
         {
@@ -69,12 +70,27 @@ namespace Krosbook.Controllers.Api.v1
                 return Ok();
             }
 
-            #endregion
+        [EnableCors("AllowAll")]
+        [HttpGet("isLoggedIn")]
+           [Authorize]
+           public  IActionResult IsLoggedIn()
+           {
+            var claims = User.Claims.Count();
+            if (claims != 0)
+            {
+                return Ok();
+            }
+            else {
+                return Unauthorized();
+            }           
+           }
+
+        #endregion
 
 
-            #region Helpers
+        #region Helpers
 
-            private async Task<IActionResult> SignInCore(string Email, string password)
+        private async Task<IActionResult> SignInCore(string Email, string password)
             {
                 User user = null;
                 var resultSignIn = PasswordSignIn(Email, password, out user);
