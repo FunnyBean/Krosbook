@@ -80,7 +80,7 @@ namespace Krosbook.Controllers.Api.v1
             return result;
         }
 
-        [Authorize(Roles = "Admin")]
+  
         [HttpGet("{userId}")]
         public IActionResult GetUserById(int userId)
         {
