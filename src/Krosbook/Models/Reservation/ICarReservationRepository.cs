@@ -11,6 +11,6 @@ namespace Krosbook.Models.Reservation
     public interface ICarReservationRepository : IRepository<CarReservation>
     {
         IQueryable<CarReservation> GetReservationsByCar(int carId);
-        IQueryable<CarReservation> GetReservationsByCarInTimeInterval(int roomId, DateTime from, DateTime to);
+        IQueryable<CarReservation> GetReservationsByCarInTimeInterval(int carId, DateTime from, DateTime to);        
     }
 }

@@ -13,6 +13,7 @@ namespace Krosbook.Models.Cars
 
         Car GetSingleByPlate(string plate);
 
-     //   IEnumerable<User> GetUsers(int carId);
+       // IQueryable<Car> GetAllUnreservedCarsInTimeInterval(DateTime from, DateTime to);
+
     }
 }

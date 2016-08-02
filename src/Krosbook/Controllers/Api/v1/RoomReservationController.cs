@@ -92,12 +92,15 @@ namespace Krosbook.Controllers.Api.v1
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult UpdateReservation(int reservationId, [FromBody] RoomReservationViewModel reservationVm)
         {
-            if (reservationVm.UserId != GetUserId())
+            if (!User.IsInRole("Admin"))
             {
-                var message = $"User with id " + GetUserId() + " can't update reservation, that was created by user with id " + reservationVm.UserId;
-                _logger.LogWarning(message);
-                this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return this.Json(new { Message = message });
+                if (reservationVm.UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't update reservation, that was created by user with id " + reservationVm.UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
             }
 
             if (reservationVm.Id != reservationId)
@@ -128,12 +131,15 @@ namespace Krosbook.Controllers.Api.v1
         [HttpDelete("{reservationId}")]
         public IActionResult DeleteReservation(int reservationId)
         {
-            if (_reservationRepository.GetItem(reservationId).UserId != GetUserId())
+            if (!User.IsInRole("Admin"))
             {
-                var message = $"User with id " + GetUserId() + " can't delete reservation, that was created by user with id " + _reservationRepository.GetItem(reservationId).UserId;
-                _logger.LogWarning(message);
-                this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return this.Json(new { Message = message });
+                if (_reservationRepository.GetItem(reservationId).UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't delete reservation, that was created by user with id " + _reservationRepository.GetItem(reservationId).UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
             }
             return SaveData(() =>
             {

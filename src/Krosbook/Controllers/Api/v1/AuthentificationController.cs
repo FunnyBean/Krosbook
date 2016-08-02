@@ -55,8 +55,8 @@ namespace Krosbook.Controllers.Api.v1
             await HttpContext.Authentication.SignOutAsync(Startup.AuthenticationScheme);
             return Ok();
         }
-        
-            
+
+
         [HttpGet("isLoggedIn")]
         [Authorize]
         public IActionResult IsLoggedIn()
@@ -109,13 +109,13 @@ namespace Krosbook.Controllers.Api.v1
             claims.Add(new Claim(ClaimTypeId, user.Id.ToString(), ClaimValueTypes.Integer32));
 
             var roles = _userRepository.GetUserRolesById(user.Id).ToArray();
-                //user.Roles.Select(role => new { role.RoleId }).ToArray();
-              for (int i = 0; i < roles.Length; i++) {
+            for (int i = 0; i < roles.Length; i++)
+            {
                 var role = _roleRepository.GetItem(roles[i].Id).Name;
                 claims.Add(new Claim(ClaimTypes.Role, role, ClaimValueTypes.String));
             }
 
-            
+
             return new ClaimsPrincipal(new ClaimsIdentity(claims, Startup.AuthenticationScheme));
         }
         #endregion
