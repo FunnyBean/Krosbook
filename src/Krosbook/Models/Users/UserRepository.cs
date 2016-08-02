@@ -51,6 +51,19 @@ namespace Krosbook.Models.Users
             return _roles;
         }
 
+        public IEnumerable<Role> GetUserRolesById(int id)
+        {
+            List<Role> _roles = null;
+            User _user = this.GetSingle(u => u.Id == id, u => u.Roles);
+            if (_user != null)
+            {
+                _roles = new List<Role>();
+                foreach (var _userRole in _user.Roles)
+                    _roles.Add(_roleReposistory.GetItem(_userRole.RoleId));
+            }
+            return _roles;
+        }
+
         /// <summary>
         /// Gets the user by Id with roles.
         /// </summary>

@@ -23,14 +23,16 @@ namespace Krosbook.Controllers.Api.v1
         #region Fields
         private readonly IUserRepository _userRepository;
         private ILogger<AuthenticationController> _logger;
+        private readonly IRoleRepository _roleRepository;
         #endregion
 
 
         #region Constructors
-        public AuthenticationController(IUserRepository userRepository, ILogger<AuthenticationController> logger)
+        public AuthenticationController(IUserRepository userRepository, IRoleRepository roleRepository, ILogger<AuthenticationController> logger)
         {
             _userRepository = userRepository;
             _logger = logger;
+            _roleRepository = roleRepository;
         }
         #endregion
 
@@ -105,6 +107,15 @@ namespace Krosbook.Controllers.Api.v1
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypeId, user.Id.ToString(), ClaimValueTypes.Integer32));
+
+            var roles = _userRepository.GetUserRolesById(user.Id).ToArray();
+                //user.Roles.Select(role => new { role.RoleId }).ToArray();
+              for (int i = 0; i < roles.Length; i++) {
+                var role = _roleRepository.GetItem(roles[i].Id).Name;
+                claims.Add(new Claim(ClaimTypes.Role, role, ClaimValueTypes.String));
+            }
+
+            
             return new ClaimsPrincipal(new ClaimsIdentity(claims, Startup.AuthenticationScheme));
         }
         #endregion

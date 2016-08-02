@@ -199,7 +199,7 @@ namespace Krosbook.Controllers.Api.v1
 
         public int GetUserId()
         {
-            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value }).ToArray();
+            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value}).ToArray();
             var userId = claims[0].Value;
             int id;
             int.TryParse(userId, out id);
