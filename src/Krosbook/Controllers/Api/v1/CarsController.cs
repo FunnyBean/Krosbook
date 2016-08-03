@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Cors;
 using Krosbook.Models.Cars;
 using Krosbook.ViewModels.Cars;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -20,19 +22,23 @@ namespace Krosbook.Controllers.Api.v1
         #region Private Fields
 
         private ICarRepository _carRepository;
+        private ICarReservationRepository _carReservationRepository;
         private ILogger<CarsController> _logger;
         private IMapper _mapper;
 
         #endregion
 
         #region Constructor
-        public CarsController(ICarRepository carRepository,
-                      ILogger<CarsController> logger,
-                                       IMapper mapper)
+        public CarsController(
+            ICarRepository carRepository,
+            ICarReservationRepository carReservationRepository,
+            ILogger<CarsController> logger,
+            IMapper mapper)
         {
             _carRepository = carRepository;
             _logger = logger;
             _mapper = mapper;
+            _carReservationRepository = carReservationRepository;
         }
 
         #endregion
@@ -121,7 +127,23 @@ namespace Krosbook.Controllers.Api.v1
                 _carRepository.Delete(carId);
             });
         }
-        
+
+
+        [HttpPost("filter")]
+        public IEnumerable<CarViewModel> GetAllUnreservedCars([FromBody] CarReservationViewModel reservationVM)
+        {
+            IQueryable<Car> cars = _carRepository.GetAll();
+            var exp = new List<Car>();
+            foreach (var car in cars)
+            {
+                if (CheckUnreservedCar(car.Id, DateTime.Parse(reservationVM.date), reservationVM.length))
+                {
+                    exp.Add(car);
+                }
+            }
+            return _mapper.Map<IEnumerable<CarViewModel>>(exp);
+        }
+
         #endregion
 
 
@@ -150,11 +172,62 @@ namespace Krosbook.Controllers.Api.v1
             else
             {
                 this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return this.Json(new JsonResult($"Car with plate '{carVm.Plate}' already exist.")                {
+                return this.Json(new JsonResult($"Car with plate '{carVm.Plate}' already exist.")
+                {
                     StatusCode = this.Response.StatusCode
                 });
             }
         }
+
+
+
+        public bool CheckUnreservedCar(int carId, DateTime date, int length)
+        {
+            IQueryable<CarReservation> reservations = _carReservationRepository.Get(r => r.CarId == carId && r.dateTime.Date == date.Date); //all reservations my car of current day 
+            var isFree = true;
+            foreach (var res in reservations)
+            {
+                //go through reservations, add their length and check if isn't any time duplication
+                for (var a = length; a >= 0; a -= 30)
+                {
+                    if (res.dateTime.TimeOfDay != date.TimeOfDay)
+                    {
+                        var reservationTime = res.dateTime;
+                        for (var i = res.length; i > 0; i -= 30)
+                        {
+
+                            if (reservationTime.TimeOfDay == date.TimeOfDay)
+                            {
+                                isFree = false;
+                                break;
+                            }
+                            reservationTime = reservationTime.AddMinutes(30);
+                        }
+                    }
+                    else
+                    {
+                        if (a == 0)
+                        {
+                            isFree = true;
+                            break;
+                        }
+                        else
+                        {
+                            isFree = false;
+                            break;
+                        }
+                    }
+
+                    date = date.AddMinutes(30);
+                }
+            }
+            return isFree;
+        }
+
+
+
+
+
 
 
         private bool ExistAnotherUserWithPlate(string plate, int carId)
