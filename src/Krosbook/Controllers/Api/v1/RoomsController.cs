@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -20,6 +22,7 @@ namespace Krosbook.Controllers.Api.v1
         #region Private Fields
 
         private IRoomRepository _roomRepository;
+        private IRoomReservationRepository _roomReservationRepository;
         private ILogger<RoomsController> _logger;
         private IMapper _mapper;
 
@@ -28,11 +31,13 @@ namespace Krosbook.Controllers.Api.v1
         #region Constructor
         public RoomsController(IRoomRepository roomRepository,
                       ILogger<RoomsController> logger,
-                                       IMapper mapper)
+                                       IMapper mapper,
+                                       IRoomReservationRepository roomReservationRepository)
         {
             _roomRepository = roomRepository;
             _logger = logger;
             _mapper = mapper;
+            _roomReservationRepository = roomReservationRepository;
         }
         #endregion
 
@@ -146,11 +151,74 @@ namespace Krosbook.Controllers.Api.v1
             });
         }
 
+
+
+        [HttpPost("filter")]
+        public IEnumerable<RoomViewModel> GetAllUnreservedCars([FromBody] RoomReservationViewModel reservationVM)
+        {
+            IQueryable<Room> rooms = _roomRepository.GetAll();
+            var exp = new List<Room>();
+            foreach (var room in rooms)
+            {
+                if (CheckUnreservedRoom(room.Id, DateTime.Parse(reservationVM.date), reservationVM.length))
+                {
+                    exp.Add(room);
+                }
+            }
+            return _mapper.Map<IEnumerable<RoomViewModel>>(exp);
+        }
         #endregion
 
 
 
         #region Helpers
+
+        public bool CheckUnreservedRoom(int roomId, DateTime date, int length)
+        {
+            IQueryable<RoomReservation> reservations = _roomReservationRepository.Get(r => r.RoomId == roomId && r.dateTime.Date == date.Date); //all reservations my car of current day 
+            var isFree = true;
+            foreach (var res in reservations)
+            {
+                var dat = date;
+                //go through reservations, add their length and check if isn't any time duplication
+                for (var a = length; a >= 0; a -= 30)
+                {
+                    if (res.dateTime.TimeOfDay != dat.TimeOfDay)
+                    {
+                        var reservationTime = res.dateTime;
+                        for (var i = res.length; i > 0; i -= 30)
+                        {
+
+                            if (reservationTime.TimeOfDay == dat.TimeOfDay)
+                            {
+                                isFree = false;
+                                break;
+                            }
+                            reservationTime = reservationTime.AddMinutes(30);
+                        }
+                    }
+                    else
+                    {
+                        if (a == 0)
+                        {
+                            isFree = true;
+                            break;
+                        }
+                        else
+                        {
+                            isFree = false;
+                            break;
+                        }
+                    }
+
+                    dat = dat.AddMinutes(30);
+                }
+            }
+            return isFree;
+        }
+
+
+
 
         private bool ExistAnotherRoomWithName(string roomName, int roomId)
         {

@@ -8,24 +8,24 @@ namespace Krosbook.ViewModels.Rooms
 {
     public class RoomReservationViewModel
     {
-        [Required()]
+        //[Required()]
         public int Id { get; set; }
 
-        [Required()]
+        //[Required()]
         public int RoomId { get; set; }
 
-        [Required()]
+        //[Required()]
         public int UserId { get; set; }
 
-        [Required()]
+        ///[Required()]
         public DateTime dateTime { get; set; }
 
         public string date { get; set; }
 
-        [Required()]
+        //[Required()]
         public int length { get; set; }
 
-        [Required()]
+       // [Required()]
         public string name { get; set; }
 
     }

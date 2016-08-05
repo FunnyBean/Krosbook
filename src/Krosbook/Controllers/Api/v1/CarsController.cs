@@ -187,16 +187,17 @@ namespace Krosbook.Controllers.Api.v1
             var isFree = true;
             foreach (var res in reservations)
             {
+                var dat = date;
                 //go through reservations, add their length and check if isn't any time duplication
                 for (var a = length; a >= 0; a -= 30)
                 {
-                    if (res.dateTime.TimeOfDay != date.TimeOfDay)
+                    if (res.dateTime.TimeOfDay != dat.TimeOfDay)
                     {
                         var reservationTime = res.dateTime;
                         for (var i = res.length; i > 0; i -= 30)
                         {
 
-                            if (reservationTime.TimeOfDay == date.TimeOfDay)
+                            if (reservationTime.TimeOfDay == dat.TimeOfDay)
                             {
                                 isFree = false;
                                 break;
@@ -218,7 +219,7 @@ namespace Krosbook.Controllers.Api.v1
                         }
                     }
 
-                    date = date.AddMinutes(30);
+                    dat = dat.AddMinutes(30);
                 }
             }
             return isFree;
