@@ -25,11 +25,14 @@ using Krosbook.ViewModels.Users;
 using Krosbook.ViewModels.Cars;
 using Krosbook.Models.Reservation;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Krosbook.Services.Email;
+using Krosbook.Services.Template;
 
 namespace Krosbook
 {
     public class Startup
     {
+        IHostingEnvironment _env;
         public const string AuthenticationScheme = "KrosbookAuthentication";
 
         public Startup(IHostingEnvironment env)
@@ -40,6 +43,7 @@ namespace Krosbook
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            _env = env;
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -74,12 +78,13 @@ namespace Krosbook
                         return Task.FromResult(0);
                     }
                 };
-            })
+            })          
+
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-
+            
             services.AddMvc();
-
+            
 
 
 
@@ -95,7 +100,12 @@ namespace Krosbook
             services.AddCors(options => {
                 options.AddPolicy("AllowAll", corsBuilder.Build());
                 });
-            
+
+
+
+
+         //   services.ConfigureOptions<EmailOptions>(Configuration.GetSection("Email"));
+
 
             // Add application services
             AddIntraWebServices(services);
@@ -163,13 +173,13 @@ namespace Krosbook
 
         private void AddIntraWebServices(IServiceCollection services)
         {
-            //services.AddScoped<IEmailService, EmailService>();
-            //services.AddScoped<IEmailSender, SmtpEmailSender>();
-            //services.AddScoped<IEmailCreator, HtmlEmailCreator>();
-            //services.AddScoped<ITemplateFormatter, TemplateFormatter>();
-            //services.AddScoped<ITemplateLoader, FileTemplateLoader>(
-            //    (provider) => new FileTemplateLoader(System.IO.Path.Combine(_env.WebRootPath, "templates", "email"))
-            //);
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailSender, SmtpEmailSender>();
+            services.AddScoped<IEmailCreator, HtmlEmailCreator>();
+            services.AddScoped<ITemplateFormatter, TemplateFormatter>();
+            services.AddScoped<ITemplateLoader, FileTemplateLoader>(
+                (provider) => new FileTemplateLoader(System.IO.Path.Combine(_env.WebRootPath, "templates", "email"))
+            );
 
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IEquipmentRepository, EquipmentRepository>();

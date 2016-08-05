@@ -57,7 +57,19 @@ namespace Krosbook.Controllers.Api.v1
         public IActionResult CreateNewRoomReservation([FromBody] RoomReservationViewModel reservationVm)
         {
             reservationVm.dateTime = DateTime.Parse(reservationVm.date);
-            return this.CreateNewReservation(reservationVm);
+            this.CreateNewReservation(reservationVm);
+
+
+            var reservation = _reservationRepository.Get(r=>r.name==reservationVm.name && r.RoomId==reservationVm.RoomId && r.length==reservationVm.length && r.UserId==reservationVm.UserId && r.dateTime==reservationVm.dateTime);
+            if (reservation == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            else
+            {
+                return this.Json(_mapper.Map<RoomReservationViewModel>(reservation));
+            }
         }
 
         
