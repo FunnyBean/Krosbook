@@ -13,8 +13,10 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.IdentityModel.Claims;
+using Krosbook.Services.Email;
+using Krosbook.Services.Template;
 
-namespace Krosbook.Controllers.Api.v1    
+namespace Krosbook.Controllers.Api.v1
 {
     [Route("api/users")]
     [EnableCors("AllowAll")]
@@ -28,23 +30,27 @@ namespace Krosbook.Controllers.Api.v1
         private IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-
+        private SendEmailService _emailService;
 
         #endregion
 
         #region Constructor
         public UsersController(
-            IUserRepository userRepository,                      
-            ILogger<UsersController> logger,                                       
-            IMapper mapper,                                         
-            UserManager<ApplicationUser> userManager, 
-            SignInManager<ApplicationUser> signInManager)
+            IUserRepository userRepository,
+            ILogger<UsersController> logger,
+            IMapper mapper,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IEmailService emailService,
+            IEmailCreator creator,
+            IEmailSender sender)
         {
             _userRepository = userRepository;
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = new SendEmailService(emailService, creator, sender);
         }
         #endregion
 
@@ -52,7 +58,7 @@ namespace Krosbook.Controllers.Api.v1
         #region API
         [HttpGet]
         public IEnumerable<UserViewModel> Get()
-        {            
+        {
             return _mapper.Map<IEnumerable<UserViewModel>>(_userRepository.GetAll());
         }
 
@@ -84,7 +90,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpGet("{userId}")]
         public IActionResult GetUserById(int userId)
         {
-            var user = _userRepository.GetItem(userId);  
+            var user = _userRepository.GetItem(userId);
             if (user == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -97,10 +103,10 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpGet("profile")]        
+        [HttpGet("profile")]
         public IActionResult GetUserProfile()
         {
-             var user = _userRepository.GetItem(GetUserId());  
+            var user = _userRepository.GetItem(GetUserId());
             if (user == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -111,7 +117,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(_mapper.Map<UserViewModel>(user));
             }
         }
-        
+
 
         [HttpPut("{userId}")]
         [ValidateModelState, CheckArgumentsForNull]
@@ -122,20 +128,20 @@ namespace Krosbook.Controllers.Api.v1
                 var message = $"Invalid argument. Id '{userId}' and userVm.Id '{userVm.Id}' are not equal.";
                 _logger.LogWarning(message);
 
-                this.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return this.Json(new { Message = message });
             }
 
             User oldUser = _userRepository.GetItem(userId);
             if (oldUser == null)
             {
-                this.Response.StatusCode = (int) HttpStatusCode.NotFound;
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return this.Json(null);
             }
 
             if (ExistAnotherUserWithEmail(userVm.Email, userId))
             {
-                this.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return this.Json(new { Message = $"User with email '{userVm.Email}' already exist." });
             }
             else
@@ -186,9 +192,11 @@ namespace Krosbook.Controllers.Api.v1
                 return SaveData(() =>
                 {
                     _userRepository.Add(user);
+
                 },
                 () =>
                 {
+                    _emailService.SendEmail(EmailType.Welcome, user.Email);
                     this.Response.StatusCode = (int)HttpStatusCode.Created;
 
                     return this.Json(new JsonResult(this.Json(_mapper.Map<UserViewModel>(user)))
@@ -207,7 +215,6 @@ namespace Krosbook.Controllers.Api.v1
                 });
             }
         }
-
 
         private bool ExistAnotherUserWithEmail(string userEmail, int userId)
         {
@@ -233,7 +240,7 @@ namespace Krosbook.Controllers.Api.v1
             catch (Exception ex)
             {
                 _logger.LogError("Exception occured when saving data.", ex);
-                this.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                this.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return this.Json(new { Message = $"Saving data throw Exception '{ex.Message}'" });
             }
         }

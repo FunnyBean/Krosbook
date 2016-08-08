@@ -4,13 +4,13 @@ using Krosbook.Services.Email;
 using System.Collections.Generic;
 using Krosbook.Controllers.Api.v1;
 using Krosbook.Resources;
-
+using Microsoft.AspNetCore.Cors;
 
 namespace Krosbook.Controllers.Api.v1
 {
 
     [Route("api/email")]
-    [AllowAnonymous]
+    [EnableCors("AllowAll")]
     public class EmailController : BaseController
     {
 
@@ -31,28 +31,32 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpGet]
-        [Route("send/{emailType}")]
-        public void Send(string emailType, string to)
+        [HttpPost]
+        [Route("send/")]
+        public void Send()
         {
-            var data = new BaseEmailData(emailType);
-            data.From = Resources.Resources.EmailFrom;
-            data.To.Add(to);
+                var emailType = "Welcome";
+                var to = "info@skupinaroyal.sk";
+                var data = new BaseEmailData(emailType);
+                data.From = Resources.Resources.EmailFrom;
+                data.To.Add(to);           
 
-            var msg = _creator.CreateEmail(data);
-            _sender.SendEmail(msg);
+                var msg = _creator.CreateEmail(data);           
+                _sender.SendEmail(msg);        
         }
 
         [HttpGet]
         [Route("PasswordReset")]
         public void PasswordReset(string to)
         {
-            var data = new PasswordResetData(@"http://example.com");
-            data.From = Resources.Resources.EmailFrom;
-            data.To.Add(to);
+            //      var data = new PasswordResetData(@"http://example.com");
+            //    data.From = Resources.Resources.EmailFrom;
+            //  data.To.Add(to);
 
-            var msg = _creator.CreateEmail(data);
-            _sender.SendEmail(msg);
+            //    var msg = _creator.CreateEmail(data);
+            //  _sender.SendEmail(msg);
+           // var a = 0;
+
         }
 
         [HttpGet]

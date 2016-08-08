@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
 using AutoMapper;
-
 using Krosbook.Models;
 using Krosbook.Models.Rooms;
 using Krosbook.Models.Users;
@@ -27,6 +22,7 @@ using Krosbook.Models.Reservation;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Krosbook.Services.Email;
 using Krosbook.Services.Template;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Krosbook
 {
@@ -50,7 +46,7 @@ namespace Krosbook
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {        
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
@@ -84,8 +80,10 @@ namespace Krosbook
             .AddDefaultTokenProviders();
             
             services.AddMvc();
-            
 
+
+            services.AddOptions();
+            services.Configure<EmailOptions>(Configuration.GetSection("Email"));
 
 
 
@@ -94,17 +92,14 @@ namespace Krosbook
             corsBuilder.AllowAnyHeader();
             corsBuilder.AllowAnyMethod();
             corsBuilder.AllowAnyOrigin();
-            corsBuilder.AllowCredentials();
-            
+            corsBuilder.AllowCredentials();           
 
             services.AddCors(options => {
                 options.AddPolicy("AllowAll", corsBuilder.Build());
                 });
 
 
-
-
-         //   services.ConfigureOptions<EmailOptions>(Configuration.GetSection("Email"));
+        
 
 
             // Add application services
