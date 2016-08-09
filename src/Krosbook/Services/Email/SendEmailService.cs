@@ -27,7 +27,7 @@ namespace Krosbook.Services.Email
 
 
 
-        public void SendEmail(EmailType emailType, string to)
+        public void SendEmail(EmailType emailType, string to, string password)
         {
             if (emailType == EmailType.Welcome)
             {
@@ -37,7 +37,16 @@ namespace Krosbook.Services.Email
                 var msg = _creator.CreateEmail(data);
                 _sender.SendEmail(msg);
             }
-        }
+            if (emailType == EmailType.PasswordReset)
+            {
+                var data = new PasswordResetData(@""+password);
+                data.From = Resources.Resources.EmailFrom;
+                data.To.Add(to);
+                var msg = _creator.CreateEmail(data);
+                _sender.SendEmail(msg);              
+            }
+
+            }
 
     }
 }

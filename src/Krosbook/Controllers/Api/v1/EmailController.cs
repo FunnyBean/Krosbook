@@ -35,27 +35,26 @@ namespace Krosbook.Controllers.Api.v1
         [Route("send/")]
         public void Send()
         {
-                var emailType = "Welcome";
-                var to = "info@skupinaroyal.sk";
-                var data = new BaseEmailData(emailType);
-                data.From = Resources.Resources.EmailFrom;
-                data.To.Add(to);           
+            var emailType = "Welcome";
+            var to = "info@skupinaroyal.sk";
+            var data = new BaseEmailData(emailType);
+            data.From = Resources.Resources.EmailFrom;
+            data.To.Add(to);
 
-                var msg = _creator.CreateEmail(data);           
-                _sender.SendEmail(msg);        
+            var msg = _creator.CreateEmail(data);
+            _sender.SendEmail(msg);
         }
 
         [HttpGet]
         [Route("PasswordReset")]
         public void PasswordReset(string to)
         {
-            //      var data = new PasswordResetData(@"http://example.com");
-            //    data.From = Resources.Resources.EmailFrom;
-            //  data.To.Add(to);
-
-            //    var msg = _creator.CreateEmail(data);
-            //  _sender.SendEmail(msg);
-           // var a = 0;
+            var data = new PasswordResetData(@"http://example.com");
+            data.From = Resources.Resources.EmailFrom;
+            data.To.Add(to);
+            var msg = _creator.CreateEmail(data);
+            _sender.SendEmail(msg);
+            var a = 0;
 
         }
 

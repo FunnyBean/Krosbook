@@ -15,6 +15,7 @@ using System.Linq;
 using System.IdentityModel.Claims;
 using Krosbook.Services.Email;
 using Krosbook.Services.Template;
+using System.Security.Cryptography;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -178,6 +179,7 @@ namespace Krosbook.Controllers.Api.v1
             {
                 User user = _mapper.Map<User>(userVm);
                 user.DateCreated = DateTime.Now;
+            //    user.Password
 
                 if (userVm.Photo != null)
                 {
@@ -187,7 +189,8 @@ namespace Krosbook.Controllers.Api.v1
                 {
                     user.Photo = DbInitializer.GetDefaultAvatar();
                 }
-                user.Password = "12545454";
+                var pass = this.GenerateRandomPasswords(8);
+                user.Password = pass;
 
                 return SaveData(() =>
                 {
@@ -196,7 +199,8 @@ namespace Krosbook.Controllers.Api.v1
                 },
                 () =>
                 {
-                    _emailService.SendEmail(EmailType.Welcome, user.Email);
+                    _emailService.SendEmail(EmailType.Welcome, user.Email, pass);
+                    _emailService.SendEmail(EmailType.PasswordReset, user.Email, pass);
                     this.Response.StatusCode = (int)HttpStatusCode.Created;
 
                     return this.Json(new JsonResult(this.Json(_mapper.Map<UserViewModel>(user)))
@@ -254,6 +258,17 @@ namespace Krosbook.Controllers.Api.v1
             int.TryParse(userId, out id);
             return id;
         }
+
+
+        public string GenerateRandomPasswords(int length)
+        {
+            RNGCryptoServiceProvider cryptRNG = new RNGCryptoServiceProvider();
+            byte[] tokenBuffer = new byte[length];
+            cryptRNG.GetBytes(tokenBuffer);
+            return Convert.ToBase64String(tokenBuffer);
+        }
+
+
 
         #endregion
     }
