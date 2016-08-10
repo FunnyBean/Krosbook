@@ -169,6 +169,29 @@ namespace Krosbook.Controllers.Api.v1
             });
         }
 
+        
+        [HttpPut("changepassword")]    
+        public IActionResult ChangePassword([FromBody] ChangePasswordViewModel chgpVM)
+        {
+           var user = _userRepository.GetItem(x=> x.Id==this.GetUserId());
+            if (BCrypt.Net.BCrypt.Verify(chgpVM.oldPassword, user.PasswordHash))
+            {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(chgpVM.newPassword);
+                user.Password = chgpVM.newPassword;
+
+                _userRepository.Edit(user);
+                _userRepository.Save();
+                return Ok();
+            }
+            return NotFound();
+            
+        }
+
+
+
+
+
+
         #endregion
 
         #region Helpers

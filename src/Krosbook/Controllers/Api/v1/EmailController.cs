@@ -33,10 +33,8 @@ namespace Krosbook.Controllers.Api.v1
 
         [HttpPost]
         [Route("send/")]
-        public void Send()
-        {
-            var emailType = "Welcome";
-            var to = "info@skupinaroyal.sk";
+        public void Send(string emailType, string to)
+        {         
             var data = new BaseEmailData(emailType);
             data.From = Resources.Resources.EmailFrom;
             data.To.Add(to);
@@ -54,8 +52,6 @@ namespace Krosbook.Controllers.Api.v1
             data.To.Add(to);
             var msg = _creator.CreateEmail(data);
             _sender.SendEmail(msg);
-            var a = 0;
-
         }
 
         [HttpGet]
