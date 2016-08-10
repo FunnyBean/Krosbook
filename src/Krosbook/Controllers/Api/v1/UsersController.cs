@@ -183,12 +183,19 @@ namespace Krosbook.Controllers.Api.v1
                 _userRepository.Save();
                 return Ok();
             }
-            return NotFound();
-            
+            return NotFound();            
         }
 
 
-
+        [HttpPut("changeimage")]
+        public IActionResult ChangeImage([FromBody] ChangeImageViewModel chgiVM)
+        {
+            var user = _userRepository.GetItem(x => x.Id == this.GetUserId());
+            user.Photo = Convert.FromBase64String(chgiVM.photoBase64);
+                _userRepository.Edit(user);
+                _userRepository.Save();
+                return Ok();              
+        }
 
 
 
