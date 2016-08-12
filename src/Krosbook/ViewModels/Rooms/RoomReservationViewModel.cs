@@ -28,5 +28,9 @@ namespace Krosbook.ViewModels.Rooms
        // [Required()]
         public string name { get; set; }
 
+        public bool emailInvitation { get; set; }
+
+        public bool goToMeeting { get; set; }
+
     }
 }

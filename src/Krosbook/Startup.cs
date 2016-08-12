@@ -131,7 +131,7 @@ namespace Krosbook
                 CookieName = "KrosbookAuth",
                 ReturnUrlParameter = "returnUrl",
                 SlidingExpiration = true,
-                ExpireTimeSpan = TimeSpan.FromMinutes(20),
+                ExpireTimeSpan = TimeSpan.FromDays(1),
                 LoginPath = "/login",
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,

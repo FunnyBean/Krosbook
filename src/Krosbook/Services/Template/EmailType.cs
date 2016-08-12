@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace Krosbook.Services.Template
 {
-    public enum EmailType { Welcome,  PasswordReset, Layout, CreatePassword};
+    public enum EmailType { Welcome,  PasswordReset, CreatePassword, ReservationRoom };
 }

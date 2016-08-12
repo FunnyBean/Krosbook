@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Krosbook.Services.Template;
+using System.Collections.Generic;
 
 namespace Krosbook.Services.Email
 {
@@ -19,7 +20,7 @@ namespace Krosbook.Services.Email
 
         public BaseEmailData(string emailType)
         {
-            this.EmailType = emailType;
+            this.EmailType = emailType;    
         }
 
         #endregion
@@ -60,6 +61,7 @@ namespace Krosbook.Services.Email
         /// Email address used when recepient replies to email.
         /// </summary>
         public string ReplyTo { get; set; }
+
 
         #endregion
 
