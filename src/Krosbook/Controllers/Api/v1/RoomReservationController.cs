@@ -15,6 +15,7 @@ using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Reservation;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Krosbook.Services.Email;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -28,17 +29,21 @@ namespace Krosbook.Controllers.Api.v1
         private IRoomReservationRepository _reservationRepository;
         private ILogger<RoomReservationController> _logger;
         private IMapper _mapper;
+        private IEmailService _emailService;
+
 
         #endregion
 
         #region Constructor
         public RoomReservationController(IRoomReservationRepository reservationRepository,
                       ILogger<RoomReservationController> logger,
-                                       IMapper mapper)
+                                       IMapper mapper, IEmailService emailService
+                                       )
         {
             _reservationRepository = reservationRepository;
             _logger = logger;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         #endregion
@@ -51,7 +56,7 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetAll());
         }
 
-        
+
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewRoomReservation([FromBody] RoomReservationViewModel reservationVm)
@@ -60,7 +65,7 @@ namespace Krosbook.Controllers.Api.v1
             this.CreateNewReservation(reservationVm);
 
 
-            List<RoomReservation> reservation = _reservationRepository.Get(r=>r.name==reservationVm.name && r.RoomId==reservationVm.RoomId && r.length==reservationVm.length && r.UserId==reservationVm.UserId && r.dateTime==reservationVm.dateTime).ToList();
+            List<Models.Reservation.RoomReservation> reservation = _reservationRepository.Get(r => r.name == reservationVm.name && r.RoomId == reservationVm.RoomId && r.length == reservationVm.length && r.UserId == reservationVm.UserId && r.dateTime == reservationVm.dateTime).ToList();
             if (reservation[0] == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -73,7 +78,7 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-        
+
 
 
         [HttpPost("byRoom/{roomId}")]
@@ -134,8 +139,15 @@ namespace Krosbook.Controllers.Api.v1
             IActionResult result;
             Models.Reservation.RoomReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
             result = SaveData(() =>
-            {
-                _reservationRepository.Edit(editedReservation);
+            {   _reservationRepository.Edit(editedReservation);
+                if (reservationVm.emailInvitation)
+                {
+                    _emailService.CreateEmailCalendarEvent(reservationVm);
+                }
+                if (reservationVm.goToMeeting)
+                {
+                    //zavola sa goToMeeting service
+                }
             });
             return result;
         }
@@ -171,11 +183,11 @@ namespace Krosbook.Controllers.Api.v1
         private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)
         {
             reservationVm.UserId = GetUserId();
-            RoomReservation reservation = _mapper.Map<RoomReservation>(reservationVm);
+            Models.Reservation.RoomReservation reservation = _mapper.Map<Models.Reservation.RoomReservation>(reservationVm);
 
             return SaveData(() =>
             {
-                _reservationRepository.Add(reservation);
+                _reservationRepository.Add(reservation);              
             },
             () =>
             {
@@ -218,7 +230,7 @@ namespace Krosbook.Controllers.Api.v1
 
         public int GetUserId()
         {
-            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value}).ToArray();
+            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value }).ToArray();
             var userId = claims[0].Value;
             int id;
             int.TryParse(userId, out id);

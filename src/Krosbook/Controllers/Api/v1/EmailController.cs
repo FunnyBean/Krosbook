@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Krosbook.Controllers.Api.v1;
 using Krosbook.Resources;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -19,28 +21,35 @@ namespace Krosbook.Controllers.Api.v1
         private IEmailService _emailService;
         private IEmailCreator _creator;
         private IEmailSender _sender;
+        private readonly IHostingEnvironment _appEnvironment;
 
         #endregion
 
 
-        public EmailController(IEmailService emailService, IEmailCreator creator, IEmailSender sender)
+        public EmailController(IEmailService emailService, IEmailCreator creator, IEmailSender sender, IHostingEnvironment appEnvironment)
         {
             _emailService = emailService;
             _creator = creator;
             _sender = sender;
+            _appEnvironment = appEnvironment;
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("send/")]
-        public void Send(string emailType, string to)
-        {         
-            var data = new BaseEmailData(emailType);
-            data.From = Resources.Resources.EmailFrom;
-            data.To.Add(to);
+        public  void Send()
+        {
+         //   CreateCalendarEvent();         
+      
+           
 
-            var msg = _creator.CreateEmail(data);
-            _sender.SendEmail(msg);
+            /*  var data = new BaseEmailData(emailType);
+              data.From = Resources.Resources.EmailFrom;
+              data.To.Add(to);
+
+              var msg = _creator.CreateEmail(data);
+         }     _sender.SendEmail(msg);*/
+
         }
 
         [HttpGet]
@@ -60,6 +69,10 @@ namespace Krosbook.Controllers.Api.v1
         {
             _emailService.SendPasswordReset(to, @"http://example.com");
         }
+
+
+
+
 
     }
 }
