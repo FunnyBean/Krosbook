@@ -48,6 +48,16 @@ namespace Krosbook.Models.Rooms
         public string Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the color of room.
+        /// </summary>
+        /// <value>
+        /// The room color.
+        /// </value>
+        [MaxLength(7)]
+        [Required()]
+        public string Color { get; set; }
+
+        /// <summary>
         /// Gets or sets the equipment.
         /// </summary>
         /// <value>
