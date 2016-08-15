@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Krosbook.Migrations
 {
-    public partial class sfasdas : Migration
+    public partial class sjjhadfjds : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,6 +42,7 @@ namespace Krosbook.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Color = table.Column<string>(maxLength: 7, nullable: false),
                     Description = table.Column<string>(maxLength: 255, nullable: true),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Type = table.Column<string>(maxLength: 25, nullable: false)

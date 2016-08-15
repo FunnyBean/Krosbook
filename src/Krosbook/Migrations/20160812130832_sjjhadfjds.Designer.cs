@@ -8,8 +8,8 @@ using Krosbook.Models;
 namespace Krosbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160726143154_sfasdas")]
-    partial class sfasdas
+    [Migration("20160812130832_sjjhadfjds")]
+    partial class sjjhadfjds
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,6 +104,10 @@ namespace Krosbook.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 7);
 
                     b.Property<string>("Description")
                         .HasAnnotation("MaxLength", 255);

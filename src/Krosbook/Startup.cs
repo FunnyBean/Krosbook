@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Krosbook.Services.Email;
 using Krosbook.Services.Template;
 using Microsoft.Extensions.DependencyInjection;
+using Krosbook.Services.G2Meeting;
 
 namespace Krosbook
 {
@@ -183,6 +184,8 @@ namespace Krosbook
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
+
+            services.AddScoped<IG2MService, G2MService>();
         }
 
         private static void InitializeAutoMapper(IServiceCollection services)
