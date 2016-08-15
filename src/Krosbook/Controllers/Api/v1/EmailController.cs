@@ -75,6 +75,10 @@ namespace Krosbook.Controllers.Api.v1
         [Route("example")]
         public void PasswordReset2(string to)
         {
+            if (_G2MService.canCreateMeeting(new ViewModels.Rooms.RoomReservationViewModel()))
+            {
+                _G2MService.createNewMeeting(new ViewModels.Rooms.RoomReservationViewModel());
+           }
 
             _G2MService.getUpcomingMeetings();
 

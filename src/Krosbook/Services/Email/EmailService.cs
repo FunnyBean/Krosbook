@@ -97,6 +97,33 @@ namespace Krosbook.Services.Email
         }
 
 
+        public void CreateEmailCalendarEvent(RoomReservationViewModel rvm, string joinUrlG2M)
+        {
+            string schLocation = _roomRepository.GetItem(rvm.RoomId).Name;
+            string schSubject = rvm.name;
+            string schDescription = "Krosbook: Rezervácia miestnosti";
+            string organizer = this._userRepository.GetItem(rvm.UserId).Email;
+
+            System.DateTime schBeginDate = rvm.dateTime;
+            System.DateTime schEndDate = rvm.dateTime.AddMinutes(rvm.length);
+
+            String[] contents = { "BEGIN:VCALENDAR",
+                              "PRODID:-//Flo Inc.//FloSoft//EN",
+                              "BEGIN:VEVENT",
+                              "DTSTART:" + schBeginDate.ToUniversalTime().ToString("yyyyMMdd\\THHmmss\\Z"),
+                              "DTEND:" + schEndDate.ToUniversalTime().ToString("yyyyMMdd\\THHmmss\\Z"),
+                              "LOCATION:" + schLocation,
+                              "ORGANIZER:MAILTO:" + organizer,
+            "DESCRIPTION;ENCODING=QUOTED-PRINTABLE:" + schDescription,
+                              "SUMMARY:" + schSubject, "PRIORITY:3",
+                         "END:VEVENT", "END:VCALENDAR" };
+
+            Random rand = new Random(DateTime.Now.Millisecond);
+            string filename = _appEnvironment.ContentRootPath + @"\Temp\CalendarEvent" + rand.Next() + ".ics";
+            System.IO.File.WriteAllLines(filename, contents);
+            SendRoomReservation(rvm.name, organizer, filename, joinUrlG2M);
+        }
+
 
         public void SendRoomReservation(string title, string emailTo, string filename)
         {
@@ -111,6 +138,31 @@ namespace Krosbook.Services.Email
             File.Delete(filename);
         }
 
+        public void SendRoomReservation(string title, string emailTo, string filename, string joinUrlG2M)
+        {
+            var data = new RoomReservation(title);
+            data.From = EmailFrom;
+            data.To.Add(emailTo);
+            var msg = _creator.CreateEmail(data);
+            var builder = new BodyBuilder();
+            builder.HtmlBody = string.Format("<p>Na nasledujúcom odkaze: <a href="+joinUrlG2M+">" +joinUrlG2M+"</a> bol vytvorený meeting službou GoToMeeting</p>");
+            builder.Attachments.Add(filename);
+            msg.Body = builder.ToMessageBody();
+            _sender.SendEmail(msg);
+            File.Delete(filename);
+        }
+
+        public void SendG2M(RoomReservationViewModel rvm, string joinUrlG2M)
+        {
+            var data = new RoomReservation(rvm.name);
+            data.From = EmailFrom;
+            data.To.Add(this._userRepository.GetItem(rvm.UserId).Email);
+            var msg = _creator.CreateEmail(data);
+            var builder = new BodyBuilder();
+            builder.HtmlBody = string.Format("<p>Na nasledujúcom odkaze: <a href=" + joinUrlG2M + ">" + joinUrlG2M + "</a> bol vytvorený meeting službou GoToMeeting</p>");     
+            msg.Body = builder.ToMessageBody();
+            _sender.SendEmail(msg);
+        }
 
 
         #endregion

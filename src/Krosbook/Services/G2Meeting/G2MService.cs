@@ -7,49 +7,82 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Citrix.GoToCoreLib.Api;
+using Citrix.GoToMeeting.Api;
+using System.Diagnostics;
+using Krosbook.Models.Rooms;
 
 namespace Krosbook.Services.G2Meeting
 {
-    public class G2MService: IG2MService
+    public class G2MService : IG2MService
     {
+        private string accessToken;
+        private IRoomRepository _roomRepository;
+
+        public G2MService(IRoomRepository roomRepository)
+        {
+            string userName = "it@kros.sk";
+            string userPassword = "21krosaci12";
+            string consumerKey = "kHFkMQquDNQJMINHl07891ypZiqtidzT";
+            var authApi = new AuthenticationApi();
+            var response = authApi.directLogin(userName, userPassword, consumerKey, "password");
+            this.accessToken = response.access_token;
+            _roomRepository = roomRepository;
+        }
 
 
-        public void createNewMeeting(RoomReservationViewModel roomResVM) {
+        public Citrix.GoToMeeting.Api.Model.MeetingCreated createNewMeeting(RoomReservationViewModel roomResVM)
+        {
+            var meetingsApi = new MeetingsApi();
+            var meeting = new Citrix.GoToMeeting.Api.Model.MeetingReqCreate();
+            meeting.subject = roomResVM.name;
+            meeting.starttime = roomResVM.dateTime.ToUniversalTime();
+            meeting.endtime = roomResVM.dateTime.AddMinutes(roomResVM.length).ToUniversalTime();
+            meeting.passwordrequired = false;
+            meeting.conferencecallinfo = "Krosbook\n Rezervácia miestnosti: "+_roomRepository.GetItem(roomResVM.RoomId);
+            meeting.meetingtype = Citrix.GoToMeeting.Api.Model.MeetingType.scheduled;
+          //    meeting.timezonekey = "GMT-01:00";           
+            meeting.conferencecallinfo = "Free";
 
+            List<Citrix.GoToMeeting.Api.Model.MeetingCreated> newMeeting = meetingsApi.createMeeting(this.accessToken, meeting);
+
+            return newMeeting[0];
+        }
+
+        public bool canCreateMeeting(RoomReservationViewModel roomResVM)
+        {
+            bool canCreate = true;
+            var meetings = this.getUpcomingMeetings();
+
+            foreach (var meeting in meetings)
+            {
+                if (((roomResVM.dateTime >= meeting.startTime && roomResVM.dateTime < meeting.endTime) ||
+                    (meeting.startTime >= roomResVM.dateTime && meeting.startTime < roomResVM.dateTime.AddMinutes(roomResVM.length))))
+                {
+                    canCreate = false;
+                    break;
+                }
+            }
+            return canCreate;
+        }
+
+
+        public void deleteMeeting(int meetingId)
+        {
+            var meetingsApi = new MeetingsApi();
+            meetingsApi.deleteMeeting(this.accessToken, meetingId);
         }
 
 
 
-        public string getUpcomingMeetings() {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.citrixonline.com/oauth/access_token");
+        public List<Citrix.GoToMeeting.Api.Model.UpcomingMeeting> getUpcomingMeetings()
+        {
+            var meetingsApi = new MeetingsApi();
+            var meetings = meetingsApi.getUpcomingMeetings(accessToken);
 
-            var postData = "grant_type=password&user_id=it@kros.sk&password=21krosaci12&client_id=kHFkMQquDNQJMINHl07891ypZiqtidzT";
-            var data = Encoding.ASCII.GetBytes(postData);
 
-            request.Method = "POST";
-            request.Accept = "application/json";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = data.Length;
 
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(data, 0, data.Length);
-            }
-
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            //    var json = new JsonConvert();
-            var jsonDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseString);
-            var url = string.Format("https://api.citrixonline.com/G2M/rest/upcomingMeetings"); //, jsonDictionary["organizer_key"], jsonDictionary["access_token"]);
-            var webRequest = WebRequest.Create(url) as HttpWebRequest;
-            webRequest.Accept = "application/json";
-            webRequest.ContentType = "application/json";
-            webRequest.Headers.Add(HttpRequestHeader.Authorization, string.Format("OAuth oauth_token={0}", jsonDictionary["access_token"]));
-            response = webRequest.GetResponse() as HttpWebResponse;
-            using (var reader = new StreamReader(response.GetResponseStream()))
-            {
-                return reader.ReadToEnd();
-            }
+            return meetings;
         }
 
 

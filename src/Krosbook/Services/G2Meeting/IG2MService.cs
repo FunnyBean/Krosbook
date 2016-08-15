@@ -8,8 +8,12 @@ namespace Krosbook.Services.G2Meeting
 {
     public interface IG2MService
     {
-        string getUpcomingMeetings();
+        List<Citrix.GoToMeeting.Api.Model.UpcomingMeeting> getUpcomingMeetings();
 
-        void createNewMeeting(RoomReservationViewModel roomResVM);
+        Citrix.GoToMeeting.Api.Model.MeetingCreated createNewMeeting(RoomReservationViewModel roomResVM);
+
+        void deleteMeeting(int meetingId);
+
+        bool canCreateMeeting(RoomReservationViewModel roomResVM);
     }
 }

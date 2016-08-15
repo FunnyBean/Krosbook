@@ -16,6 +16,7 @@ using Krosbook.ViewModels.Reservation;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Krosbook.Services.Email;
+using Krosbook.Services.G2Meeting;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -30,6 +31,7 @@ namespace Krosbook.Controllers.Api.v1
         private ILogger<RoomReservationController> _logger;
         private IMapper _mapper;
         private IEmailService _emailService;
+        private IG2MService _G2MService;
 
 
         #endregion
@@ -37,13 +39,14 @@ namespace Krosbook.Controllers.Api.v1
         #region Constructor
         public RoomReservationController(IRoomReservationRepository reservationRepository,
                       ILogger<RoomReservationController> logger,
-                                       IMapper mapper, IEmailService emailService
+                                       IMapper mapper, IEmailService emailService, IG2MService G2MService
                                        )
         {
             _reservationRepository = reservationRepository;
             _logger = logger;
             _mapper = mapper;
             _emailService = emailService;
+            _G2MService = G2MService;
         }
 
         #endregion
@@ -139,14 +142,30 @@ namespace Krosbook.Controllers.Api.v1
             IActionResult result;
             Models.Reservation.RoomReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
             result = SaveData(() =>
-            {   _reservationRepository.Edit(editedReservation);
-                if (reservationVm.emailInvitation)
-                {
-                    _emailService.CreateEmailCalendarEvent(reservationVm);
-                }
+            {
+                _reservationRepository.Edit(editedReservation);
                 if (reservationVm.goToMeeting)
                 {
-                    //zavola sa goToMeeting service
+                    if (_G2MService.canCreateMeeting(reservationVm))
+                    {
+                        var meeting = _G2MService.createNewMeeting(reservationVm);
+                        string joinUrl = meeting.joinURL;
+
+                        if (reservationVm.emailInvitation)
+                        {
+                            _emailService.CreateEmailCalendarEvent(reservationVm, joinUrl);
+                        }
+                        else {
+                            _emailService.SendG2M(reservationVm, joinUrl);
+                        }
+                    }
+                }
+                else
+                {
+                    if (reservationVm.emailInvitation)
+                    {
+                        _emailService.CreateEmailCalendarEvent(reservationVm);
+                    }
                 }
             });
             return result;
@@ -187,7 +206,7 @@ namespace Krosbook.Controllers.Api.v1
 
             return SaveData(() =>
             {
-                _reservationRepository.Add(reservation);              
+                _reservationRepository.Add(reservation);
             },
             () =>
             {
