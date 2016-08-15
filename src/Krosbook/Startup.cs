@@ -135,9 +135,9 @@ namespace Krosbook
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 SlidingExpiration = true,
-                ExpireTimeSpan = TimeSpan.FromMinutes(1),
+                ExpireTimeSpan = TimeSpan.FromHours(8),
                 LoginPath = new PathString("/login"),
-                //AccessDeniedPath = new PathString("/login"),
+                AccessDeniedPath = new PathString("/login"),
                 CookieHttpOnly = false //ak je false tak mozno editovat cookie v prehliadaci
             });
 

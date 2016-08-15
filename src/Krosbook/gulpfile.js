@@ -14,7 +14,7 @@ var paths = {
     npm: "./node_modules/",
     lib: "./wwwroot/lib/",
     scripts: "./Scripts/",
-    app: "./wwwroot/app/"
+    app: "./wwwroot/"
 };
 
 var libs = [
