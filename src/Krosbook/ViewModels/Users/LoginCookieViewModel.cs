@@ -6,20 +6,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Krosbook.ViewModels.Users
 {
-    public class LoginViewModel
+    public class LoginCookieViewModel
     {
         [Required()]
-        [MaxLength(100)]
-        public string Email { get; set; }
-
-        [Required()]
-        [MaxLength(100)]
-        public string Password { get; set; }
-
-        public bool RememberMe { get; set; }
-
         public string Selector { get; set; }
 
+        [Required()]
         public string Validator { get; set; }
+
+        [Required()]
+        public string NewValidator { get; set; }
     }
 }

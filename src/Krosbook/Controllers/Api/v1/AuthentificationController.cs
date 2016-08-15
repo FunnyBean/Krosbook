@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Krosbook.Models.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Authentication;
 using System.Security.Claims;
 using Krosbook.ViewModels.Users;
 using Microsoft.AspNetCore.Cors;
@@ -44,7 +45,16 @@ namespace Krosbook.Controllers.Api.v1
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel user)
         {
-            return await SignInCore(user.Email, user.Password);
+            if(user.RememberMe)
+                return await SignInCoreEmailCookie(user.Email, user.Password, user.Selector, user.Validator);
+            else return await SignInCore(user.Email, user.Password);
+        }
+
+        [HttpPost]
+        [Route("loginWithCookie")]
+        public async Task<IActionResult> LoginWithCookie([FromBody] LoginCookieViewModel user)
+        {
+            return await SignInCoreCookie(user.Selector, user.Validator);
         }
 
 
@@ -52,6 +62,14 @@ namespace Krosbook.Controllers.Api.v1
         [Authorize]
         public async Task<IActionResult> Logout()
         {
+            var user = _userRepository.GetItem(GetUserId());
+            if (user.Selector != null)
+            {
+                user.Validator = "0";
+                user.Selector = null;
+                _userRepository.Edit(user);
+                _userRepository.Save();
+            }
             await HttpContext.Authentication.SignOutAsync(Startup.AuthenticationScheme);
             return Ok();
         }
@@ -82,6 +100,37 @@ namespace Krosbook.Controllers.Api.v1
             var resultSignIn = PasswordSignIn(Email, password, out user);
             if (resultSignIn.Succeeded)
             {
+                await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user), new AuthenticationProperties
+                {
+                    IsPersistent = true
+                });
+                return Ok();
+            }
+            return Unauthorized();
+        }
+
+        private async Task<IActionResult> SignInCoreEmailCookie(string email, string password, string selector, string validator)
+        {
+            User user = null;
+            var resultSignIn = PasswordSignIn(email, password, out user);
+            if (resultSignIn.Succeeded)
+            {
+                user.Selector = selector;
+                user.Validator = validator;
+                _userRepository.Edit(user);
+                _userRepository.Save();
+                await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
+                return Ok();
+            }
+            return Unauthorized();
+        }
+
+        private async Task<IActionResult> SignInCoreCookie(string selector, string validator)
+        {
+            User user = null;
+            var resultSignIn = SelectorSignIn(selector, validator, out user);
+            if (resultSignIn.Succeeded)
+            {
                 await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
                 return Ok();
             }
@@ -95,6 +144,19 @@ namespace Krosbook.Controllers.Api.v1
             if (user != null)
             {
                 if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                {
+                    return Microsoft.AspNetCore.Identity.SignInResult.Success;
+                }
+            }
+            return Microsoft.AspNetCore.Identity.SignInResult.Failed;
+        }
+
+        private Microsoft.AspNetCore.Identity.SignInResult SelectorSignIn(string selector, string validator, out User user)
+        {
+            user = _userRepository.GetSingleBySelector(selector);
+            if(user != null)
+            {
+                if (BCrypt.Net.BCrypt.Verify(validator, user.ValidatorHash))
                 {
                     return Microsoft.AspNetCore.Identity.SignInResult.Success;
                 }
@@ -117,6 +179,15 @@ namespace Krosbook.Controllers.Api.v1
 
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, Startup.AuthenticationScheme));
+        }
+
+        private int GetUserId()
+        {
+            var claims = User.Claims.Select(claim => new { claim.Type, claim.Value }).ToArray();
+            var userId = claims[0].Value;
+            int id;
+            int.TryParse(userId, out id);
+            return id;
         }
         #endregion
     }

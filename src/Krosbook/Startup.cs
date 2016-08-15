@@ -113,6 +113,8 @@ namespace Krosbook
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseCors("AllowAll");
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -130,12 +132,12 @@ namespace Krosbook
             {
                 AuthenticationScheme = Startup.AuthenticationScheme,
                 CookieName = "KrosbookAuth",
-                ReturnUrlParameter = "returnUrl",
-                SlidingExpiration = true,
-                ExpireTimeSpan = TimeSpan.FromDays(1),
-                LoginPath = "/login",
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
+                SlidingExpiration = true,
+                ExpireTimeSpan = TimeSpan.FromMinutes(1),
+                LoginPath = new PathString("/login"),
+                //AccessDeniedPath = new PathString("/login"),
                 CookieHttpOnly = false //ak je false tak mozno editovat cookie v prehliadaci
             });
 
@@ -143,9 +145,7 @@ namespace Krosbook
 
             app.UseIdentity();
 
-            app.UseMvc();
-
-            app.UseCors("AllowAll");            
+            app.UseMvc();      
 
             app.MapWhen(context =>
             {

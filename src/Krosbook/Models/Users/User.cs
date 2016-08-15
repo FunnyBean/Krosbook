@@ -81,6 +81,12 @@ namespace Krosbook.Models.Users
         [MaxLength(PasswordHashMaxLength)]
         public string PasswordHash { get; set; }
 
+        public string Selector { get; set; }
+
+        public string Validator { set { ValidatorHash = BCrypt.Net.BCrypt.HashPassword(value, BCryptWorkFactor); } }
+
+        public string ValidatorHash { get; set; }
+
         [Required]
         public bool IsLocked { get; set; }
 
