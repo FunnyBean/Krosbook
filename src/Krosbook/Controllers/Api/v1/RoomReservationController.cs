@@ -155,9 +155,13 @@ namespace Krosbook.Controllers.Api.v1
                         {
                             _emailService.CreateEmailCalendarEvent(reservationVm, joinUrl);
                         }
-                        else {
+                        else
+                        {
                             _emailService.SendG2M(reservationVm, joinUrl);
                         }
+                    }
+                    else {
+                        this.Response.StatusCode = (int)HttpStatusCode.Conflict;
                     }
                 }
                 else
