@@ -7,6 +7,12 @@ using Krosbook.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using System.Text;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Krosbook.Services.G2Meeting;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -22,16 +28,18 @@ namespace Krosbook.Controllers.Api.v1
         private IEmailCreator _creator;
         private IEmailSender _sender;
         private readonly IHostingEnvironment _appEnvironment;
+        private IG2MService _G2MService;
 
         #endregion
 
 
-        public EmailController(IEmailService emailService, IEmailCreator creator, IEmailSender sender, IHostingEnvironment appEnvironment)
+        public EmailController(IEmailService emailService, IEmailCreator creator, IEmailSender sender, IHostingEnvironment appEnvironment, IG2MService G2MService)
         {
             _emailService = emailService;
             _creator = creator;
             _sender = sender;
             _appEnvironment = appEnvironment;
+            _G2MService = G2MService;
         }
 
 
@@ -64,10 +72,16 @@ namespace Krosbook.Controllers.Api.v1
         }
 
         [HttpGet]
-        [Route("PasswordReset2")]
+        [Route("example")]
         public void PasswordReset2(string to)
         {
-            _emailService.SendPasswordReset(to, @"http://example.com");
+
+            _G2MService.getUpcomingMeetings();
+
+            
+
+
+            //  _emailService.SendPasswordReset(to, @"http://example.com");
         }
 
 

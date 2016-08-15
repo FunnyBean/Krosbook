@@ -104,6 +104,10 @@ namespace Krosbook.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 7);
+
                     b.Property<string>("Description")
                         .HasAnnotation("MaxLength", 255);
 
