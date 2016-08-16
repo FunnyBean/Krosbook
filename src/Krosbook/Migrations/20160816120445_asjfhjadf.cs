@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Krosbook.Migrations
 {
-    public partial class sjjhadfjds : Migration
+    public partial class asjfhjadf : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -144,6 +144,7 @@ namespace Krosbook.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    G2MeetingID = table.Column<int>(nullable: false),
                     RoomId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     dateTime = table.Column<DateTime>(nullable: false),
@@ -162,6 +163,27 @@ namespace Krosbook.Migrations
                     table.ForeignKey(
                         name: "FK_RoomReservation_User_UserId",
                         column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RememberMe",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Selector = table.Column<string>(nullable: true),
+                    ValidatorHash = table.Column<string>(nullable: true),
+                    userId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RememberMe", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RememberMe_User_userId",
+                        column: x => x.userId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -228,6 +250,11 @@ namespace Krosbook.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RememberMe_userId",
+                table: "RememberMe",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Role_Name",
                 table: "Role",
                 column: "Name",
@@ -260,6 +287,9 @@ namespace Krosbook.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoomEquipment");
+
+            migrationBuilder.DropTable(
+                name: "RememberMe");
 
             migrationBuilder.DropTable(
                 name: "UserRole");

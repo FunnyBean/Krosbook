@@ -47,7 +47,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpPost()]
-        [ValidateModelState, CheckArgumentsForNull]
+        [ValidateModelState, CheckArgumentsForNull] 
         public IActionResult CreateNewRole([FromBody] RoleViewModel roleVm)
         {
             if (_roleRepository.GetItem(u => u.Name == roleVm.Name) == null)

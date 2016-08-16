@@ -1082,7 +1082,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Ubuntu", sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
@@ -3049,7 +3049,7 @@ select[multiple].input-lg {
 .btn.disabled,
 .btn[disabled],
 fieldset[disabled] .btn {
-  cursor: not-allowed;
+  /*cursor: not-allowed;*/
   filter: alpha(opacity=65);
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -5853,7 +5853,7 @@ button.list-group-item-danger.active:focus {
 }
 .close:hover,
 .close:focus {
-  color: #000;
+  color: #4d4d4d;
   text-decoration: none;
   cursor: pointer;
   filter: alpha(opacity=50);

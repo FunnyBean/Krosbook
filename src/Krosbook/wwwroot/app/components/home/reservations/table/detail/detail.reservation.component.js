@@ -70,7 +70,11 @@ var DetailReservationComponent = (function () {
                     return false;
                 }
             }
-            _this.reservationService.editReservation(_this.reservationType, _this.data.id, _this.data.name, elementId, _this.data.userId, _this.data.dateTime, _this.data.length * 60, _this.emailInvitation, _this.reserveGoToMeeting).subscribe(function () {
+            _this.reservationService.editReservation(_this.reservationType, _this.data.id, _this.data.name, elementId, _this.data.userId, _this.data.dateTime, _this.data.length * 60, _this.emailInvitation, _this.reserveGoToMeeting).subscribe(function (data) { }, function (error) {
+                _this.error = 'Na daný termín je v GoToMeeting naplánovaná už iná rezervácia';
+                console.log("error " + error);
+                _this.saving = false;
+            }, function () {
                 _this.saving = false;
                 _this.windowClose.emit(true);
             });

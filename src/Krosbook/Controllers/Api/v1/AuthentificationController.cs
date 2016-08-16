@@ -25,15 +25,17 @@ namespace Krosbook.Controllers.Api.v1
         private readonly IUserRepository _userRepository;
         private ILogger<AuthenticationController> _logger;
         private readonly IRoleRepository _roleRepository;
+        private IRememberMeRepository _rememberMeRepository;
         #endregion
 
 
         #region Constructors
-        public AuthenticationController(IUserRepository userRepository, IRoleRepository roleRepository, ILogger<AuthenticationController> logger)
+        public AuthenticationController(IUserRepository userRepository, IRoleRepository roleRepository, ILogger<AuthenticationController> logger, IRememberMeRepository rememberMeRepository)
         {
             _userRepository = userRepository;
             _logger = logger;
             _roleRepository = roleRepository;
+            _rememberMeRepository = rememberMeRepository;
         }
         #endregion
 
@@ -63,12 +65,11 @@ namespace Krosbook.Controllers.Api.v1
         public async Task<IActionResult> Logout()
         {
             var user = _userRepository.GetItem(GetUserId());
-            if (user.Selector != null)
+            if (_rememberMeRepository.GetSingleByUserId(user.Id).Selector != null)
             {
-                user.Validator = "0";
-                user.Selector = null;
-                _userRepository.Edit(user);
-                _userRepository.Save();
+                var remember = _rememberMeRepository.GetSingleByUserId(user.Id);
+                _rememberMeRepository.Delete(remember);
+                _rememberMeRepository.Save();
             }
             await HttpContext.Authentication.SignOutAsync(Startup.AuthenticationScheme);
             return Ok();
@@ -115,10 +116,13 @@ namespace Krosbook.Controllers.Api.v1
             var resultSignIn = PasswordSignIn(email, password, out user);
             if (resultSignIn.Succeeded)
             {
-                user.Selector = selector;
-                user.Validator = validator;
-                _userRepository.Edit(user);
-                _userRepository.Save();
+                RememberMe rem = new RememberMe();
+                rem.Selector = selector;
+                rem.Validator = validator;
+                rem.userId = user.Id;
+               // rem.
+                _rememberMeRepository.Add(rem);
+                _rememberMeRepository.Save();
                 await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
                 return Ok();
             }
@@ -153,10 +157,11 @@ namespace Krosbook.Controllers.Api.v1
 
         private Microsoft.AspNetCore.Identity.SignInResult SelectorSignIn(string selector, string validator, out User user)
         {
-            user = _userRepository.GetSingleBySelector(selector);
+            user = _userRepository.GetItem(_rememberMeRepository.GetSingleBySelector(selector).userId);
+
             if(user != null)
             {
-                if (BCrypt.Net.BCrypt.Verify(validator, user.ValidatorHash))
+                if (BCrypt.Net.BCrypt.Verify(validator, _rememberMeRepository.GetSingleByUserId(user.Id).ValidatorHash))
                 {
                     return Microsoft.AspNetCore.Identity.SignInResult.Success;
                 }

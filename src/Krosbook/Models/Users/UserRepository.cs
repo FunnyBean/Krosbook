@@ -36,11 +36,7 @@ namespace Krosbook.Models.Users
             return this.GetSingle(x => x.Email == email);
         }
 
-        public User GetSingleBySelector(string selector)
-        {
-            return this.GetSingle(x => x.Selector == selector);
-        }
-
+        
         public IEnumerable<Role> GetUserRoles(string username)
         {
             List<Role> _roles = null;
@@ -130,6 +126,5 @@ namespace Krosbook.Models.Users
             return _dbContext.Set<UserRole>().Any(p => p.UserId == userId && p.RoleId == roleId);
         }
 
-      
     }
 }

@@ -12,8 +12,14 @@ namespace Krosbook.Services.G2Meeting
 
         Citrix.GoToMeeting.Api.Model.MeetingCreated createNewMeeting(RoomReservationViewModel roomResVM);
 
+        Citrix.GoToMeeting.Api.Model.MeetingCreated updateMeeting(RoomReservationViewModel reservationVm, int G2MeetingID);
+
+        string getMeetingUrl(int G2MeetingID);
+
         void deleteMeeting(int meetingId);
 
         bool canCreateMeeting(RoomReservationViewModel roomResVM);
+
+
     }
 }

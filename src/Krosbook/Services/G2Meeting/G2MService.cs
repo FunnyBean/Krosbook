@@ -11,6 +11,7 @@ using Citrix.GoToCoreLib.Api;
 using Citrix.GoToMeeting.Api;
 using System.Diagnostics;
 using Krosbook.Models.Rooms;
+using Citrix.GoToMeeting.Api.Model;
 
 namespace Krosbook.Services.G2Meeting
 {
@@ -39,12 +40,11 @@ namespace Krosbook.Services.G2Meeting
             meeting.starttime = roomResVM.dateTime.ToUniversalTime();
             meeting.endtime = roomResVM.dateTime.AddMinutes(roomResVM.length).ToUniversalTime();
             meeting.passwordrequired = false;
-            meeting.conferencecallinfo = "Krosbook\n Rezervácia miestnosti: "+_roomRepository.GetItem(roomResVM.RoomId);
-            meeting.meetingtype = Citrix.GoToMeeting.Api.Model.MeetingType.scheduled;
-          //    meeting.timezonekey = "GMT-01:00";           
+            meeting.conferencecallinfo = "Krosbook\n Rezervácia miestnosti: " + _roomRepository.GetItem(roomResVM.RoomId);
+            meeting.meetingtype = MeetingType.scheduled;   
             meeting.conferencecallinfo = "Free";
 
-            List<Citrix.GoToMeeting.Api.Model.MeetingCreated> newMeeting = meetingsApi.createMeeting(this.accessToken, meeting);
+            List<MeetingCreated> newMeeting = meetingsApi.createMeeting(this.accessToken, meeting);
 
             return newMeeting[0];
         }
@@ -75,7 +75,7 @@ namespace Krosbook.Services.G2Meeting
 
 
 
-        public List<Citrix.GoToMeeting.Api.Model.UpcomingMeeting> getUpcomingMeetings()
+        public List<UpcomingMeeting> getUpcomingMeetings()
         {
             var meetingsApi = new MeetingsApi();
             var meetings = meetingsApi.getUpcomingMeetings(accessToken);
@@ -85,10 +85,18 @@ namespace Krosbook.Services.G2Meeting
             return meetings;
         }
 
+        public MeetingCreated updateMeeting(RoomReservationViewModel reservationVm, int G2MeetingID)
+        {
+            var meetingsApi = new MeetingsApi();
+            meetingsApi.deleteMeeting(this.accessToken, G2MeetingID);
+         //   meetingsApi.
+            return this.createNewMeeting(reservationVm);         
+        }
 
-
-
-
-
+        public string getMeetingUrl(int G2MeetingID)
+        {
+            var meetingsApi = new MeetingsApi();
+            return meetingsApi.startMeeting(this.accessToken, long.Parse(G2MeetingID.ToString())).hostURL;
+        }
     }
 }

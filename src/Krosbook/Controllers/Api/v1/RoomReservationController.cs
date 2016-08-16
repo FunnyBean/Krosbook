@@ -143,13 +143,29 @@ namespace Krosbook.Controllers.Api.v1
             Models.Reservation.RoomReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
             result = SaveData(() =>
             {
-                _reservationRepository.Edit(editedReservation);
+
                 if (reservationVm.goToMeeting)
                 {
                     if (_G2MService.canCreateMeeting(reservationVm))
                     {
-                        var meeting = _G2MService.createNewMeeting(reservationVm);
-                        string joinUrl = meeting.joinURL;
+
+                        var meeting = new Citrix.GoToMeeting.Api.Model.MeetingCreated();
+                        string joinUrl = "";
+                        if (_reservationRepository.GetItem(editedReservation.Id).G2MeetingID == 0)
+                        {
+                            meeting = _G2MService.createNewMeeting(reservationVm);
+                            joinUrl = meeting.joinURL;
+                        }
+                        else
+                        {
+                            var m = _G2MService.updateMeeting(reservationVm, _reservationRepository.GetItem(editedReservation.Id).G2MeetingID);
+                            meeting = m;
+                            joinUrl = m.joinURL;
+                        }
+
+
+
+                        editedReservation.G2MeetingID = int.Parse(meeting.meetingid.ToString());
 
                         if (reservationVm.emailInvitation)
                         {
@@ -160,7 +176,8 @@ namespace Krosbook.Controllers.Api.v1
                             _emailService.SendG2M(reservationVm, joinUrl);
                         }
                     }
-                    else {
+                    else
+                    {
                         this.Response.StatusCode = (int)HttpStatusCode.Conflict;
                     }
                 }
@@ -171,6 +188,8 @@ namespace Krosbook.Controllers.Api.v1
                         _emailService.CreateEmailCalendarEvent(reservationVm);
                     }
                 }
+
+                _reservationRepository.Edit(editedReservation);
             });
             return result;
         }
@@ -191,16 +210,20 @@ namespace Krosbook.Controllers.Api.v1
             }
             return SaveData(() =>
             {
+                var g2mId = _reservationRepository.GetItem(reservationId).G2MeetingID;
                 _reservationRepository.Delete(reservationId);
+                if (g2mId != 0)
+                {
+                    _G2MService.deleteMeeting(g2mId);
+                }
+
             });
         }
 
 
         #endregion
 
-
-
-
+        
         #region Helpers
 
         private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)

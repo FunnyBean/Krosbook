@@ -13,7 +13,6 @@ namespace Krosbook.Models.Users
     {
 
         #region Static helpers
-
         public static int BCryptWorkFactor { get; set; } = 10;
 
         #endregion
@@ -81,11 +80,6 @@ namespace Krosbook.Models.Users
         [MaxLength(PasswordHashMaxLength)]
         public string PasswordHash { get; set; }
 
-        public string Selector { get; set; }
-
-        public string Validator { set { ValidatorHash = BCrypt.Net.BCrypt.HashPassword(value, BCryptWorkFactor); } }
-
-        public string ValidatorHash { get; set; }
 
         [Required]
         public bool IsLocked { get; set; }
@@ -121,5 +115,7 @@ namespace Krosbook.Models.Users
         /// </value>
         public ICollection<CarReservation> Cars { get; set; } = new List<CarReservation>();
         public static object Claims { get; internal set; }
+
+        public ICollection<RememberMe> rememberMe { get; set; }
     }
 }

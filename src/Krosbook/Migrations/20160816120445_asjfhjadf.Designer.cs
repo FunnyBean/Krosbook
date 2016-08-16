@@ -8,8 +8,8 @@ using Krosbook.Models;
 namespace Krosbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160812130832_sjjhadfjds")]
-    partial class sjjhadfjds
+    [Migration("20160816120445_asjfhjadf")]
+    partial class asjfhjadf
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,8 @@ namespace Krosbook.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("G2MeetingID");
 
                     b.Property<int>("RoomId");
 
@@ -140,6 +142,24 @@ namespace Krosbook.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomEquipment");
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Users.RememberMe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Selector");
+
+                    b.Property<string>("ValidatorHash");
+
+                    b.Property<int>("userId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("RememberMe");
                 });
 
             modelBuilder.Entity("Krosbook.Models.Users.Role", b =>
@@ -245,6 +265,14 @@ namespace Krosbook.Migrations
                     b.HasOne("Krosbook.Models.Rooms.Room", "Room")
                         .WithMany("Equipment")
                         .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Users.RememberMe", b =>
+                {
+                    b.HasOne("Krosbook.Models.Users.User", "user")
+                        .WithMany("rememberMe")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

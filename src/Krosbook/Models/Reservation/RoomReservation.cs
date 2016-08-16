@@ -60,5 +60,7 @@ namespace Krosbook.Models.Reservation
 
 
         public string name { get; set; }
+
+        public int G2MeetingID { get; set; }
     }
 }

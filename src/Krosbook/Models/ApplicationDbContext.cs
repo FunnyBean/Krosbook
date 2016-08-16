@@ -94,14 +94,14 @@ namespace Krosbook.Models
 
 
 
-            builder.Entity<RoomReservation>().HasKey(re => (new { re.Id}));
+            builder.Entity<RoomReservation>().HasKey(re => (new { re.Id }));
 
 
             builder.Entity<RoomReservation>()
                 .HasOne(re => re.Room)
                 .WithMany(r => r.Reservations)
                 .HasForeignKey(re => re.RoomId);
-              
+
 
             builder.Entity<RoomReservation>()
                 .HasOne(re => re.User)
@@ -112,7 +112,7 @@ namespace Krosbook.Models
 
         private void OnUserModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>().HasIndex(u => u.Email).IsUnique();     
+            builder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
             builder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
 
@@ -126,18 +126,24 @@ namespace Krosbook.Models
                 .HasOne(ur => ur.Role)
                 .WithMany(ur => ur.Users)
                 .HasForeignKey(ur => ur.RoleId);
+
+
+
+            builder.Entity<RememberMe>().HasKey(r => r.Id);
+            builder.Entity<RememberMe>()
+                .HasOne(ur => ur.user)
+                .WithMany(ur => ur.rememberMe)
+                .HasForeignKey(ur => ur.userId);
+
         }
 
 
-        private void OnCarModelCreating(ModelBuilder builder) {
+        private void OnCarModelCreating(ModelBuilder builder)
+        {
             builder.Entity<Car>().HasKey(r => r.Id);
             builder.Entity<Car>().HasIndex(r => r.Plate).IsUnique();
 
-
-
-
             builder.Entity<CarReservation>().HasKey(re => (new { re.Id }));
-
 
             builder.Entity<CarReservation>()
                 .HasOne(re => re.Car)

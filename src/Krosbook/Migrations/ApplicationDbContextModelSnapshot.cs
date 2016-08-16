@@ -66,6 +66,8 @@ namespace Krosbook.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("G2MeetingID");
+
                     b.Property<int>("RoomId");
 
                     b.Property<int>("UserId");
@@ -139,6 +141,24 @@ namespace Krosbook.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomEquipment");
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Users.RememberMe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Selector");
+
+                    b.Property<string>("ValidatorHash");
+
+                    b.Property<int>("userId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("RememberMe");
                 });
 
             modelBuilder.Entity("Krosbook.Models.Users.Role", b =>
@@ -244,6 +264,14 @@ namespace Krosbook.Migrations
                     b.HasOne("Krosbook.Models.Rooms.Room", "Room")
                         .WithMany("Equipment")
                         .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Users.RememberMe", b =>
+                {
+                    b.HasOne("Krosbook.Models.Users.User", "user")
+                        .WithMany("rememberMe")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

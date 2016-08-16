@@ -12,10 +12,8 @@ namespace Krosbook.Models.Users
 
         User GetSingleByEmail(string email);
 
-        User GetSingleBySelector(string selector);
-
         IEnumerable<Role> GetUserRoles(string username);
 
-        IEnumerable<Role> GetUserRolesById(int id);
+        IEnumerable<Role> GetUserRolesById(int id); 
     }
 }
