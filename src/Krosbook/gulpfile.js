@@ -85,4 +85,21 @@ gulp.task("css", function () {
         .pipe(gulp.dest(paths.app));
 });
 
-gulp.task("build", ["html", "js", "css"]);
+gulp.task("images", function () {
+    return gulp.src(paths.scripts + "**/*.png")
+       .pipe(gulp.dest(paths.app));
+});
+gulp.task("javaScript", function () {
+    return gulp.src(paths.scripts + "**/*.js")
+       .pipe(gulp.dest(paths.app));
+});
+gulp.task("CSS2", function () {
+    return gulp.src(paths.scripts + "**/*.css")
+       .pipe(gulp.dest(paths.app));
+});
+gulp.task("bootstrap", function () {
+    return gulp.src(paths.scripts + "**/bootstrap/*")
+       .pipe(gulp.dest(paths.app));
+});
+
+gulp.task("build", ["html", "js", "css", "images", "javaScript", "CSS2", "bootstrap"]);
