@@ -1,18 +1,18 @@
 #form_background {
   min-height: 100%;
   margin: 0em;
-  padding-top: 50px; }
+}
 
 #form_login {
   float: none;
   min-height: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding: 20px 0px 20px 0px;
+  padding: 70px 0px 20px 0px;
   z-index: 3; }
 
 #logo {
-  margin-bottom: 80px; }
+  margin-bottom: 70px; }
 
 #form_login input[type=password], #form_login input[type=text] {
   background: transparent;
@@ -31,7 +31,7 @@
   margin-top: 20px; }
 
 .checkbox, #form_login input[type=checkbox] {
-  padding-left: 23px;
+  padding-left: 8px;
   line-height: 20px;
   font-size: 1.2em;
   color: rgba(255, 255, 255, 0.6);
@@ -57,7 +57,7 @@
 
 #footer {
   color: rgba(255, 255, 255, 0.6);
-  margin-top: 20px; }
+  margin-top: -30px; }
 
 ::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.6);

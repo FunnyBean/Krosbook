@@ -65,7 +65,8 @@ namespace Krosbook.Controllers.Api.v1
         public async Task<IActionResult> Logout()
         {
             var user = _userRepository.GetItem(GetUserId());
-            if (_rememberMeRepository.GetSingleByUserId(user.Id).Selector != null)
+            var rememberMe = _rememberMeRepository.GetSingleByUserId(user.Id);
+            if (rememberMe != null && rememberMe.Selector != null)
             {
                 var remember = _rememberMeRepository.GetSingleByUserId(user.Id);
                 _rememberMeRepository.Delete(remember);
@@ -101,10 +102,7 @@ namespace Krosbook.Controllers.Api.v1
             var resultSignIn = PasswordSignIn(Email, password, out user);
             if (resultSignIn.Succeeded)
             {
-                await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user), new AuthenticationProperties
-                {
-                    IsPersistent = true
-                });
+                await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
                 return Ok();
             }
             return Unauthorized();

@@ -19,14 +19,14 @@ export class UserService {
   }
 
   public login(Email:string, Password:string, RememberMe:boolean) {
-    let headers = new Headers(), selector, validator;
+    let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     if(RememberMe){
-      selector = this.generateRandomString();
-      validator = this.generateRandomString();
-      Cookie.set('RememberMe', selector+':'+validator, 30);
+      var selector = this.generateRandomString(), validator = this.generateRandomString();
+      Cookie.set('RememberMe', selector + ':' + validator, 30);
+      return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email, Password, RememberMe, selector, validator }), { headers });
     }
-    return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email, Password, RememberMe, selector, validator }), {headers});
+    return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email, Password, RememberMe }), { headers });
   }
 
   public loginWithCookie(selector:string, validator:string){

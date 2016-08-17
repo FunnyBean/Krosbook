@@ -24,14 +24,14 @@ var UserService = (function () {
         };
     }
     UserService.prototype.login = function (Email, Password, RememberMe) {
-        var headers = new http_1.Headers(), selector, validator;
+        var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         if (RememberMe) {
-            selector = this.generateRandomString();
-            validator = this.generateRandomString();
+            var selector = this.generateRandomString(), validator = this.generateRandomString();
             ng2_cookies_1.Cookie.set('RememberMe', selector + ':' + validator, 30);
+            return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe, selector: selector, validator: validator }), { headers: headers });
         }
-        return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe, selector: selector, validator: validator }), { headers: headers });
+        return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe }), { headers: headers });
     };
     UserService.prototype.loginWithCookie = function (selector, validator) {
         var headers = new http_1.Headers();
