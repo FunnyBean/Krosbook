@@ -24,9 +24,8 @@
   font-family: "Ubuntu", sans-serif;
   font-size: 1.5em;
   width: 100%; }
-
-#form_login input:focus {
-  outline: none; }
+  #form_login input:focus {
+    outline: none; }
 
 #form_login input[type=password] {
   margin-top: 20px; }
@@ -35,7 +34,8 @@
   padding-left: 23px;
   line-height: 20px;
   font-size: 1.2em;
-  color: rgba(255, 255, 255, 0.6); }
+  color: rgba(255, 255, 255, 0.6);
+}
 
 #login_button {
   background: #AAC4D2;
@@ -48,15 +48,12 @@
   margin-top: 40px;
   padding: 10px 6px 10px 6px;
   width: 100%; }
-
-#login_button:hover {
-  opacity: 0.8; }
-
-#login_button:active {
-  opacity: 0.6; }
-
-#login_button:focus {
-  outline: none; }
+  #login_button:hover {
+    opacity: 0.8; }
+  #login_button:active {
+    opacity: 0.6; }
+  #login_button:focus {
+    outline: none; }
 
 #footer {
   color: rgba(255, 255, 255, 0.6);
