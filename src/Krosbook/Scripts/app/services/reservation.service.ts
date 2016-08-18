@@ -21,14 +21,14 @@ export class ReservationService {
   public getReservation(type:string, id:number){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://localhost:50909/api/reservations/'+type+'/'+id, {headers});
+    return this.http.get('/api/reservations/'+type+'/'+id, {headers});
   }
 
   public getReservations(type:string, id:number, from:any, to:any){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     var by = (type == "rooms") ? "byroom" : "bycar";
-    return this.http.post('http://localhost:50909/api/reservations/'+type+'/'+by+'/'+id, JSON.stringify({from, to}), {headers});
+    return this.http.post('/api/reservations/'+type+'/'+by+'/'+id, JSON.stringify({from, to}), {headers});
   }
 
   public addReservation(type:string, elementId: number, userId:number, name:string, date:string, length:number){
@@ -36,10 +36,10 @@ export class ReservationService {
     headers.append('Content-Type', 'application/json');
     if(type == "rooms"){
       var roomId = elementId;
-      return this.http.post('http://localhost:50909/api/reservations/'+type+'/', JSON.stringify({roomId, name, date, length}), {headers});
+      return this.http.post('/api/reservations/'+type+'/', JSON.stringify({roomId, name, date, length}), {headers});
     } else {
       var carId = elementId;
-      return this.http.post('http://localhost:50909/api/reservations/'+type+'/', JSON.stringify({carId, name, date, length}), {headers});
+      return this.http.post('/api/reservations/'+type+'/', JSON.stringify({carId, name, date, length}), {headers});
     }
   }
 
@@ -48,16 +48,16 @@ export class ReservationService {
     headers.append('Content-Type', 'application/json');
     if(type == "rooms"){
       var roomId = elementId;
-      return this.http.put('http://localhost:50909/api/reservations/'+type+'/'+id, JSON.stringify({id, name, roomId, dateTime, userId, length, emailInvitation, goToMeeting}), {headers});
+      return this.http.put('/api/reservations/'+type+'/'+id, JSON.stringify({id, name, roomId, dateTime, userId, length, emailInvitation, goToMeeting}), {headers});
     } else {
       var carId = elementId;
-      return this.http.put('http://localhost:50909/api/reservations/'+type+'/'+id, JSON.stringify({id, name, carId, dateTime, userId, length}), {headers});
+      return this.http.put('/api/reservations/'+type+'/'+id, JSON.stringify({id, name, carId, dateTime, userId, length}), {headers});
     }
   }
 
   public deleteReservation(type:string, id:number){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.delete('http://localhost:50909/api/reservations/'+type+'/'+id, {headers});
+    return this.http.delete('/api/reservations/'+type+'/'+id, {headers});
   }
 }

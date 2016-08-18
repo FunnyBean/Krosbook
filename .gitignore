@@ -254,4 +254,8 @@ appsettings
 
 project.lock.json
 
+web.config
+
+appsettings.development.json
+
 PublishProfiles

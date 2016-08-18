@@ -25,35 +25,35 @@ var OfficeService = (function () {
     OfficeService.prototype.getOffices = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/rooms', { headers: headers });
+        return this.http.get('/api/rooms', { headers: headers });
     };
     OfficeService.prototype.getOffice = function (id) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/rooms/' + id, { headers: headers });
+        return this.http.get('/api/rooms/' + id, { headers: headers });
     };
     OfficeService.prototype.addOffice = function (office) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/rooms', office, { headers: headers });
+        return this.http.post('/api/rooms', office, { headers: headers });
     };
     OfficeService.prototype.editOffice = function (id, office) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://localhost:50909/api/rooms/" + id, office, { headers: headers });
+        return this.http.put("/api/rooms/" + id, office, { headers: headers });
     };
     OfficeService.prototype.removeOffice = function (id) {
-        return this.http.delete('http://localhost:50909/api/rooms/' + id);
+        return this.http.delete('/api/rooms/' + id);
     };
     OfficeService.prototype.getEquipment = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/equipment/', { headers: headers });
+        return this.http.get('/api/equipment/', { headers: headers });
     };
     OfficeService.prototype.filterOffices = function (date, length, filterType) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/rooms/filter', JSON.stringify({ date: date, length: length, filterType: filterType }), { headers: headers });
+        return this.http.post('/api/rooms/filter', JSON.stringify({ date: date, length: length, filterType: filterType }), { headers: headers });
     };
     OfficeService = __decorate([
         core_1.Injectable(), 

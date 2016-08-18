@@ -28,25 +28,25 @@ var EquipmentService = (function () {
     EquipmentService.prototype.getEquipments = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/equipment', { headers: headers });
+        return this.http.get('/api/equipment', { headers: headers });
     };
     EquipmentService.prototype.getEquipment = function (id) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/equipment/' + id, { headers: headers });
+        return this.http.get('/api/equipment/' + id, { headers: headers });
     };
     EquipmentService.prototype.addEquipment = function (equipment) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/equipment', equipment, { headers: headers });
+        return this.http.post('/api/equipment', equipment, { headers: headers });
     };
     EquipmentService.prototype.editEquipment = function (id, equipment) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://localhost:50909/api/equipment/" + id, equipment, { headers: headers });
+        return this.http.put("/api/equipment/" + id, equipment, { headers: headers });
     };
     EquipmentService.prototype.removeEquipment = function (id) {
-        return this.http.delete('http://localhost:50909/api/equipment/' + id);
+        return this.http.delete('/api/equipment/' + id);
     };
     EquipmentService = __decorate([
         core_1.Injectable(), 

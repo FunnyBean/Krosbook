@@ -28,30 +28,30 @@ var CarService = (function () {
     CarService.prototype.getCars = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/cars', { headers: headers }); /*headers tu nemusi byt*/
+        return this.http.get('/api/cars', { headers: headers }); /*headers tu nemusi byt*/
     };
     CarService.prototype.getCar = function (id) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/cars/' + id, { headers: headers }); /*headers tu nemusi byt*/
+        return this.http.get('/api/cars/' + id, { headers: headers }); /*headers tu nemusi byt*/
     };
     CarService.prototype.addCar = function (car) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/cars', car, { headers: headers });
+        return this.http.post('/api/cars', car, { headers: headers });
     };
     CarService.prototype.editCar = function (id, car) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://localhost:50909/api/cars/" + id, car, { headers: headers });
+        return this.http.put("/api/cars/" + id, car, { headers: headers });
     };
     CarService.prototype.removeCar = function (id) {
-        return this.http.delete('http://localhost:50909/api/cars/' + id);
+        return this.http.delete('/api/cars/' + id);
     };
     CarService.prototype.filterCars = function (date, length) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/cars/filter', JSON.stringify({ date: date, length: length }), { headers: headers });
+        return this.http.post('/api/cars/filter', JSON.stringify({ date: date, length: length }), { headers: headers });
     };
     CarService = __decorate([
         core_1.Injectable(), 

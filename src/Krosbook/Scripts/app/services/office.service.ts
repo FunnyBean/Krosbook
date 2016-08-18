@@ -20,40 +20,40 @@ export class OfficeService {
     public getOffices() {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/rooms', { headers });
+        return this.http.get('/api/rooms', { headers });
     }
 
     public getOffice(id: number) { //with equipment
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/rooms/' + id, { headers });
+        return this.http.get('/api/rooms/' + id, { headers });
     }
 
     public addOffice(office: string) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/rooms', office, { headers });
+        return this.http.post('/api/rooms', office, { headers });
     }
 
     public editOffice(id: string, office: string) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://localhost:50909/api/rooms/" + id, office, { headers });
+        return this.http.put("/api/rooms/" + id, office, { headers });
     }
 
     public removeOffice(id: string) {
-        return this.http.delete('http://localhost:50909/api/rooms/' + id);
+        return this.http.delete('/api/rooms/' + id);
     }
 
     public getEquipment() {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/equipment/', { headers });
+        return this.http.get('/api/equipment/', { headers });
     }
 
     public filterOffices(date: string, length: number, filterType: string) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/rooms/filter', JSON.stringify({ date, length, filterType }), { headers });
+        return this.http.post('/api/rooms/filter', JSON.stringify({ date, length, filterType }), { headers });
     }
 }

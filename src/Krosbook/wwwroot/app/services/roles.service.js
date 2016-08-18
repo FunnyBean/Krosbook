@@ -24,25 +24,25 @@ var RolesService = (function () {
     RolesService.prototype.getRoles = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/roles', { headers: headers });
+        return this.http.get('/api/roles', { headers: headers });
     };
     RolesService.prototype.getRole = function (id) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/roles/' + id, { headers: headers });
+        return this.http.get('/api/roles/' + id, { headers: headers });
     };
     RolesService.prototype.addRole = function (role) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/roles', role, { headers: headers });
+        return this.http.post('/api/roles', role, { headers: headers });
     };
     RolesService.prototype.editRole = function (id, role) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://localhost:50909/api/roles/" + id, role, { headers: headers });
+        return this.http.put("/api/roles/" + id, role, { headers: headers });
     };
     RolesService.prototype.removeRole = function (id) {
-        return this.http.delete('http://localhost:50909/api/roles/' + id);
+        return this.http.delete('/api/roles/' + id);
     };
     RolesService = __decorate([
         core_1.Injectable(), 

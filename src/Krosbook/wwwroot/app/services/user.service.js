@@ -31,64 +31,68 @@ var UserService = (function () {
             validator = this.generateRandomString();
             ng2_cookies_1.Cookie.set('RememberMe', selector + ':' + validator, 30);
         }
-        return this.http.post('http://localhost:50909/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe, selector: selector, validator: validator }), { headers: headers });
+        return this.http.post('/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe, selector: selector, validator: validator }), { headers: headers });
     };
     UserService.prototype.loginWithCookie = function (selector, validator) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/authentification/loginWithCookie', JSON.stringify({ selector: selector, validator: validator }), { headers: headers });
+        return this.http.post('/api/authentification/loginWithCookie', JSON.stringify({ selector: selector, validator: validator }), { headers: headers });
     };
     UserService.prototype.logout = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         ng2_cookies_1.Cookie.delete("RememberMe");
-        return this.http.get('http://localhost:50909/api/authentification/logout', { headers: headers });
+        return this.http.get('/api/authentification/logout', { headers: headers });
     };
     UserService.prototype.isLoggedIn = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/authentification/IsLoggedIn', { headers: headers });
+        if (ng2_cookies_1.Cookie.get('KrosbookAuth') != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        //return this.http.get('/api/authentification/IsLoggedIn');
     };
     UserService.prototype.myProfile = function () {
-        return this.http.get('http://localhost:50909/api/users/profile');
+        return this.http.get('/api/users/profile');
     };
     UserService.prototype.updatePassword = function (oldPassword, newPassword) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://localhost:50909/api/users/changePassword', JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword }), { headers: headers });
+        return this.http.put('/api/users/changePassword', JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword }), { headers: headers });
     };
     UserService.prototype.updateImage = function (photoBase64) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://localhost:50909/api/users/changeImage', JSON.stringify({ photoBase64: photoBase64 }), { headers: headers });
+        return this.http.put('/api/users/changeImage', JSON.stringify({ photoBase64: photoBase64 }), { headers: headers });
     };
     UserService.prototype.getUsers = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/users', { headers: headers });
+        return this.http.get('/api/users', { headers: headers });
     };
     UserService.prototype.getUser = function (id) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/users/' + id, { headers: headers });
+        return this.http.get('/api/users/' + id, { headers: headers });
     };
     UserService.prototype.addUser = function (user) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/users/', user, { headers: headers });
+        return this.http.post('/api/users/', user, { headers: headers });
     };
     UserService.prototype.editUser = function (id, user) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://localhost:50909/api/users/' + id, user, { headers: headers });
+        return this.http.put('/api/users/' + id, user, { headers: headers });
     };
     UserService.prototype.removeUser = function (id) {
-        return this.http.delete('http://localhost:50909/api/users/' + id);
+        return this.http.delete('/api/users/' + id);
     };
     UserService.prototype.getRoles = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:50909/api/roles', { headers: headers });
+        return this.http.get('/api/roles', { headers: headers });
     };
     UserService.prototype.generateRandomString = function () {
         var randString = '';
