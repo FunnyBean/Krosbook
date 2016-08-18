@@ -50,10 +50,10 @@ var OfficeService = (function () {
         headers.append('Content-Type', 'application/json');
         return this.http.get('http://localhost:50909/api/equipment/', { headers: headers });
     };
-    OfficeService.prototype.filterOffices = function (date, length) {
+    OfficeService.prototype.filterOffices = function (date, length, filterType) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:50909/api/rooms/filter', JSON.stringify({ date: date, length: length }), { headers: headers });
+        return this.http.post('http://localhost:50909/api/rooms/filter', JSON.stringify({ date: date, length: length, filterType: filterType }), { headers: headers });
     };
     OfficeService = __decorate([
         core_1.Injectable(), 

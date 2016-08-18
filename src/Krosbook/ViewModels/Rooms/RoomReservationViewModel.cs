@@ -33,5 +33,7 @@ namespace Krosbook.ViewModels.Rooms
         public bool goToMeeting { get; set; }
 
         public int G2MeetingID { get; set; }
+
+        public string FilterType { get; set; }
     }
 }

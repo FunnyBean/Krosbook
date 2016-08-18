@@ -154,7 +154,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
         [HttpPost("filter")]
-        public IEnumerable<RoomViewModel> GetAllUnreservedCars([FromBody] RoomReservationViewModel reservationVM)
+        public IEnumerable<RoomViewModel> GetAllUnreservedRooms([FromBody] RoomReservationViewModel reservationVM)
         {
             IQueryable<Room> rooms = _roomRepository.GetAll();
             var exp = new List<Room>();
@@ -162,7 +162,12 @@ namespace Krosbook.Controllers.Api.v1
             {
                 if (CheckUnreservedRoom(room.Id, DateTime.Parse(reservationVM.date), reservationVM.length))
                 {
-                    exp.Add(room);
+                    if (reservationVM.FilterType != "")
+                    {
+                        if (room.Type == reservationVM.FilterType)
+                            exp.Add(room);
+                    }
+                    else exp.Add(room);
                 }
             }
             return _mapper.Map<IEnumerable<RoomViewModel>>(exp);

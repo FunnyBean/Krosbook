@@ -34,6 +34,7 @@ var ReservationsComponent = (function () {
         this.week = 0;
         this.now = moment();
         this.moveDate = this.now.format("YYYY-MM-DD");
+        this.officeTypes = new Array();
     }
     ReservationsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -92,6 +93,11 @@ var ReservationsComponent = (function () {
         var _this = this;
         this.officeService.getOffices().subscribe(function (data) {
             _this.data = data.json();
+            for (var i = 0; i < _this.data.length; i++) {
+                var row = _this.data[i];
+                if (_this.officeTypes.indexOf(row.type) == -1)
+                    _this.officeTypes.push(row.type);
+            }
         }, function (error) { return console.log(error); });
     };
     ReservationsComponent.prototype.loadCarsData = function () {
@@ -131,7 +137,7 @@ var ReservationsComponent = (function () {
     };
     ReservationsComponent.prototype.loadFilteredOfficesData = function () {
         var _this = this;
-        this.officeService.filterOffices(this.dateTime, this.length * 60).subscribe(function (data) {
+        this.officeService.filterOffices(this.dateTime, this.length * 60, this.filterOfficeTypes).subscribe(function (data) {
             _this.data = data.json();
             _this.week = moment(_this.dateTime).week() - moment().week() + 52 * (moment(_this.dateTime).year() - moment().year());
             if (moment(_this.dateTime).year() - moment().year() !== 0)
