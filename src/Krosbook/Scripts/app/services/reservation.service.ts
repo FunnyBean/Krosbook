@@ -43,15 +43,15 @@ export class ReservationService {
     }
   }
 
-  public editReservation(type:string, id:number, name:string, elementId:number, userId:number, dateTime:any, length:number, emailInvitation:boolean, goToMeeting:boolean){
+  public editReservation(type: string, id: number, name: string, elementId: number, userId: number, date:any, length:number, emailInvitation:boolean, goToMeeting:boolean){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     if(type == "rooms"){
-      var roomId = elementId;
-      return this.http.put('/api/reservations/'+type+'/'+id, JSON.stringify({id, name, roomId, dateTime, userId, length, emailInvitation, goToMeeting}), {headers});
+        var roomId = elementId;
+        return this.http.put('/api/reservations/'+type+'/'+id, JSON.stringify({id, name, roomId, date, userId, length, emailInvitation, goToMeeting}), {headers});
     } else {
       var carId = elementId;
-      return this.http.put('/api/reservations/'+type+'/'+id, JSON.stringify({id, name, carId, dateTime, userId, length}), {headers});
+      return this.http.put('/api/reservations/' + type + '/' + id, JSON.stringify({ id, name, carId, date, userId, length}), {headers});
     }
   }
 
