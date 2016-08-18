@@ -42,7 +42,7 @@
         <input type="checkbox" name="emailInvitaion" (change)="emailInvitation = $event.target.checked"> Poslať pozvánku mailom
       </label>
       <label>
-        <input type="checkbox" name="reserveGoToMeeting" (change)="reserveGoToMeeting = $event.target.checked"> Rezervovať GoToMeeting
+        <input type="checkbox" name="reserveGoToMeeting" (change)="reserveGoToMeeting = $event.target.checked" [checked]="data.g2MeetingID != 0"> Rezervovať GoToMeeting
       </label>
     </div>
 
