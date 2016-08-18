@@ -97,28 +97,39 @@ namespace Krosbook.Models.Users
         /// Edits the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        public override void Edit(User item)
+        public override void Edit(User user)
         {
-            var userRoles = item.Roles;
+            var userRoles = user.Roles;
 
-            item.Roles = null;
-            base.Edit(item);
+            user.Roles = null;
+            base.Edit(user);
 
             if (userRoles != null)
             {
-                var oldRoles = _dbContext.Set<UserRole>().Where(p => p.UserId == item.Id);
+                var oldRole = _dbContext.Set<UserRole>().Where(p => p.RoleId == user.Id);
 
-                foreach (var role in userRoles.Where(p => !HasUserRole(item.Id, p.RoleId)))
-                {
-                    _dbContext.Entry(role).State = EntityState.Added;
-                }
+                SetAddOrModifiedStatesForRole(user, userRoles);
 
-                foreach (var role in oldRoles.Where((r) => !userRoles.Any(p => (p.RoleId == r.RoleId))))
-                {
-                    _dbContext.Entry(role).State = EntityState.Deleted;
-                }
+                SetDeleteStateForNotUsedRole(userRoles, oldRole);
             }
 
+        }
+
+        private void SetAddOrModifiedStatesForRole(User user, ICollection<UserRole> userRole)
+        {
+            foreach (var role in userRole)
+            {
+                _dbContext.Entry(role).State =
+                    HasUserRole(user.Id, role.RoleId) ? EntityState.Modified : EntityState.Added;
+            }
+        }
+
+        private void SetDeleteStateForNotUsedRole(ICollection<UserRole> userRole, IQueryable<UserRole> oldRole)
+        {
+            foreach (var role in oldRole.Where((r) => !userRole.Any(p => (p.RoleId == r.RoleId))))
+            {
+                _dbContext.Entry(role).State = EntityState.Deleted;
+            }
         }
 
         private bool HasUserRole(int userId, int roleId)

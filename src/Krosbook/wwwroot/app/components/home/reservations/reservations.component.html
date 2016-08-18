@@ -1,7 +1,7 @@
 <div id="reservations">
   <h3>Rezervácia {{ name }}</h3>
 
-  <div class="col-md-12" style="margin-bottom: 15px">
+  <div class="col-md-12 remove-padding" style="margin-bottom: 15px">
     <button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
     <div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
       <div class="form-group col-xs-3">
