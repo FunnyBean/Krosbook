@@ -29,7 +29,7 @@ var PasswordComponent = (function () {
     };
     PasswordComponent.prototype.savePassword = function () {
         var _this = this;
-        this.userService.updatePassword(this.passwordData[0], this.passwordData[1]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; }, function (error) { _this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; });
+        this.userService.updatePassword(this.passwordData[0], this.passwordData[1]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; $("input").val(''); }, function (error) { _this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; });
     };
     PasswordComponent = __decorate([
         core_1.Component({

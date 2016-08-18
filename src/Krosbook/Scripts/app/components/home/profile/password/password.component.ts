@@ -35,8 +35,8 @@ export class PasswordComponent implements AfterContentInit{
 
   savePassword(){
       this.userService.updatePassword(this.passwordData[0], this.passwordData[1]).subscribe(
-        data => { this.success = "Heslo bolo úspešne zmenené." },
-        error => { this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; }
+          data => { this.success = "Heslo bolo úspešne zmenené."; $("input").val(''); },
+          error => { this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; }
       );
   }
 

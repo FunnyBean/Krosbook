@@ -16,6 +16,8 @@ using System.IdentityModel.Claims;
 using Krosbook.Services.Email;
 using Krosbook.Services.Template;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -32,6 +34,7 @@ namespace Krosbook.Controllers.Api.v1
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private SendEmailService _emailService;
+        private IRememberMeRepository _rememberMeRepository;
 
         #endregion
 
@@ -44,7 +47,7 @@ namespace Krosbook.Controllers.Api.v1
             SignInManager<ApplicationUser> signInManager,
             IEmailService emailService,
             IEmailCreator creator,
-            IEmailSender sender)
+            IEmailSender sender, IRememberMeRepository rememberMeRepository)
         {
             _userRepository = userRepository;
             _logger = logger;
@@ -52,6 +55,7 @@ namespace Krosbook.Controllers.Api.v1
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = new SendEmailService(emailService, creator, sender);
+            _rememberMeRepository = rememberMeRepository;
         }
         #endregion
 
@@ -161,8 +165,21 @@ namespace Krosbook.Controllers.Api.v1
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{userId}")]
-        public IActionResult DeleteUser(int userId)
+        public async Task<IActionResult> DeleteUser(int userId)
         {
+            if(userId == this.GetUserId())
+            {
+                var user = _userRepository.GetItem(GetUserId());
+                var rememberMe = _rememberMeRepository.GetSingleByUserId(user.Id);
+                if (rememberMe != null && rememberMe.Selector != null)
+                {
+                    var remember = _rememberMeRepository.GetSingleByUserId(user.Id);
+                    _rememberMeRepository.Delete(remember);
+                    _rememberMeRepository.Save();
+                }
+                await HttpContext.Authentication.SignOutAsync(Startup.AuthenticationScheme);
+                return Ok();
+            }
             return SaveData(() =>
             {
                 _userRepository.Delete(userId);

@@ -31,7 +31,7 @@
   margin-top: 20px; }
 
 .checkbox, #form_login input[type=checkbox] {
-  padding-left: 23px;
+  padding-left: 8px;
   line-height: 20px;
   font-size: 1.2em;
   color: rgba(255, 255, 255, 0.6);

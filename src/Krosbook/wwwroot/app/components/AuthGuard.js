@@ -14,19 +14,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var user_service_1 = require('../services/user.service');
 var router_1 = require('@angular/router');
 var core_1 = require("@angular/core");
+var Observable_1 = require('rxjs/Observable');
 var AuthGuard = (function () {
-    function AuthGuard(authService, router) {
-        this.authService = authService;
+    function AuthGuard(userService, router) {
+        this.userService = userService;
         this.router = router;
     }
     AuthGuard.prototype.canActivate = function () {
-        if (this.authService.isLoggedIn()) {
-            return true;
-        }
-        else {
-            this.router.navigate(['/login']);
-            return false;
-        }
+        var _this = this;
+        return Observable_1.Observable.create(function (observer) {
+            _this.userService.isLoggedIn().map(function (res) { return res; }).subscribe(function (result) {
+                if (result)
+                    observer.next(true);
+                else {
+                    observer.next(false);
+                    _this.router.navigate(['/login']);
+                }
+                observer.complete();
+            }, function (error) {
+                observer.next(false);
+                observer.complete();
+                _this.router.navigate(['/login']);
+            });
+        });
+        ;
     };
     AuthGuard = __decorate([
         core_1.Injectable(), 
