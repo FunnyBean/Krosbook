@@ -68,6 +68,14 @@ export class DetailReservationComponent implements OnInit {
     authorizeActions() {
         if (this.data.userId == this.loggedUser.id)
             this.canEdit = true;
+        else {
+            for (var i = 0; i < this.loggedUser.roles.length; i++) {
+                if (this.loggedUser.roles[i].roleId == 1) {
+                    this.canEdit = true;
+                    break;
+                } 
+            } 
+        }
     }
 
     editReservation() {
