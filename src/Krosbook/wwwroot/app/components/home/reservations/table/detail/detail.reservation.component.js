@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/**
- * Created by Ondrej on 01.08.2016.
- */
 var core_1 = require('@angular/core');
 var reservation_service_1 = require('../../../../../services/reservation.service');
 var user_service_1 = require('../../../../../services/user.service');
@@ -63,8 +60,12 @@ var DetailReservationComponent = (function () {
             }
         }
     };
-    DetailReservationComponent.prototype.editReservation = function () {
+    DetailReservationComponent.prototype.editReservation = function (form) {
         var _this = this;
+        if (form.pristine && !this.emailInvitation && !this.reserveGoToMeeting) {
+            this.windowClose.emit(true);
+            return false;
+        }
         this.saving = true;
         var elementId = (this.reservationType == "rooms") ? this.data.roomId : this.data.carId, dayData;
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(function (data) { dayData = data.json(); }, function (error) { return console.log(error); }, function () {
@@ -75,11 +76,12 @@ var DetailReservationComponent = (function () {
                 console.log(reservationTime + ' ' + time + ' ' + reservationTimeEnd);
                 if ((reservationTime >= time && reservationTime < endTime) || (time >= reservationTime && time < reservationTimeEnd)) {
                     _this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
+                    _this.saving = false;
                     return false;
                 }
             }
             _this.reservationService.editReservation(_this.reservationType, _this.data.id, _this.data.name, elementId, _this.data.userId, _this.data.dateTime, _this.data.length * 60, _this.emailInvitation, _this.reserveGoToMeeting).subscribe(function (data) { }, function (error) {
-                _this.error = 'Na daný termín je v GoToMeeting naplánovaná už iná rezervácia';
+                _this.error = 'Na daný termín je v GoToMeeting naplánovaná už iná rezervácia.';
                 console.log("error " + error);
                 _this.saving = false;
             }, function () {

@@ -10,14 +10,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var reservation_service_1 = require('../../../../services/reservation.service');
+var holiday_service_1 = require('../../../../services/holiday.service');
 var detail_reservation_component_1 = require('./detail/detail.reservation.component');
 var moment = require('moment');
 var TableReservationComponent = (function () {
-    function TableReservationComponent(reservationService) {
+    function TableReservationComponent(reservationService, holidayService) {
         this.reservationService = reservationService;
+        this.holidayService = holidayService;
         this.tableData = [];
         this.detailReset = false;
         this.reservationDetailId = [0, 0, 0, 0];
+        this.reservationInProgress = false;
     }
     TableReservationComponent.prototype.ngOnInit = function () {
         this.updateData();
@@ -37,11 +40,19 @@ var TableReservationComponent = (function () {
             table += '<td class="col-md-1">' + this.times[i].time + '</td>';
             for (var j = 0; j < this.tableData[this.times[i].time].length; j++) {
                 var cell = this.tableData[this.times[i].time][j];
+                var holiday = this.holidayService.isHoliday(moment().add(this.week, 'weeks').weekday(j + 1).format("DD/MM"), moment().add(this.week, 'weeks').format("YYYY"));
                 if (cell.long == null) {
-                    var filter = '';
+                    var filter = 'empty';
                     if (this.filterActive && moment(this.filterDateTime).format("DD.MM.YYYY") == moment().add(this.week, 'weeks').weekday(j + 1).format("DD.MM.YYYY") && moment(this.filterDateTime).format("HH:mm") <= this.times[i].time && this.times[i].time < moment(this.filterDateTime).add(this.filterTimeLength * 60, 'minutes').format("HH:mm"))
-                        filter = 'filterSelected';
-                    table += '<td class="col-md-2 empty ' + filter + '"></td>';
+                        filter += 'filterSelected';
+                    if (holiday) {
+                        if (i == 0)
+                            table += '<td class="col-md-2 holiday">' + holiday + '</td>';
+                        else
+                            table += '<td class="col-md-2 holiday"></td>';
+                    }
+                    else
+                        table += '<td class="col-md-2 empty ' + filter + '"></td>';
                 }
                 else {
                     if (cell.reservationName == null) {
@@ -77,7 +88,7 @@ var TableReservationComponent = (function () {
         });
         $(".records" + this.data.id + " td.empty")
             .on("mousedown", function (event) {
-            if (event.which != 1 || thisDocument.reservationDetailId[0] != 0)
+            if (event.which != 1 || thisDocument.reservationDetailId[0] != 0 || thisDocument.reservationInProgress)
                 return false; //does not work for other than left button
             var element = $(this);
             isMouseDown = true;
@@ -106,6 +117,7 @@ var TableReservationComponent = (function () {
     };
     TableReservationComponent.prototype.makeReservation = function (fromRow, fromCol, length) {
         var _this = this;
+        this.reservationInProgress = true;
         var date, hours = 7, minutes = 0;
         if (fromRow % 2 != 0) {
             fromRow -= 1;
@@ -136,6 +148,7 @@ var TableReservationComponent = (function () {
             _this.reservationDetailId = [data.json().id, _this.reservationDetailId[1], _this.reservationDetailId[2], 0]; //okno na potvrdenie rezervacie      
         }, function (error) { alert(error); }, function () {
             _this.updateData();
+            _this.reservationInProgress = false;
             $(".filterSelected").removeClass("filterSelected");
         });
     };
@@ -214,9 +227,9 @@ var TableReservationComponent = (function () {
             selector: 'tbody',
             templateUrl: 'app/components/home/reservations/table/table.reservations.component.html',
             directives: [detail_reservation_component_1.DetailReservationComponent],
-            providers: [reservation_service_1.ReservationService]
+            providers: [reservation_service_1.ReservationService, holiday_service_1.HolidayService]
         }), 
-        __metadata('design:paramtypes', [reservation_service_1.ReservationService])
+        __metadata('design:paramtypes', [reservation_service_1.ReservationService, holiday_service_1.HolidayService])
     ], TableReservationComponent);
     return TableReservationComponent;
 }());
