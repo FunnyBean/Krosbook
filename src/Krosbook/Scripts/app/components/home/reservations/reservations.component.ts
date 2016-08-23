@@ -46,16 +46,9 @@ export class ReservationsComponent implements OnInit  {
   constructor(private route:ActivatedRoute, private carService:CarService, private officeService:OfficeService, private userService:UserService) { }
 
   ngOnInit() {
-    this.updateTime();
-    this.updateWeek();
     this.loadUsersData();
-    this.route.params.subscribe(params => {
-      this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
-      this.name = (this.reservationType == 'rooms') ? 'miestností' : 'áut';
-      if (this.reservationType == 'rooms')
-        this.loadOfficesData();
-      else this.loadCarsData();
-    });   
+    this.updateTime();
+    this.updateWeek(); 
   }
 
   ngAfterViewInit(){
@@ -98,11 +91,20 @@ export class ReservationsComponent implements OnInit  {
         for (var i = 0; i < usersArray.length; i++)
           this.usersList[usersArray[i].id] = usersArray[i].name + ' ' + usersArray[i].surname;
       },
-      error => console.log(error)
+      error => console.log(error),
+      () => {
+        this.route.params.subscribe(params => {
+          this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
+          this.name = (this.reservationType == 'rooms') ? 'miestností' : 'áut';
+          if (this.reservationType == 'rooms')
+            this.loadOfficesData();
+          else this.loadCarsData();
+        });  
+      }
     );
     this.userService.myProfile().subscribe(
       data => {
-        this.loggedUser = data.json()
+        this.loggedUser = data.json();
       },
       error => console.log(error)
     );
