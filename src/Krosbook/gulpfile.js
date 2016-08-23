@@ -31,6 +31,10 @@ gulp.task("anuglar", function () {
     return gulp.src(paths.npm + "@angular/**/*.js")
         .pipe(gulp.dest(paths.lib + "@angular/"));
 });
+gulp.task("anuglarMap", function () {
+    return gulp.src(paths.npm + "@angular/**/*.js.map")
+        .pipe(gulp.dest(paths.lib + "@angular/"));
+});
 
 gulp.task("systemjs", function () {
     return gulp.src(paths.npm + "systemjs/**/*.js")
@@ -52,7 +56,7 @@ gulp.task("zone.js", function () {
         .pipe(gulp.dest(paths.lib + "zone.js/"));
 });
 
-gulp.task("libs", ["rxjs", "anuglar", "systemjs", "core-js", "reflect-metadata", "zone.js"]);
+gulp.task("libs", ["rxjs", "anuglar", "anuglarMap", "systemjs", "core-js", "reflect-metadata", "zone.js"]);
 
 gulp.task("clean", function () {
     return gulp.src(paths.app + "**/*.*", { read: false })

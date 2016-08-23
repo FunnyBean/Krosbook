@@ -1,4 +1,4 @@
-// SystemJS configuration file, see links for more information
+﻿// SystemJS configuration file, see links for more information
 // https://github.com/systemjs/systemjs
 // https://github.com/systemjs/systemjs/blob/master/docs/config-api.md
 /***********************************************************************************************
@@ -26,7 +26,7 @@ var barrels = [
     'rxjs',
     // App specific barrels.
     'app',
-    'app/shared',
+    'app/shared'
 ];
 var cliSystemConfigPackages = {};
 barrels.forEach(function (barrelName) {

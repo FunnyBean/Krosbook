@@ -185,7 +185,8 @@ namespace Krosbook
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
 
-           services.AddScoped<IG2MService, G2MService>();
+            //  services.AddScoped<IG2MService, G2MService>();
+            services.AddSingleton<IG2MService, G2MService>();
 
             services.AddScoped<IRememberMeRepository, RememberMeRepository>();
         }

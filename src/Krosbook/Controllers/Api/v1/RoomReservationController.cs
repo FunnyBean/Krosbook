@@ -59,12 +59,12 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetAll());
         }
 
-
+        //yyyy-MM-ddTHH:mm:ss
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewRoomReservation([FromBody] RoomReservationViewModel reservationVm)
         {
-            reservationVm.dateTime = DateTime.Parse(reservationVm.date);
+            reservationVm.dateTime = DateTime.ParseExact(reservationVm.date, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             this.CreateNewReservation(reservationVm);
 
 
@@ -87,7 +87,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPost("byRoom/{roomId}")]
         public IEnumerable<RoomReservationViewModel> GetReservationByRoom([FromBody] RoomReservationIntervalViewModel reservation, int roomId)
         {
-            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoomInTimeInterval(roomId, DateTime.Parse(reservation.from), DateTime.Parse(reservation.to)));
+            return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetReservationsByRoomInTimeInterval(roomId, DateTime.ParseExact(reservation.from, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture), DateTime.ParseExact(reservation.to, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture)));
         }
 
 
@@ -220,10 +220,9 @@ namespace Krosbook.Controllers.Api.v1
             });
         }
 
-
         #endregion
 
-        
+
         #region Helpers
 
         private IActionResult CreateNewReservation(RoomReservationViewModel reservationVm)
