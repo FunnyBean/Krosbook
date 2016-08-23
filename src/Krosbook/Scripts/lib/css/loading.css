@@ -54,6 +54,10 @@ td {
 #reservationHead th, #reservationHead td {
   border: none;
 }
+
+#reservationTable{
+  border-collapse: separate;  
+}
 .reservation td {
   padding: 2px !important;
   text-align: center;
