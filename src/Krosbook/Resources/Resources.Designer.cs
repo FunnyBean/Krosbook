@@ -60,7 +60,7 @@ namespace Krosbook.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to IntraWeb &lt;funnybean@kros.sk&gt;.
+        ///    Looks up a localized string similar to KrosBook &lt;krosbook@kros.sk&gt;.
         /// </summary>
         public static string EmailFrom {
             get {
