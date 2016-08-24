@@ -45,7 +45,12 @@
         <label>
           <input type="checkbox" name="reserveGoToMeeting" (change)="reserveGoToMeeting = $event.target.checked" [checked]="data.g2MeetingID != 0"> Rezervovať GoToMeeting
         </label>
+        <label>
+          <input type="checkbox" name="repeatReservation" (change)="repeating = $event.target.checked" [checked]="repeating"> Opakovať udalosť
+        </label>
       </div>
+
+      <repeater *ngIf="repeating" class="form-group" [repetitionData]="repetitionData"></repeater>
 
       <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
 

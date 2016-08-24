@@ -15,29 +15,29 @@ export class EquipmentService {
   public getEquipments(){
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
-      return this.http.get('http://funnybean.cloudapp.net/api/equipment', { headers  } );
+      return this.http.get('/api/equipment', { headers  } );
   }
 
   public getEquipment(id:number){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://funnybean.cloudapp.net/api/equipment/'+id, { headers  } );
+    return this.http.get('/api/equipment/'+id, { headers  } );
   }
 
   public addEquipment(equipment:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://funnybean.cloudapp.net/api/equipment',equipment, {headers});
+    return this.http.post('/api/equipment',equipment, {headers});
   }
 
   public editEquipment(id:number, equipment:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put("http://funnybean.cloudapp.net/api/equipment/"+id, equipment, {headers});
+    return this.http.put("/api/equipment/"+id, equipment, {headers});
   }
 
   public removeEquipment(id: string) {
-    return this.http.delete('http://funnybean.cloudapp.net/api/equipment/'+id);
+    return this.http.delete('/api/equipment/'+id);
   }
 
 

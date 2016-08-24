@@ -57,9 +57,9 @@ export class TableReservationComponent implements OnInit {
         let cell = this.tableData[this.times[i].time][j];
         let holiday:string = this.holidayService.isHoliday(moment().add(this.week, 'weeks').weekday(j + 1).format("DD/MM"), moment().add(this.week, 'weeks').format("YYYY"));
         if (cell.long == null) {
-          var filter:string = 'empty';
+          var filter:string = '';
           if(this.filterActive && moment(this.filterDateTime).format("DD.MM.YYYY") == moment().add(this.week, 'weeks').weekday(j + 1).format("DD.MM.YYYY") && moment(this.filterDateTime).format("HH:mm") <= this.times[i].time && this.times[i].time < moment(this.filterDateTime).add(this.filterTimeLength*60, 'minutes').format("HH:mm"))
-            filter += 'filterSelected';
+            filter = 'filterSelected';
           if(holiday){
             if(i == 0)
               table += '<td class="col-md-2 holiday">'+holiday+'</td>';

@@ -30,7 +30,7 @@ export class ReservationsComponent implements OnInit  {
   public usersList = [];
   public isShowedFilterInput:boolean;
   public length = 0.5;
-  public filterOfficeTypes:string;
+  public filterOfficeTypes:string = "";
   public maxTime:number = 10.5;
   public dateTime;
   public week:number = 0;

@@ -13,6 +13,8 @@ var reservation_service_1 = require('../../../../../services/reservation.service
 var user_service_1 = require('../../../../../services/user.service');
 var reservation_model_1 = require('../../../../../models/reservation.model');
 var time_validator_1 = require('../../../../../validators/time.validator');
+var repeat_reservation_component_1 = require('./repeat/repeat.reservation.component');
+var repetition_model_1 = require('../../../../../models/repetition.model');
 var moment = require('moment');
 var DetailReservationComponent = (function () {
     function DetailReservationComponent(reservationService, userService) {
@@ -24,11 +26,16 @@ var DetailReservationComponent = (function () {
         this.canEdit = false;
         this.emailInvitation = false;
         this.reserveGoToMeeting = false;
+        this.repeating = false;
+        this.repetitionData = new repetition_model_1.Repetition();
     }
     DetailReservationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(function (data) {
             _this.data = data.json();
+            if (_this.data.reservationRepeaterId != null) {
+                _this.reservationService.getRepeatingReservation(_this.reservationType, _this.data.reservationRepeaterId).subscribe(function (data) { _this.repetitionData = data.json(); _this.repeating = true; });
+            }
             _this.dateTime = moment(_this.data.dateTime).format("DD.MM.YYYY HH:mm");
             _this.data.length = _this.data.length / 60;
             _this.authorizeActions();
@@ -62,7 +69,7 @@ var DetailReservationComponent = (function () {
     };
     DetailReservationComponent.prototype.editReservation = function (form) {
         var _this = this;
-        if (form.pristine && !this.emailInvitation && !this.reserveGoToMeeting) {
+        if (form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating) {
             this.windowClose.emit(true);
             return false;
         }
@@ -73,7 +80,6 @@ var DetailReservationComponent = (function () {
                 if (_this.data.id == dayData[i].id)
                     continue;
                 var date = moment(dayData[i].dateTime), reservationTime = moment(_this.data.dateTime).format("HH:mm"), reservationTimeEnd = moment(_this.data.dateTime).add(_this.data.length * 60, 'minutes').format("HH:mm"), time = date.format("HH:mm"), endTime = date.add(dayData[i].length, 'minutes').format("HH:mm");
-                console.log(reservationTime + ' ' + time + ' ' + reservationTimeEnd);
                 if ((reservationTime >= time && reservationTime < endTime) || (time >= reservationTime && time < reservationTimeEnd)) {
                     _this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
                     _this.saving = false;
@@ -85,8 +91,30 @@ var DetailReservationComponent = (function () {
                 console.log("error " + error);
                 _this.saving = false;
             }, function () {
-                _this.saving = false;
-                _this.windowClose.emit(true);
+                if (_this.repeating) {
+                    if (_this.data.reservationRepeaterId == null) {
+                        _this.reservationService.addRepeatingReservation(_this.reservationType, _this.data.id, _this.data.dateTime, _this.repetitionData.repeating, _this.repetitionData.interval, _this.repetitionData.end, _this.repetitionData.appearance, _this.repetitionData.date).subscribe(function (data) {
+                            _this.saving = false;
+                            _this.windowClose.emit(true);
+                        }, function (error) { _this.saving = false; });
+                    }
+                    else {
+                        _this.reservationService.editRepeatingReservation(_this.reservationType, _this.data.reservationRepeaterId, _this.data.id, _this.data.dateTime, _this.repetitionData.repeating, _this.repetitionData.interval, _this.repetitionData.end, _this.repetitionData.appearance, _this.repetitionData.date).subscribe(function (data) {
+                            _this.saving = false;
+                            _this.windowClose.emit(true);
+                        }, function (error) { _this.saving = false; });
+                    }
+                }
+                else if (!_this.repeating && _this.data.reservationRepeaterId != null) {
+                    _this.reservationService.deleteRepeatingReservation(_this.reservationType, _this.data.reservationRepeaterId).subscribe(function (data) {
+                        _this.saving = false;
+                        _this.windowClose.emit(true);
+                    }, function (error) { _this.saving = false; });
+                }
+                else {
+                    _this.saving = false;
+                    _this.windowClose.emit(true);
+                }
             });
         });
     };
@@ -122,7 +150,7 @@ var DetailReservationComponent = (function () {
             selector: 'reservation-detail',
             templateUrl: 'app/components/home/reservations/table/detail/detail.reservation.component.html',
             styleUrls: ['app/components/home/reservations/table/detail/detail.reservation.component.css'],
-            directives: [time_validator_1.TimeValidator, time_validator_1.DateValidator],
+            directives: [time_validator_1.TimeValidator, time_validator_1.DateValidator, repeat_reservation_component_1.RepeatReservationComponent],
             providers: [reservation_service_1.ReservationService]
         }), 
         __metadata('design:paramtypes', [reservation_service_1.ReservationService, user_service_1.UserService])

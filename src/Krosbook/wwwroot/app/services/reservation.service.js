@@ -8,12 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/**
- * Created by Ondrej on 01.08.2016.
- */
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
-require('rxjs/add/operator/map');
+var moment = require('moment');
 var ReservationService = (function () {
     function ReservationService(http) {
         this.http = http;
@@ -63,6 +60,26 @@ var ReservationService = (function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         return this.http.delete('/api/reservations/' + type + '/' + id, { headers: headers });
+    };
+    ReservationService.prototype.getRepeatingReservation = function (type, repetitionId) {
+        return this.http.get('/api/reservations/' + type + '/' + repetitionId);
+    };
+    ReservationService.prototype.addRepeatingReservation = function (type, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        appearance = (endType == 'appearance') ? appearance : null;
+        endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
+        return this.http.post('/api/reservations/' + type + '/repetition', JSON.stringify({ reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
+    };
+    ReservationService.prototype.editRepeatingReservation = function (type, repetitionId, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        appearance = (endType == 'appearance') ? appearance : null;
+        endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
+        return this.http.put('/api/reservations/' + type + '/repetition/' + repetitionId, JSON.stringify({ repetitionId: repetitionId, reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
+    };
+    ReservationService.prototype.deleteRepeatingReservation = function (type, repetitionId) {
+        return this.http.delete('/api/reservations/' + type + '/repetition/' + repetitionId);
     };
     ReservationService = __decorate([
         core_1.Injectable(), 

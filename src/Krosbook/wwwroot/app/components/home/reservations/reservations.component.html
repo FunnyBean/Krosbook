@@ -19,7 +19,7 @@
         <label for="officeType" class="control-label">Typ miesnotsti: </label>
         <div>
           <select class="form-control" name="officeType" id="officeType" [(ngModel)]="filterOfficeTypes">
-            <option value=""></option>
+            <option value="">Všetky</option>
             <option *ngFor="let officeType of officeTypes">{{ officeType }}</option>
           </select>
         </div>
