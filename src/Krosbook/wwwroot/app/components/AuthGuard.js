@@ -23,7 +23,6 @@ var AuthGuard = (function () {
     AuthGuard.prototype.canActivate = function () {
         var _this = this;
         return Observable_1.Observable.create(function (observer) {
-            console.log("AuthGuard");
             _this.userService.isLoggedIn().subscribe(function (data) {
                 observer.next(true);
                 observer.complete();

@@ -16,6 +16,7 @@ import {OfficeNameValidator} from '../../../../validators/officeName.validator';
 export class DetailOfficeAdminComponent implements OnInit{
   public error:string;
   public success:string;
+  public saving:boolean = false;
   public equipment:Equipment;
   public formReset:boolean = true;
   public officeData:Office = new Office();
@@ -40,6 +41,7 @@ export class DetailOfficeAdminComponent implements OnInit{
   }
 
   newOffice(){
+    this.saving = true;
     let name = this.officeData.name;
     let type = this.officeData.type;
     let description = this.officeData.description;
@@ -50,8 +52,10 @@ export class DetailOfficeAdminComponent implements OnInit{
       },
         error => {
           this.error = error;
+          this.saving = false;
         },
         () => {
+          this.saving = false;
           this.success = 'Miestnosť úspešne vytvorená.';
           this.officeData = new Office();
           this.formReset = false;
@@ -63,6 +67,7 @@ export class DetailOfficeAdminComponent implements OnInit{
   }
 
   editOffice(){
+    this.saving = true;
     let id = this.officeData.id;
     let name = this.officeData.name;
     let type = this.officeData.type;
@@ -74,11 +79,12 @@ export class DetailOfficeAdminComponent implements OnInit{
       },
       error => {
         this.error = error;
+        this.saving = false;
       },
       () => {
+        this.saving = false;
         this.success = 'Miestnosť úspešne upravená.';
         this.updateList.emit(true);
-        //this.closeWindow();
       }
     );
   }

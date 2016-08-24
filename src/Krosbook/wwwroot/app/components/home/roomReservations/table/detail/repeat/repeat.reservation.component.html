@@ -1,0 +1,39 @@
+<div class="form-group col-md-12 remove-padding">
+    <label class="control-label col-md-4 remove-padding">opakovanie: </label>
+    <div class="col-md-8 remove-padding">
+        <select name="repeating" class="form-control" [(ngModel)]="repetitionData.repetation">
+            <option value="days">Denne</option>
+            <option value="weeks">Týždenne</option>
+            <option value="months">Mesačne</option>
+            <option value="years">Ročne</option>
+        </select>
+    </div>
+</div>
+<div class="form-group col-md-12 remove-padding">
+    <label class="control-label col-md-4 remove-padding">interval: </label>
+    <div class="col-md-8 remove-padding">
+         <p class="form-group one-line">
+            {{ (repetitionData.interval == 1) ? "každý" : ((repetitionData.interval >= 5) ? "každých" : "každé") }} <input type="number" min="1" max="30" value="1" name="interval" class="form-control" [(ngModel)]="repetitionData.interval"> {{ (repetitionData.interval == 1) ? slovakIntervalSG[repetitionData.repetation] : ((repetitionData.interval >= 5) ? slovakIntervalPLG[repetitionData.repetation] : slovakIntervalPLN[repetitionData.repetation]) }}
+        </p>    
+    </div>
+</div>
+<div class="form-group col-md-12 remove-padding">
+    <label class="control-label col-md-4 remove-padding">koniec: </label>
+    <div class="col-md-8 remove-padding">
+        <div class="radio">
+            <label>
+                <input type="radio" name="endOptions" id="endOptions1" [(ngModel)]="repetitionData.end" value="appearance">
+                <p class="form-group one-line">
+                    po <input type="number" class="form-control" min="1" name="repetitionAppearance" [(ngModel)]="repetitionData.appearance" [disabled]="repetitionData.end != 'appearance'"> {{ (repetitionData.appearance == 1) ? "výskyte" : "výskytoch" }}
+                </p>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="endOptions" id="endOptions2" [(ngModel)]="repetitionData.end" value="date">
+                <input type="date" class="form-control" name="repetitionEndDate" [(ngModel)]="repetitionData.endDate" [disabled]="repetitionData.end != 'date'" validateDate>
+            </label>
+        </div>
+    </div>
+</div>
+

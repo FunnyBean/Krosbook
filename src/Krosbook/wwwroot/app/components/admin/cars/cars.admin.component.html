@@ -1,7 +1,7 @@
 <h2>Autá</h2>
 <button type="button" class="btn btn-success" (click)="newCar()"><span class="glyphicon glyphicon-plus"></span>  Nové vozidlo</button>
 <car *ngIf="showCarWindow" (windowClose)="windowClose($event)" (updateList)="getCars()" [carId]="carId"></car>
-<table class="table">
+<table class="table table-hover col-md-12">
   <thead>
   <tr>
     <th>Značka a typ</th>

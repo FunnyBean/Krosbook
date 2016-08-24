@@ -60,14 +60,14 @@ var ReservationService = (function () {
     ReservationService.prototype.getRepeatingReservation = function (type, repetitionId) {
         return this.http.get('/api/reservations/' + type + '/repetition/' + repetitionId);
     };
-    ReservationService.prototype.addRepeatingReservation = function (type, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
+    ReservationService.prototype.addRepeatingReservation = function (type, reservationId, repetation, interval, endType, appearance, endingDate) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         appearance = (endType == 'appearance') ? appearance : null;
         endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
         return this.http.post('/api/reservations/' + type + '/repetition', JSON.stringify({ reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
     };
-    ReservationService.prototype.editRepeatingReservation = function (type, id, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
+    ReservationService.prototype.editRepeatingReservation = function (type, id, reservationId, repetation, interval, endType, appearance, endingDate) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         appearance = (endType == 'appearance') ? appearance : null;

@@ -16,6 +16,7 @@ var officeName_validator_1 = require('../../../../validators/officeName.validato
 var DetailOfficeAdminComponent = (function () {
     function DetailOfficeAdminComponent(officeService) {
         this.officeService = officeService;
+        this.saving = false;
         this.formReset = true;
         this.officeData = new office_admin_model_1.Office();
         this.windowClose = new core_1.EventEmitter();
@@ -33,6 +34,7 @@ var DetailOfficeAdminComponent = (function () {
     };
     DetailOfficeAdminComponent.prototype.newOffice = function () {
         var _this = this;
+        this.saving = true;
         var name = this.officeData.name;
         var type = this.officeData.type;
         var description = this.officeData.description;
@@ -41,7 +43,9 @@ var DetailOfficeAdminComponent = (function () {
         this.officeService.addOffice(JSON.stringify({ name: name, type: type, description: description, color: color, equipment: equipment })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
+            _this.saving = false;
         }, function () {
+            _this.saving = false;
             _this.success = 'Miestnosť úspešne vytvorená.';
             _this.officeData = new office_admin_model_1.Office();
             _this.formReset = false;
@@ -52,6 +56,7 @@ var DetailOfficeAdminComponent = (function () {
     };
     DetailOfficeAdminComponent.prototype.editOffice = function () {
         var _this = this;
+        this.saving = true;
         var id = this.officeData.id;
         var name = this.officeData.name;
         var type = this.officeData.type;
@@ -61,10 +66,11 @@ var DetailOfficeAdminComponent = (function () {
         this.officeService.editOffice(id, JSON.stringify({ id: id, name: name, type: type, description: description, color: color, equipment: equipment })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
+            _this.saving = false;
         }, function () {
+            _this.saving = false;
             _this.success = 'Miestnosť úspešne upravená.';
             _this.updateList.emit(true);
-            //this.closeWindow();
         });
     };
     DetailOfficeAdminComponent.prototype.closeWindow = function () {

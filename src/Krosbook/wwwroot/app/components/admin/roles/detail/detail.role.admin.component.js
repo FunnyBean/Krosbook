@@ -14,6 +14,7 @@ var roles_service_1 = require('../../../../services/roles.service');
 var DetailRoleAdminComponent = (function () {
     function DetailRoleAdminComponent(rolesService) {
         this.rolesService = rolesService;
+        this.saving = false;
         this.formReset = true;
         this.roleData = new role_admin_model_1.Role();
         this.windowClose = new core_1.EventEmitter();
@@ -29,9 +30,11 @@ var DetailRoleAdminComponent = (function () {
     };
     DetailRoleAdminComponent.prototype.newRole = function () {
         var _this = this;
+        this.saving = true;
         var name = this.roleData.name;
         var id = this.roleData.id;
-        this.rolesService.addRole(JSON.stringify({ name: name, id: id })).subscribe(function (data) { }, function (error) { _this.error = error; }, function () {
+        this.rolesService.addRole(JSON.stringify({ name: name, id: id })).subscribe(function (data) { }, function (error) { _this.error = error; _this.saving = false; }, function () {
+            _this.saving = false;
             _this.success = 'Rola úspešné pridaná.';
             _this.roleData = new role_admin_model_1.Role();
             _this.formReset = false;
@@ -41,9 +44,11 @@ var DetailRoleAdminComponent = (function () {
     };
     DetailRoleAdminComponent.prototype.editRole = function () {
         var _this = this;
+        this.saving = true;
         var name = this.roleData.name;
         var id = this.roleData.id;
-        this.rolesService.editRole(id, JSON.stringify({ id: id, name: name })).subscribe(function (data) { }, function (error) { _this.error = error; }, function () {
+        this.rolesService.editRole(id, JSON.stringify({ id: id, name: name })).subscribe(function (data) { }, function (error) { _this.error = error; _this.saving = false; }, function () {
+            _this.saving = false;
             _this.success = 'Rola úspešne upravená.';
             _this.updateList.emit(true);
         });

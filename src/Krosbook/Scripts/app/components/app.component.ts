@@ -9,7 +9,7 @@ import {RolesService} from '../services/roles.service';
 
 @Component({
     selector: 'app-root',
-    template: '<router-outlet></router-outlet>',
+  template: '<router-outlet></router-outlet>',
     directives: [ROUTER_DIRECTIVES],
     providers: [
         UserService, OfficeService, CarService, EquipmentService, RolesService

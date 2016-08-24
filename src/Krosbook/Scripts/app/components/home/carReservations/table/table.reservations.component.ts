@@ -9,7 +9,7 @@ declare var $:any;
 
 @Component({
   selector: 'tbody',
-  templateUrl: 'app/components/home/reservations/table/table.reservations.component.html',
+  templateUrl: 'app/components/home/carReservations/table/table.reservations.component.html',
   directives: [DetailReservationComponent],
   providers: [ReservationService, HolidayService]
 })

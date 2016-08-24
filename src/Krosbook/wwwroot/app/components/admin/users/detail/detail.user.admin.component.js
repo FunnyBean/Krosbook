@@ -18,6 +18,7 @@ var email_validator_1 = require('../../../../validators/email.validator');
 var DetailUserAdminComponent = (function () {
     function DetailUserAdminComponent(userService) {
         this.userService = userService;
+        this.saving = false;
         this.formReset = true;
         this.checkedRoles = new Array();
         this.userData = new user_admin_model_1.User();
@@ -40,6 +41,7 @@ var DetailUserAdminComponent = (function () {
     };
     DetailUserAdminComponent.prototype.newUser = function () {
         var _this = this;
+        this.saving = true;
         var email = this.userData.email;
         var name = this.userData.name;
         var surname = this.userData.surname;
@@ -49,7 +51,8 @@ var DetailUserAdminComponent = (function () {
                 roles.push({ "roleId": this.allRoles[i].id });
             }
         }
-        this.userService.addUser(JSON.stringify({ email: email, name: name, surname: surname, roles: roles })).subscribe(function (data) { }, function (error) { _this.error = error; }, function () {
+        this.userService.addUser(JSON.stringify({ email: email, name: name, surname: surname, roles: roles })).subscribe(function (data) { }, function (error) { _this.error = error; _this.saving = false; }, function () {
+            _this.saving = false;
             _this.success = 'Užívateľ úspešne vytvorený.';
             _this.userData = new user_admin_model_1.User();
             _this.formReset = false;
@@ -61,6 +64,7 @@ var DetailUserAdminComponent = (function () {
     };
     DetailUserAdminComponent.prototype.editUser = function () {
         var _this = this;
+        this.saving = true;
         var id = this.userData.id;
         var email = this.userData.email;
         var name = this.userData.name;
@@ -75,7 +79,9 @@ var DetailUserAdminComponent = (function () {
         this.userService.editUser(id, JSON.stringify({ id: id, email: email, name: name, surname: surname, roles: roles, PhotoBase64: PhotoBase64 })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
+            _this.saving = false;
         }, function () {
+            _this.saving = false;
             _this.success = 'Užívateľ úspešne upravený.';
             _this.updateList.emit(true);
         });

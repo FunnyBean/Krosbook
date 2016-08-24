@@ -13,7 +13,7 @@
     <label class="control-label col-md-4 remove-padding">interval: </label>
     <div class="col-md-8 remove-padding">
          <p class="form-group one-line">
-            {{ (repetitionData.interval == 1) ? "každý" : ((repetitionData.interval >= 5) ? "každých" : "každé") }} <input type="number" min="1" max="30" value="1" name="interval" class="form-control" [(ngModel)]="repetitionData.interval"> {{ (repetitionData.interval == 1) ? slovakIntervalSG[repetitionData.repeating] : ((repetitionData.interval >= 5) ? slovakIntervalPLG[repetitionData.repeating] : slovakIntervalPLN[repetitionData.repeating]) }}
+            {{ (repetitionData.interval == 1) ? "každý" : ((repetitionData.interval >= 5) ? "každých" : "každé") }} <input type="number" min="1" max="30" value="1" name="interval" class="form-control" [(ngModel)]="repetitionData.interval"> {{ (repetitionData.interval == 1) ? slovakIntervalSG[repetitionData.repetation] : ((repetitionData.interval >= 5) ? slovakIntervalPLG[repetitionData.repetation] : slovakIntervalPLN[repetitionData.repetation]) }}
         </p>    
     </div>
 </div>

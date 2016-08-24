@@ -1,7 +1,7 @@
 <h2>Používatelia</h2>
 <button type="button" class="btn btn-success" (click)="newUser()"><span class="glyphicon glyphicon-plus"></span>  Nový používateľ</button>
 <user *ngIf="showOfficeWindow" (windowClose)="windowClose($event)" (updateList)="GetUsers()" [userId]="userId"></user>
-<table class="table">
+<table class="table table-hover col-md-12">
   <thead>
   <tr>
     <th>Obrázok</th>

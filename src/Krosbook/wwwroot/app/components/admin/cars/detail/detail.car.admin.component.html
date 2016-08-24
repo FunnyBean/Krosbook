@@ -37,10 +37,14 @@
 
     <!--SUBMIT BUTTON-->
     <div *ngIf="!carData.id">
-      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newCar()" [disabled]="!carForm.form.valid">Vytvoriť vozidlo</button>
+      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newCar()" [disabled]="!carForm.form.valid">Vytvoriť vozidlo
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
     <div *ngIf="carData.id">
-      <button type="submit" id="edit_button" class="btn btn-success  btn-block" (click)="editCar()" [disabled]="!carForm.form.valid">Editovať vozidlo</button>
+      <button type="submit" id="edit_button" class="btn btn-success  btn-block" (click)="editCar()" [disabled]="!carForm.form.valid">Editovať vozidlo
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
 
   </form>

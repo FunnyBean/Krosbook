@@ -13,7 +13,9 @@ import {CarsAdminComponent} from "./admin/cars/cars.admin.component";
 import {EquipmentAdminComponent} from "./admin/equipment/equipment.admin.component";
 import {RolesAdminComponent} from './admin/roles/roles.admin.component';
 
-import {ReservationsComponent} from './home/reservations/reservations.component';
+
+import {RoomReservationsComponent} from './home/roomReservations/room.reservations.component';
+import {CarsReservationsComponent} from './home/carReservations/car.reservations.component';
 import {AvatarComponent} from "./home/profile/avatar/avatar.component";
 import {PasswordComponent} from "./home/profile/password/password.component";
 
@@ -42,11 +44,15 @@ const routes: RouterConfig = [
       },
       {
         path: '',
-        component: ReservationsComponent
+        component: RoomReservationsComponent
       },
       {
-        path: 'reservations/:type',
-        component: ReservationsComponent
+        path: 'reservations/cars',
+        component: CarsReservationsComponent
+      },
+       {
+        path: 'reservations/rooms',
+        component: RoomReservationsComponent
       }
     ]
   },

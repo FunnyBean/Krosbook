@@ -42,6 +42,9 @@ div {
   #leftMenu a:hover {
     text-decoration: none; 
   }
+  #leftMenu a.active{
+    background: #dbdbdb;
+  }
 
 .homeButton {
   margin-top: 10px;

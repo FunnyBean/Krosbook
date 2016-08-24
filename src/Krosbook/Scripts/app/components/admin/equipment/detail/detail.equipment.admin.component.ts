@@ -11,6 +11,7 @@ import {EquipmentService} from '../../../../services/equipment.service';
 export class DetailEquipmentAdminComponent implements OnInit {
   public error;
   public success;
+  public saving:boolean = false;
   public formReset:boolean = true;
   public equipmentData:Equipment = new Equipment();
 
@@ -33,12 +34,14 @@ export class DetailEquipmentAdminComponent implements OnInit {
   }
 
   newEquipment(){
+    this.saving = true;
     let description = this.equipmentData.description;
     let amount = this.equipmentData.amount;
     this.equipmentService.addEquipment(JSON.stringify({description , amount})).subscribe(
       data => { },
-      error => { this.error = error; },
+      error => { this.error = error; this.saving = false; },
       () => {
+        this.saving = false;
         this.success = 'Vybavenie úspešne pridané.';
         this.equipmentData = new Equipment();
         this.formReset = false;
@@ -49,13 +52,15 @@ export class DetailEquipmentAdminComponent implements OnInit {
   }
 
   editEquipment(){
+    this.saving = true;
     let id = this.equipmentData.id;
     let description= this.equipmentData.description;
     let amount = this.equipmentData.amount;
     this.equipmentService.editEquipment(id, JSON.stringify({id, description, amount})).subscribe(
       data => { },
-      error => { this.error = error; },
+      error => { this.error = error; this.saving = false;},
       () => {
+        this.saving = false;
         this.success = 'Vybavenie úspešne upravené.';
         this.updateList.emit(true);
       }

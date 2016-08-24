@@ -15,7 +15,6 @@ export class AuthGuard implements CanActivate {
 
   canActivate() {
     return Observable.create(observer => {
-      console.log("AuthGuard");
       this.userService.isLoggedIn().subscribe(
         data => { 
             observer.next(true);

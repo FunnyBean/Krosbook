@@ -12,7 +12,8 @@ var offices_admin_component_1 = require('./admin/offices/offices.admin.component
 var cars_admin_component_1 = require("./admin/cars/cars.admin.component");
 var equipment_admin_component_1 = require("./admin/equipment/equipment.admin.component");
 var roles_admin_component_1 = require('./admin/roles/roles.admin.component');
-var reservations_component_1 = require('./home/reservations/reservations.component');
+var room_reservations_component_1 = require('./home/roomReservations/room.reservations.component');
+var car_reservations_component_1 = require('./home/carReservations/car.reservations.component');
 var avatar_component_1 = require("./home/profile/avatar/avatar.component");
 var password_component_1 = require("./home/profile/password/password.component");
 var routes = [
@@ -38,11 +39,15 @@ var routes = [
             },
             {
                 path: '',
-                component: reservations_component_1.ReservationsComponent
+                component: room_reservations_component_1.RoomReservationsComponent
             },
             {
-                path: 'reservations/:type',
-                component: reservations_component_1.ReservationsComponent
+                path: 'reservations/cars',
+                component: car_reservations_component_1.CarsReservationsComponent
+            },
+            {
+                path: 'reservations/rooms',
+                component: room_reservations_component_1.RoomReservationsComponent
             }
         ]
     },

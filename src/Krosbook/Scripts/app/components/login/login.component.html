@@ -23,7 +23,9 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" id="login_button" class="ui button" >Prihlásiť</button>
+                <button type="submit" id="login_button" class="ui button" >Prihlásiť 
+                    <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:25px; margin-left: 5px"></i>
+                </button>
             </div>
         
         </form>

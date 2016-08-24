@@ -52,10 +52,14 @@
 
     <!--SUBMIT BUTTON-->
     <div *ngIf="!userData.id">
-      <button type="submit" id="add_button" class="btn btn-success  btn-block" [disabled]="!userForm.form.valid" (click)="newUser()">Vytvoriť používateľa</button>
+      <button type="submit" id="add_button" class="btn btn-success  btn-block" [disabled]="!userForm.form.valid" (click)="newUser()">Vytvoriť používateľa
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
     <div *ngIf="userData.id">
-      <button type="submit" id="edit_button" class="btn btn-success  btn-block" [disabled]="!userForm.form.valid" (click)="editUser()">Editovať používateľa</button>
+      <button type="submit" id="edit_button" class="btn btn-success  btn-block" [disabled]="!userForm.form.valid" (click)="editUser()">Editovať používateľa
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
   </form>
  </div>

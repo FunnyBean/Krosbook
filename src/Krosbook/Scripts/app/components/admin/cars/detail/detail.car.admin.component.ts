@@ -13,6 +13,7 @@ import {PlateUniquenessValidator, PlateValidator} from '../../../../validators/p
 export class DetailCarAdminComponent {
   public error;
   public success;
+  public saving:boolean = false;
   public formReset:boolean = true;
   public carData:Car = new Car();
 
@@ -35,6 +36,7 @@ export class DetailCarAdminComponent {
   }
 
   newCar(){
+    this.saving = true;
     let plate = this.carData.plate.toUpperCase();
     let name = this.carData.name;
     this.carService.addCar(JSON.stringify({plate, name})).subscribe(
@@ -42,8 +44,10 @@ export class DetailCarAdminComponent {
       },
       error => {
         this.error = error;
+        this.saving = false;
       },
       () => {
+        this.saving = false;
         this.success = 'Vozidlo úspešne vytvorené.';
         this.carData = new Car();
         this.formReset = false;
@@ -54,6 +58,7 @@ export class DetailCarAdminComponent {
   }
 
   editCar(){
+    this.saving = true;
     let id = this.carData.id
     let plate = this.carData.plate.toUpperCase();
     let name = this.carData.name;
@@ -63,8 +68,10 @@ export class DetailCarAdminComponent {
       },
       error => {
         this.error = error;
+        this.saving = false;
       },
       () => {
+        this.saving = false;
         this.success = 'Vozidlo úspešne upravené.';
         this.updateList.emit(true);
       }
