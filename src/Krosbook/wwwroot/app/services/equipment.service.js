@@ -8,16 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/**
- * Created by krosaci on 21.7.2016.
- */
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
-require('rxjs/add/operator/map');
 var EquipmentService = (function () {
     function EquipmentService(http) {
         this.http = http;
-        this.hasRoleAdmin = false;
         var _build = http._backend._browserXHR.build;
         http._backend._browserXHR.build = function () {
             var _xhr = _build();

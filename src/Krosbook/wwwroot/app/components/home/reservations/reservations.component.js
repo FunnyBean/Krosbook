@@ -37,18 +37,9 @@ var ReservationsComponent = (function () {
         this.officeTypes = new Array();
     }
     ReservationsComponent.prototype.ngOnInit = function () {
-        var _this = this;
+        this.loadUsersData();
         this.updateTime();
         this.updateWeek();
-        this.loadUsersData();
-        this.route.params.subscribe(function (params) {
-            _this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
-            _this.name = (_this.reservationType == 'rooms') ? 'miestností' : 'áut';
-            if (_this.reservationType == 'rooms')
-                _this.loadOfficesData();
-            else
-                _this.loadCarsData();
-        });
     };
     ReservationsComponent.prototype.ngAfterViewInit = function () {
         var tables = this.tableReservationComponent.toArray();
@@ -84,7 +75,16 @@ var ReservationsComponent = (function () {
             var usersArray = data.json();
             for (var i = 0; i < usersArray.length; i++)
                 _this.usersList[usersArray[i].id] = usersArray[i].name + ' ' + usersArray[i].surname;
-        }, function (error) { return console.log(error); });
+        }, function (error) { return console.log(error); }, function () {
+            _this.route.params.subscribe(function (params) {
+                _this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
+                _this.name = (_this.reservationType == 'rooms') ? 'miestností' : 'áut';
+                if (_this.reservationType == 'rooms')
+                    _this.loadOfficesData();
+                else
+                    _this.loadCarsData();
+            });
+        });
         this.userService.myProfile().subscribe(function (data) {
             _this.loggedUser = data.json();
         }, function (error) { return console.log(error); });

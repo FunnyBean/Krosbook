@@ -28,6 +28,7 @@ namespace Krosbook.Controllers.Api.v1
         #region Private Fields
 
         private IRoomReservationRepository _reservationRepository;
+        private IRoomReservationRepeaterRepository _reservationRepeaterRepository;
         private ILogger<RoomReservationController> _logger;
         private IMapper _mapper;
         private IEmailService _emailService;
@@ -39,7 +40,7 @@ namespace Krosbook.Controllers.Api.v1
         #region Constructor
         public RoomReservationController(IRoomReservationRepository reservationRepository,
                       ILogger<RoomReservationController> logger,
-                                       IMapper mapper, IEmailService emailService, IG2MService G2MService
+                                       IMapper mapper, IEmailService emailService, IG2MService G2MService, IRoomReservationRepeaterRepository reservationRepeaterRepository
                                        )
         {
             _reservationRepository = reservationRepository;
@@ -47,6 +48,7 @@ namespace Krosbook.Controllers.Api.v1
             _mapper = mapper;
             _emailService = emailService;
             _G2MService = G2MService;
+            _reservationRepeaterRepository = reservationRepeaterRepository;
         }
 
         #endregion
@@ -59,7 +61,7 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetAll());
         }
 
-        //yyyy-MM-ddTHH:mm:ss
+    
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewRoomReservation([FromBody] RoomReservationViewModel reservationVm)
@@ -219,6 +221,44 @@ namespace Krosbook.Controllers.Api.v1
 
             });
         }
+
+
+
+
+        [HttpPost("repetition")]
+        [ValidateModelState, CheckArgumentsForNull]
+        public IActionResult CreateNewRoomRepetitionReservation([FromBody] RoomReservationRepeaterViewModel repeaterVm)
+        {
+         //   if (repeaterVm.Appearance == null)
+           // {
+                repeaterVm.EndDate = DateTime.ParseExact(repeaterVm.endingDate, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            //}
+           // else {
+          //      repeaterVm.EndDate = DateTime.ParseExact(repeaterVm.endingDate, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            //}
+
+
+            if (_reservationRepeaterRepository.Get(x=>x.ReservationId==repeaterVm.ReservationId) == null)
+            {
+                var repeater = _mapper.Map<RoomReservationRepeater>(repeaterVm);
+                return SaveData(() =>
+                {
+                    _reservationRepeaterRepository.Add(repeater);
+                },
+                () =>
+                {
+                    this.Response.StatusCode = (int)HttpStatusCode.Created;
+                    return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(repeater));
+                });
+            }
+            else
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return this.Json(new { Message = $"Repetition with reservation id '{repeaterVm.ReservationId}' already exist." });
+            }
+
+        }
+
 
         #endregion
 

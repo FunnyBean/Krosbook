@@ -15,35 +15,35 @@ export class CarService {
   public getCars() {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://funnybean.cloudapp.net/api/cars', { headers  } ); /*headers tu nemusi byt*/
+    return this.http.get('/api/cars', { headers  } ); /*headers tu nemusi byt*/
   }
 
   public getCar(id:number) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://funnybean.cloudapp.net/api/cars/'+id, { headers  } ); /*headers tu nemusi byt*/
+    return this.http.get('/api/cars/'+id, { headers  } ); /*headers tu nemusi byt*/
   }
 
   public addCar(car:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://funnybean.cloudapp.net/api/cars',car, {headers});
+    return this.http.post('/api/cars',car, {headers});
   }
 
   public editCar(id:string, car:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put("http://funnybean.cloudapp.net/api/cars/"+id, car, {headers});
+    return this.http.put("/api/cars/"+id, car, {headers});
   }
 
   public removeCar(id: string) {
-    return this.http.delete('http://funnybean.cloudapp.net/api/cars/'+id);
+    return this.http.delete('/api/cars/'+id);
   }
 
   public filterCars(date:string, length:number) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://funnybean.cloudapp.net/api/cars/filter', JSON.stringify({date, length}), { headers  } );
+    return this.http.post('/api/cars/filter', JSON.stringify({date, length}), { headers  } );
   }
 
 }

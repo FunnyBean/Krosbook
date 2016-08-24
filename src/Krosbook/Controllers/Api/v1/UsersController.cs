@@ -16,7 +16,6 @@ using System.IdentityModel.Claims;
 using Krosbook.Services.Email;
 using Krosbook.Services.Template;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
 namespace Krosbook.Controllers.Api.v1

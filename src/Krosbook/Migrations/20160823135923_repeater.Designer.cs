@@ -8,8 +8,8 @@ using Krosbook.Models;
 namespace Krosbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160816120445_asjfhjadf")]
-    partial class asjfhjadf
+    [Migration("20160823135923_repeater")]
+    partial class repeater
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,6 +71,8 @@ namespace Krosbook.Migrations
 
                     b.Property<int>("RoomId");
 
+                    b.Property<int?>("RoomReservationRepeaterId");
+
                     b.Property<int>("UserId");
 
                     b.Property<DateTime>("dateTime");
@@ -83,9 +85,30 @@ namespace Krosbook.Migrations
 
                     b.HasIndex("RoomId");
 
+                    b.HasIndex("RoomReservationRepeaterId")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
                     b.ToTable("RoomReservation");
+                });
+
+            modelBuilder.Entity("Krosbook.Models.Reservation.RoomReservationRepeater", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Appearance");
+
+                    b.Property<int>("Interval");
+
+                    b.Property<string>("Repetation");
+
+                    b.Property<int?>("ReservationId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomReservationRepeater");
                 });
 
             modelBuilder.Entity("Krosbook.Models.Rooms.Equipment", b =>
@@ -248,6 +271,10 @@ namespace Krosbook.Migrations
                         .WithMany("Reservations")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Krosbook.Models.Reservation.RoomReservationRepeater", "RoomReservationRepeater")
+                        .WithOne("RoomReservation")
+                        .HasForeignKey("Krosbook.Models.Reservation.RoomReservation", "RoomReservationRepeaterId");
 
                     b.HasOne("Krosbook.Models.Users.User", "User")
                         .WithMany("Rooms")
