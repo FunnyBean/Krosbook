@@ -189,6 +189,7 @@ namespace Krosbook
             services.AddSingleton<IG2MService, G2MService>();
 
             services.AddScoped<IRememberMeRepository, RememberMeRepository>();
+            services.AddScoped<IRoomReservationRepeaterRepository, RoomReservationRepeaterRepository>();
         }
 
         private static void InitializeAutoMapper(IServiceCollection services)

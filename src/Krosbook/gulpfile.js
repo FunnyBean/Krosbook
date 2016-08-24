@@ -56,12 +56,17 @@ gulp.task("reflect-metadata", function () {
         .pipe(gulp.dest(paths.lib + "reflect-metadata/"));
 });
 
+gulp.task("reflect-metadataMap", function () {
+    return gulp.src(paths.npm + "reflect-metadata/**/*.js.map")
+        .pipe(gulp.dest(paths.lib + "reflect-metadata/"));
+});
+
 gulp.task("zone.js", function () {
     return gulp.src(paths.npm + "zone.js/**/*.js")
         .pipe(gulp.dest(paths.lib + "zone.js/"));
 });
 
-gulp.task("libs", ["rxjs", "rxjsMap", "anuglar", "anuglarMap", "systemjs", "core-js", "reflect-metadata", "zone.js"]);
+gulp.task("libs", ["rxjs", "rxjsMap", "anuglar", "anuglarMap", "systemjs", "core-js", "reflect-metadata", "reflect-metadataMap", "zone.js"]);
 
 gulp.task("clean", function () {
     return gulp.src(paths.app + "**/*.*", { read: false })

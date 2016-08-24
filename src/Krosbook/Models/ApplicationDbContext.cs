@@ -63,6 +63,10 @@ namespace Krosbook.Models
         /// </summary>
         public DbSet<CarReservation> CarReservation { get; set; }
 
+        public DbSet<RememberMe> RememberMe { get; set; }
+
+        public DbSet<RoomReservationRepeater> RoomReservationRepeater { get; set; }
+
         #endregion
 
 
@@ -94,6 +98,8 @@ namespace Krosbook.Models
 
 
 
+         
+
             builder.Entity<RoomReservation>().HasKey(re => (new { re.Id }));
 
 
@@ -107,6 +113,22 @@ namespace Krosbook.Models
                 .HasOne(re => re.User)
                 .WithMany(r => r.Rooms)
                 .HasForeignKey(re => re.UserId);
+
+            //  builder.Entity<RoomReservation>().HasKey(r => r.Id);
+            /*    builder.Entity<RoomReservation>()
+                    .HasOne(ur => ur.RoomReservationRepeater)
+                    .WithMany(ur => ur.RoomReservation)
+                    .HasForeignKey(ur => ur.RoomReservationRepeaterId);
+                    */
+            builder.Entity<RoomReservationRepeater>().HasKey(re => (new { re.Id }));
+            builder.Entity<RoomReservationRepeater>().HasIndex(re=>re.ReservationId).IsUnique();
+
+            builder.Entity<RoomReservation>()
+                .HasOne(p=>p.RoomReservationRepeater)
+                .WithOne(t => t.RoomReservation)
+                .HasForeignKey<RoomReservation>(r=>r.RoomReservationRepeaterId);
+
+
 
         }
 
