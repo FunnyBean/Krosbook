@@ -112,40 +112,12 @@ export class DetailReservationComponent implements OnInit {
                     }
                 }
 
-                if(this.repeating)
-                {
-                    if(this.data.roomReservationRepeaterId == null){
-                        this.reservationService.addRepeatingReservation(this.reservationType, this.data.id, this.data.dateTime, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.end, this.repetitionData.appearance, this.repetitionData.endDate).subscribe(
-                            data => {
-                                this.saving = false;
-                                this.windowClose.emit(true);
-                            },
-                            error => { this.saving = false }
-                        )
-                    } else {
-                        this.reservationService.editRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId, this.data.id, this.data.dateTime, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.end, this.repetitionData.appearance, this.repetitionData.endDate).subscribe(
-                            data => {
-                                this.saving = false;
-                                this.windowClose.emit(true);
-                            },
-                            error => { this.saving = false }
-                        )
-                    }
-                }
-                else if(!this.repeating && this.data.roomReservationRepeaterId != null){
-                    this.reservationService.deleteRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId).subscribe(
-                        data => {
-                            this.saving = false;
-                            this.windowClose.emit(true);
-                        },   
-                        error => { this.saving = false }
-                    )
-                }
-
-                if(this.data.roomReservationRepeaterId && !this.repeating)
-                    this.data.roomReservationRepeaterId = null;
+                var repeaterId: any;
+                if (this.data.roomReservationRepeaterId && !this.repeating)
+                    repeaterId = null;
+                else repeaterId = this.data.roomReservationRepeaterId;
                 
-                this.reservationService.editReservation(this.reservationType, this.data.id, this.data.name, elementId, this.data.userId, this.data.dateTime, this.data.length * 60, this.data.roomReservationRepeaterId, this.emailInvitation, this.reserveGoToMeeting).subscribe(
+                this.reservationService.editReservation(this.reservationType, this.data.id, this.data.name, elementId, this.data.userId, this.data.dateTime, this.data.length * 60, repeaterId, this.emailInvitation, this.reserveGoToMeeting).subscribe(
                     data => { },
                     error => {
                         this.error = 'Na daný termín je v GoToMeeting naplánovaná už iná rezervácia.';
@@ -153,6 +125,34 @@ export class DetailReservationComponent implements OnInit {
                         this.saving = false;
                     },
                     () => {
+                        if (this.repeating) {
+                            if (this.data.roomReservationRepeaterId == null) {
+                                this.reservationService.addRepeatingReservation(this.reservationType, this.data.id, this.data.dateTime, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.end, this.repetitionData.appearance, this.repetitionData.endDate).subscribe(
+                                    data => {
+                                        this.saving = false;
+                                        this.windowClose.emit(true);
+                                    },
+                                    error => { this.saving = false }
+                                )
+                            } else {
+                                this.reservationService.editRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId, this.data.id, this.data.dateTime, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.end, this.repetitionData.appearance, this.repetitionData.endDate).subscribe(
+                                    data => {
+                                        this.saving = false;
+                                        this.windowClose.emit(true);
+                                    },
+                                    error => { this.saving = false }
+                                )
+                            }
+                        }
+                        else if (!this.repeating && this.data.roomReservationRepeaterId != null) {
+                            this.reservationService.deleteRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId).subscribe(
+                                data => {
+                                    this.saving = false;
+                                    this.windowClose.emit(true);
+                                },
+                                error => { this.saving = false }
+                            )
+                        }
                         this.saving = false;
                         this.windowClose.emit(true);
                     }

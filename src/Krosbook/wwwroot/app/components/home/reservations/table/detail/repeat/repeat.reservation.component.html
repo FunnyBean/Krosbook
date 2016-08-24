@@ -1,7 +1,7 @@
 <div class="form-group col-md-12 remove-padding">
     <label class="control-label col-md-4 remove-padding">opakovanie: </label>
     <div class="col-md-8 remove-padding">
-        <select name="repeating" class="form-control" [(ngModel)]="repetitionData.repeating">
+        <select name="repeating" class="form-control" [(ngModel)]="repetitionData.repetation">
             <option value="days">Denne</option>
             <option value="weeks">Týždenne</option>
             <option value="months">Mesačne</option>
@@ -31,7 +31,7 @@
         <div class="radio">
             <label>
                 <input type="radio" name="endOptions" id="endOptions2" [(ngModel)]="repetitionData.end" value="date">
-                <input type="date" class="form-control" name="repetitionEndDate" [(ngModel)]="repetitionData.date" [disabled]="repetitionData.end != 'date'">
+                <input type="date" class="form-control" name="repetitionEndDate" [(ngModel)]="repetitionData.endDate" [disabled]="repetitionData.end != 'date'" validateDate>
             </label>
         </div>
     </div>

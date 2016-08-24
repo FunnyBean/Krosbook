@@ -4,7 +4,7 @@
  */
 var Reservation = (function () {
     function Reservation() {
-        this.reservationRepeaterId = null;
+        this.roomReservationRepeaterId = null;
     }
     return Reservation;
 }());

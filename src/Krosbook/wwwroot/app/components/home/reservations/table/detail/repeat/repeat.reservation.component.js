@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var time_validator_1 = require('../../../../../../validators/time.validator');
 var RepeatReservationComponent = (function () {
     function RepeatReservationComponent() {
         this.slovakIntervalSG = { days: "deň", weeks: "týždeň", months: "mesiac", years: "rok" };
@@ -23,7 +24,8 @@ var RepeatReservationComponent = (function () {
         core_1.Component({
             selector: "repeater",
             templateUrl: 'app/components/home/reservations/table/detail/repeat/repeat.reservation.component.html',
-            styles: ['.one-line{display: inline-flex; line-height: 34px;} .one-line input{margin-left: 5px; margin-right: 5px} input[type="radio"]{margin-top: 10px;} .radio{margin-top: 0px} .control-label{line-height: 34px;}']
+            styles: ['.one-line{display: inline-flex; line-height: 34px;} .one-line input{margin-left: 5px; margin-right: 5px} input[type="radio"]{margin-top: 10px;} .radio{margin-top: 0px} .control-label{line-height: 34px;}'],
+            directives: [time_validator_1.DateValidator]
         }), 
         __metadata('design:paramtypes', [])
     ], RepeatReservationComponent);

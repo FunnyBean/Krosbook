@@ -2,10 +2,10 @@
 var moment = require('moment');
 var Repetition = (function () {
     function Repetition() {
-        this.repeating = "days";
+        this.repetation = "days";
         this.interval = 1;
         this.appearance = 1;
-        this.date = moment().format("YYYY-MM-DD");
+        this.endDate = moment().format("YYYY-MM-DD");
     }
     return Repetition;
 }());
