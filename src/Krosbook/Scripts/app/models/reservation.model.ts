@@ -9,5 +9,5 @@ export class Reservation {
   public roomId:number;
   public carId:number;
   public userId:number;
-  public reservationRepeaterId:number = null;
+  public roomReservationRepeaterId:number = null;
 }
