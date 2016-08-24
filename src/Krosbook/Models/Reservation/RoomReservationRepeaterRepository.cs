@@ -11,5 +11,10 @@ namespace Krosbook.Models.Reservation
         public RoomReservationRepeaterRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
+
+        public RoomReservationRepeater GetSingleByReservationId(int ReservationId)
+        {
+            return this.GetSingle(x => x.ReservationId == ReservationId);
+        }
     }
 }

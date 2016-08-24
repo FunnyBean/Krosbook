@@ -223,7 +223,20 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-
+        [HttpGet("repetition/{reservationId}")]
+        public IActionResult GetReservationRepetitionById(int repetitionnId)
+        {
+            var repetition = _reservationRepeaterRepository.GetItem(repetitionnId);
+            if (repetition == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            else
+            {
+                return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(repetition));
+            }
+        }
 
         [HttpPost("repetition")]
         [ValidateModelState, CheckArgumentsForNull]
@@ -238,15 +251,21 @@ namespace Krosbook.Controllers.Api.v1
             //}
 
 
-            if (_reservationRepeaterRepository.Get(x=>x.ReservationId==repeaterVm.ReservationId) == null)
+            if (_reservationRepeaterRepository.Get(x=>x.ReservationId==repeaterVm.ReservationId).Count() == 0)
             {
                 var repeater = _mapper.Map<RoomReservationRepeater>(repeaterVm);
                 return SaveData(() =>
                 {
-                    _reservationRepeaterRepository.Add(repeater);
+                    _reservationRepeaterRepository.Add(repeater);    
                 },
                 () =>
                 {
+                    var reservation = _reservationRepository.GetItem(repeater.ReservationId);
+                    var rep = _reservationRepeaterRepository.GetSingleByReservationId(repeater.ReservationId);
+                    reservation.RoomReservationRepeaterId = rep.Id;
+                    _reservationRepository.Edit(reservation);
+                    _reservationRepository.Save();
+
                     this.Response.StatusCode = (int)HttpStatusCode.Created;
                     return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(repeater));
                 });
