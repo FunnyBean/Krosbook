@@ -8,5 +8,6 @@ namespace Krosbook.Models.Reservation
 {
     public interface IRoomReservationRepeaterRepository: IRepository<RoomReservationRepeater>
     {
+        RoomReservationRepeater GetSingleByReservationId(int ReservationId);
     }
 }

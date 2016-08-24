@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Krosbook.ViewModels.Users;
 using Microsoft.AspNetCore.Cors;
 using System.Linq;
+using System.Net;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -77,18 +78,17 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpGet("isLoggedIn")]
-        [Authorize]
+        [HttpGet("isLoggedIn")]    
         public IActionResult IsLoggedIn()
         {
             var claims = User.Claims.Count();
             if (claims != 0)
-            {
+            {             
                 return Ok();
             }
             else
             {
-                return Unauthorized();
+                return NotFound();
             }
         }
         #endregion
