@@ -61,7 +61,7 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<RoomReservationViewModel>>(_reservationRepository.GetAll());
         }
 
-    
+
         [HttpPost()]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewRoomReservation([FromBody] RoomReservationViewModel reservationVm)
@@ -254,32 +254,136 @@ namespace Krosbook.Controllers.Api.v1
             }
             return SaveData(() =>
             {
-                _reservationRepeaterRepository.Delete(repetitionId);              
+                _reservationRepeaterRepository.Delete(repetitionId);
             });
         }
 
+        [HttpPut("repetition/{repetitionId}")]
+        [ValidateModelState, CheckArgumentsForNull]
+        public IActionResult UpdateReservationRepetition(int repetitionId, [FromBody] RoomReservationRepeaterViewModel repeaterVm)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                if (_reservationRepository.GetItem(_reservationRepeaterRepository.GetItem(repetitionId).ReservationId).UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't update reservation repetition, that was created by user with id " + _reservationRepository.GetItem(repetitionId).UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
+            }
+            if (repeaterVm.Id != repetitionId)
+            {
+                var message = $"Invalid argument. Id '{repetitionId}' and userVm.Id '{repeaterVm.Id}' are not equal.";
+                _logger.LogWarning(message);
+                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return this.Json(new { Message = message });
+            }
 
+            RoomReservationRepeater oldRepeater = _reservationRepeaterRepository.GetItem(repetitionId);
+            if (oldRepeater == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+
+            if (repeaterVm.Appearance == null)
+            {
+                repeaterVm.EndDate = DateTime.ParseExact(repeaterVm.endingDate, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                var startDate = _reservationRepository.GetItem(repeaterVm.ReservationId).dateTime;
+                if (repeaterVm.Repetation == "days")
+                {
+                    repeaterVm.EndDate = startDate;
+                    for (int i = 0; i < (repeaterVm.Appearance - 1) * repeaterVm.Interval; i++)
+                    {
+
+                        if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Monday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Tuesday
+                            || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Wednesday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Thursday)
+                        {
+                            repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1);
+                        }
+                        if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            repeaterVm.EndDate = repeaterVm.EndDate.AddDays(3);
+                            i++;
+                        }
+                    }
+                }
+                if (repeaterVm.Repetation == "weeks")
+                {
+                    repeaterVm.EndDate = startDate.AddDays((((int)repeaterVm.Appearance * 7) - 1) * repeaterVm.Interval);
+                }
+                if (repeaterVm.Repetation == "months")
+                {
+                    repeaterVm.EndDate = startDate.AddMonths(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
+                }
+                if (repeaterVm.Repetation == "years")
+                {
+                    repeaterVm.EndDate = startDate.AddYears(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
+                }
+            }
+
+            RoomReservationRepeater editedRepeater = _mapper.Map(repeaterVm, oldRepeater);
+            return SaveData(() =>
+            {
+                _reservationRepeaterRepository.Edit(editedRepeater);
+            });
+        }
 
 
         [HttpPost("repetition")]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewRoomRepetitionReservation([FromBody] RoomReservationRepeaterViewModel repeaterVm)
         {
-         //   if (repeaterVm.Appearance == null)
-           // {
+            if (repeaterVm.Appearance == null)
+            {
                 repeaterVm.EndDate = DateTime.ParseExact(repeaterVm.endingDate, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-            //}
-           // else {
-          //      repeaterVm.EndDate = DateTime.ParseExact(repeaterVm.endingDate, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-            //}
+            }
+            else
+            {
+                var startDate = _reservationRepository.GetItem(repeaterVm.ReservationId).dateTime;
+                if (repeaterVm.Repetation == "days")
+                {
+                    repeaterVm.EndDate = startDate;
+                    for (int i = 0; i < (repeaterVm.Appearance-1)*repeaterVm.Interval; i++)
+                    {
+
+                        if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Monday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Tuesday
+                            || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Wednesday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Thursday)
+                        {
+                            repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1);
+                        }
+                        if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            repeaterVm.EndDate = repeaterVm.EndDate.AddDays(3);
+                            i++;
+                        }
+                    }
+                }
+                if (repeaterVm.Repetation == "weeks")
+                {
+                    repeaterVm.EndDate = startDate.AddDays((((int)repeaterVm.Appearance * 7) - 1) * repeaterVm.Interval);
+                }
+                if (repeaterVm.Repetation == "months")
+                {
+                    repeaterVm.EndDate = startDate.AddMonths(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
+                }
+                if (repeaterVm.Repetation == "years")
+                {
+                    repeaterVm.EndDate = startDate.AddYears(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
+                }
+            }
 
 
-            if (_reservationRepeaterRepository.Get(x=>x.ReservationId==repeaterVm.ReservationId).Count() == 0)
+            if (_reservationRepeaterRepository.Get(x => x.ReservationId == repeaterVm.ReservationId).Count() == 0)
             {
                 var repeater = _mapper.Map<RoomReservationRepeater>(repeaterVm);
                 return SaveData(() =>
                 {
-                    _reservationRepeaterRepository.Add(repeater);    
+                    _reservationRepeaterRepository.Add(repeater);
                 },
                 () =>
                 {

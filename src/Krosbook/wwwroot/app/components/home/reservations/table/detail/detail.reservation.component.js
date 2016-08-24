@@ -33,8 +33,14 @@ var DetailReservationComponent = (function () {
         var _this = this;
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(function (data) {
             _this.data = data.json();
-            if (_this.data.reservationRepeaterId != null) {
-                _this.reservationService.getRepeatingReservation(_this.reservationType, _this.data.reservationRepeaterId).subscribe(function (data) { _this.repetitionData = data.json(); _this.repeating = true; });
+            if (_this.data.roomReservationRepeaterId != null) {
+                _this.reservationService.getRepeatingReservation(_this.reservationType, _this.data.roomReservationRepeaterId).subscribe(function (data) {
+                    _this.repetitionData = data.json();
+                    console.log(_this.repetitionData);
+                    _this.repetitionData.endDate = moment(_this.repetitionData.endDate).format("YYYY-MM-DD");
+                    _this.repetitionData.end = (_this.repetitionData.appearance == null) ? "date" : "appearance";
+                    _this.repeating = true;
+                });
             }
             _this.dateTime = moment(_this.data.dateTime).format("DD.MM.YYYY HH:mm");
             _this.data.length = _this.data.length / 60;
@@ -69,7 +75,7 @@ var DetailReservationComponent = (function () {
     };
     DetailReservationComponent.prototype.editReservation = function (form) {
         var _this = this;
-        if (form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating) {
+        if (form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating && this.data.roomReservationRepeaterId == null) {
             this.windowClose.emit(true);
             return false;
         }
@@ -86,35 +92,38 @@ var DetailReservationComponent = (function () {
                     return false;
                 }
             }
-            _this.reservationService.editReservation(_this.reservationType, _this.data.id, _this.data.name, elementId, _this.data.userId, _this.data.dateTime, _this.data.length * 60, _this.emailInvitation, _this.reserveGoToMeeting).subscribe(function (data) { }, function (error) {
+            var repeaterId;
+            if (_this.data.roomReservationRepeaterId && !_this.repeating)
+                repeaterId = null;
+            else
+                repeaterId = _this.data.roomReservationRepeaterId;
+            _this.reservationService.editReservation(_this.reservationType, _this.data.id, _this.data.name, elementId, _this.data.userId, _this.data.dateTime, _this.data.length * 60, repeaterId, _this.emailInvitation, _this.reserveGoToMeeting).subscribe(function (data) { }, function (error) {
                 _this.error = 'Na daný termín je v GoToMeeting naplánovaná už iná rezervácia.';
                 console.log("error " + error);
                 _this.saving = false;
             }, function () {
                 if (_this.repeating) {
-                    if (_this.data.reservationRepeaterId == null) {
-                        _this.reservationService.addRepeatingReservation(_this.reservationType, _this.data.id, _this.data.dateTime, _this.repetitionData.repeating, _this.repetitionData.interval, _this.repetitionData.end, _this.repetitionData.appearance, _this.repetitionData.date).subscribe(function (data) {
+                    if (_this.data.roomReservationRepeaterId == null) {
+                        _this.reservationService.addRepeatingReservation(_this.reservationType, _this.data.id, _this.data.dateTime, _this.repetitionData.repetation, _this.repetitionData.interval, _this.repetitionData.end, _this.repetitionData.appearance, _this.repetitionData.endDate).subscribe(function (data) {
                             _this.saving = false;
                             _this.windowClose.emit(true);
                         }, function (error) { _this.saving = false; });
                     }
                     else {
-                        _this.reservationService.editRepeatingReservation(_this.reservationType, _this.data.reservationRepeaterId, _this.data.id, _this.data.dateTime, _this.repetitionData.repeating, _this.repetitionData.interval, _this.repetitionData.end, _this.repetitionData.appearance, _this.repetitionData.date).subscribe(function (data) {
+                        _this.reservationService.editRepeatingReservation(_this.reservationType, _this.data.roomReservationRepeaterId, _this.data.id, _this.data.dateTime, _this.repetitionData.repetation, _this.repetitionData.interval, _this.repetitionData.end, _this.repetitionData.appearance, _this.repetitionData.endDate).subscribe(function (data) {
                             _this.saving = false;
                             _this.windowClose.emit(true);
                         }, function (error) { _this.saving = false; });
                     }
                 }
-                else if (!_this.repeating && _this.data.reservationRepeaterId != null) {
-                    _this.reservationService.deleteRepeatingReservation(_this.reservationType, _this.data.reservationRepeaterId).subscribe(function (data) {
+                else if (!_this.repeating && _this.data.roomReservationRepeaterId != null) {
+                    _this.reservationService.deleteRepeatingReservation(_this.reservationType, _this.data.roomReservationRepeaterId).subscribe(function (data) {
                         _this.saving = false;
                         _this.windowClose.emit(true);
                     }, function (error) { _this.saving = false; });
                 }
-                else {
-                    _this.saving = false;
-                    _this.windowClose.emit(true);
-                }
+                _this.saving = false;
+                _this.windowClose.emit(true);
             });
         });
     };
