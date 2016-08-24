@@ -11,19 +11,20 @@ import {User} from '../../../models/user.admin.model';
 import {TableReservationComponent} from './table/table.reservations.component';
 import * as moment from 'moment';
 import {TimeValidator, DateValidator} from "../../../validators/time.validator";
+import {OrderDetailComponent} from '../../home/carReservations/order.detail/order.detail.component';
 
 declare var $:any;
 
 @Component({
-  templateUrl: 'app/components/home/reservations/reservations.component.html',
-  directives: [TableReservationComponent, TimeValidator, DateValidator],
+  templateUrl: 'app/components/home/carReservations/car.reservations.component.html',
+  directives: [TableReservationComponent, TimeValidator, DateValidator,OrderDetailComponent],
   styles: ['.table-arrow {top: 0px;} #filter{background-color: #f2f2f2; padding: 10px}']
 
 })
 
-export class ReservationsComponent implements OnInit  {
+export class CarsReservationsComponent implements OnInit  {
   public reservationType:string;
-  public name:string;
+  //public name:string;
   public times = JSON.parse('[]');
   public loggedUser:User = new User();
   public data;
@@ -39,11 +40,12 @@ export class ReservationsComponent implements OnInit  {
   public now = moment();
   public moveDate = this.now.format("YYYY-MM-DD");
   public tableWidth;
-  public officeTypes = new Array();
+  public showOrderWindow:boolean=false;
+  //public officeTypes = new Array();
 
   @ViewChildren(TableReservationComponent) tableReservationComponent: QueryList<TableReservationComponent>;
 
-  constructor(private route:ActivatedRoute, private carService:CarService, private officeService:OfficeService, private userService:UserService) { }
+  constructor(private route:ActivatedRoute, private carService:CarService,private userService:UserService) { }
 
   ngOnInit() {
     this.loadUsersData();
@@ -95,10 +97,7 @@ export class ReservationsComponent implements OnInit  {
       () => {
         this.route.params.subscribe(params => {
           this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
-          this.name = (this.reservationType == 'rooms') ? 'miestností' : 'áut';
-          if (this.reservationType == 'rooms')
-            this.loadOfficesData();
-          else this.loadCarsData();
+          this.loadCarsData();
         });  
       }
     );
@@ -110,20 +109,6 @@ export class ReservationsComponent implements OnInit  {
     );
   }
 
-  loadOfficesData() {
-    this.officeService.getOffices().subscribe(
-      data => {
-        this.data = data.json();
-        for(var i = 0; i < this.data.length; i++)
-        {
-          var row = this.data[i];
-          if(this.officeTypes.indexOf(row.type) == -1)
-            this.officeTypes.push(row.type);
-        }
-      },
-      error => console.log(error)
-    );
-  }
 
   loadCarsData() {
     this.carService.getCars().subscribe(
@@ -162,25 +147,7 @@ export class ReservationsComponent implements OnInit  {
   }
 
   filterReservation(element) {
-    if (this.reservationType == 'rooms')
-      this.loadFilteredOfficesData();
-    else this.loadFilteredCarsData();   
-  }
-
-  loadFilteredOfficesData() {
-   this.officeService.filterOffices(this.dateTime, this.length * 60, this.filterOfficeTypes).subscribe(
-     data => { 
-       this.data = data.json();
-       this.week = moment(this.dateTime).week() - moment().week() + 52*(moment(this.dateTime).year() - moment().year());
-        if(moment(this.dateTime).year() - moment().year() !== 0) this.week++;
-       this.updateWeek();
-    },
-     error => console.log(error)
-     );
-  }
-
-  loadFilteredCarsData() {
-    this.carService.filterCars(this.dateTime, this.length * 60).subscribe(
+   this.carService.filterCars(this.dateTime, this.length * 60).subscribe(
       data => {
         this.data = data.json();
         this.week = moment(this.dateTime).week() - moment().week() + 52*(moment(this.dateTime).year() - moment().year());
@@ -188,8 +155,9 @@ export class ReservationsComponent implements OnInit  {
         this.updateWeek();
       },
       error => console.log(error)
-    );
-  }
+    );   
+  } 
+ 
 
   moveFor() {
     this.week += 1;
@@ -222,6 +190,20 @@ export class ReservationsComponent implements OnInit  {
     for (var i = 1; i < 6; i++) {
       var day = moment().add(this.week, 'weeks').weekday(i).format("dd DD.MM.YY");
       this.days.push(day);
-    }
+    }    
   }
+
+  //opens order.detail.component window
+  windowOpen(){
+     this.showOrderWindow = true;
+  }
+
+  //closes order.detail.component window
+  windowClose(action: boolean){
+   // this.showOrderWindow = action;
+    this.showOrderWindow = false;
+  }
+
+ 
 }
+

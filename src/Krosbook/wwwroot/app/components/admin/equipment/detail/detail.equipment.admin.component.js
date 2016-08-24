@@ -14,6 +14,7 @@ var equipment_service_1 = require('../../../../services/equipment.service');
 var DetailEquipmentAdminComponent = (function () {
     function DetailEquipmentAdminComponent(equipmentService) {
         this.equipmentService = equipmentService;
+        this.saving = false;
         this.formReset = true;
         this.equipmentData = new equipment_admin_model_1.Equipment();
         this.windowClose = new core_1.EventEmitter();
@@ -29,9 +30,11 @@ var DetailEquipmentAdminComponent = (function () {
     };
     DetailEquipmentAdminComponent.prototype.newEquipment = function () {
         var _this = this;
+        this.saving = true;
         var description = this.equipmentData.description;
         var amount = this.equipmentData.amount;
-        this.equipmentService.addEquipment(JSON.stringify({ description: description, amount: amount })).subscribe(function (data) { }, function (error) { _this.error = error; }, function () {
+        this.equipmentService.addEquipment(JSON.stringify({ description: description, amount: amount })).subscribe(function (data) { }, function (error) { _this.error = error; _this.saving = false; }, function () {
+            _this.saving = false;
             _this.success = 'Vybavenie úspešne pridané.';
             _this.equipmentData = new equipment_admin_model_1.Equipment();
             _this.formReset = false;
@@ -41,10 +44,12 @@ var DetailEquipmentAdminComponent = (function () {
     };
     DetailEquipmentAdminComponent.prototype.editEquipment = function () {
         var _this = this;
+        this.saving = true;
         var id = this.equipmentData.id;
         var description = this.equipmentData.description;
         var amount = this.equipmentData.amount;
-        this.equipmentService.editEquipment(id, JSON.stringify({ id: id, description: description, amount: amount })).subscribe(function (data) { }, function (error) { _this.error = error; }, function () {
+        this.equipmentService.editEquipment(id, JSON.stringify({ id: id, description: description, amount: amount })).subscribe(function (data) { }, function (error) { _this.error = error; _this.saving = false; }, function () {
+            _this.saving = false;
             _this.success = 'Vybavenie úspešne upravené.';
             _this.updateList.emit(true);
         });

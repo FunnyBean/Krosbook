@@ -58,7 +58,7 @@ export class ReservationService {
     return this.http.get('/api/reservations/'+type+'/repetition/'+repetitionId);
   }
 
-  public addRepeatingReservation(type:string, reservationId:number, startDate:any, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){
+  public addRepeatingReservation(type:string, reservationId:number, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     appearance = (endType == 'appearance') ? appearance : null;
@@ -66,12 +66,12 @@ export class ReservationService {
     return this.http.post('/api/reservations/'+type+'/repetition', JSON.stringify({reservationId, repetation, interval, appearance, endingDate}), { headers });
   }
 
-  public editRepeatingReservation(type:string, repetitionId:number, reservationId:number, startDate:any, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){
+  public editRepeatingReservation(type:string, id:number, reservationId:number, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     appearance = (endType == 'appearance') ? appearance : null;
     endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
-    return this.http.put('/api/reservations/'+type+'/repetition/'+repetitionId, JSON.stringify({repetitionId, reservationId, repetation, interval, appearance, endingDate}), { headers });
+    return this.http.put('/api/reservations/'+type+'/repetition/'+id, JSON.stringify({id, reservationId, repetation, interval, appearance, endingDate}), { headers });
   }
 
   public deleteRepeatingReservation(type:string, repetitionId:number)

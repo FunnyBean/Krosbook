@@ -71,6 +71,10 @@ div {
   background-color: #f2f2f2;
   border-right: 1px #b3b3b3 solid; }
 
+#left_menu a.active {
+  background: #dbdbdb;
+}
+
 .menu_icon {
   padding: 0px 10px 0px 0px; 
   vertical-align: sub;  

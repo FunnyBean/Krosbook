@@ -17,6 +17,7 @@ import {Role} from "../../../../models/role.admin.model";
 export class DetailUserAdminComponent implements OnInit {
   public error:string;
   public success:string;
+  public saving:boolean = false;
   public formReset:boolean = true;
   public allRoles:Array<Role>;
   public checkedRoles:Array<boolean> = new Array();
@@ -48,6 +49,7 @@ export class DetailUserAdminComponent implements OnInit {
 
 
   newUser() {
+    this.saving = true;
     let email = this.userData.email;
     let name = this.userData.name;
     let surname = this.userData.surname;
@@ -59,8 +61,9 @@ export class DetailUserAdminComponent implements OnInit {
     }
     this.userService.addUser(JSON.stringify({email, name, surname, roles})).subscribe(
       data => { },
-      error => { this.error = error; },
+      error => { this.error = error; this.saving = false; },
       () => {
+        this.saving = false;
         this.success = 'Užívateľ úspešne vytvorený.';
         this.userData = new User();
         this.formReset = false;
@@ -73,6 +76,7 @@ export class DetailUserAdminComponent implements OnInit {
   }
 
   editUser() {
+    this.saving = true;
     let id = this.userData.id;
     let email = this.userData.email;
     let name = this.userData.name;
@@ -89,8 +93,10 @@ export class DetailUserAdminComponent implements OnInit {
       },
       error => {
         this.error = error;
+        this.saving = false;
       },
       () => {
+        this.saving = false;
         this.success = 'Užívateľ úspešne upravený.';
         this.updateList.emit(true);
       }

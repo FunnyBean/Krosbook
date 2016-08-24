@@ -11,6 +11,7 @@ import {RolesService} from '../../../../services/roles.service';
 export class DetailRoleAdminComponent implements OnInit {
   public error;
   public success;
+  public saving:boolean = false;
   public formReset:boolean = true;
   public roleData:Role = new Role();
 
@@ -33,12 +34,14 @@ export class DetailRoleAdminComponent implements OnInit {
   }
 
   newRole(){
+    this.saving = true;
     let name = this.roleData.name;
     let id = this.roleData.id;
     this.rolesService.addRole(JSON.stringify({name , id})).subscribe(
       data => { },
-      error => { this.error = error; },
+      error => { this.error = error; this.saving = false; },
       () => {
+        this.saving = false;
         this.success = 'Rola úspešné pridaná.';
         this.roleData = new Role();
         this.formReset = false;
@@ -49,12 +52,14 @@ export class DetailRoleAdminComponent implements OnInit {
   }
 
   editRole(){
+    this.saving = true;
     let name = this.roleData.name;
     let id = this.roleData.id;
     this.rolesService.editRole(id, JSON.stringify({id, name})).subscribe(
       data => { },
-      error => { this.error = error; },
+      error => { this.error = error; this.saving = false; },
       () => {
+        this.saving = false;
         this.success = 'Rola úspešne upravená.';
         this.updateList.emit(true);
       }

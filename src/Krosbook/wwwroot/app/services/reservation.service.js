@@ -42,12 +42,12 @@ var ReservationService = (function () {
             return this.http.post('/api/reservations/' + type + '/', JSON.stringify({ carId: carId, name: name, date: date, length: length }), { headers: headers });
         }
     };
-    ReservationService.prototype.editReservation = function (type, id, name, elementId, userId, dateTime, length, emailInvitation, goToMeeting) {
+    ReservationService.prototype.editReservation = function (type, id, name, elementId, userId, dateTime, length, roomReservationRepeaterId, emailInvitation, goToMeeting) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         if (type == "rooms") {
             var roomId = elementId;
-            return this.http.put('/api/reservations/' + type + '/' + id, JSON.stringify({ id: id, name: name, roomId: roomId, dateTime: dateTime, userId: userId, length: length, emailInvitation: emailInvitation, goToMeeting: goToMeeting }), { headers: headers });
+            return this.http.put('/api/reservations/' + type + '/' + id, JSON.stringify({ id: id, name: name, roomId: roomId, dateTime: dateTime, userId: userId, length: length, roomReservationRepeaterId: roomReservationRepeaterId, emailInvitation: emailInvitation, goToMeeting: goToMeeting }), { headers: headers });
         }
         else {
             var carId = elementId;
@@ -60,19 +60,19 @@ var ReservationService = (function () {
     ReservationService.prototype.getRepeatingReservation = function (type, repetitionId) {
         return this.http.get('/api/reservations/' + type + '/repetition/' + repetitionId);
     };
-    ReservationService.prototype.addRepeatingReservation = function (type, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
+    ReservationService.prototype.addRepeatingReservation = function (type, reservationId, repetation, interval, endType, appearance, endingDate) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         appearance = (endType == 'appearance') ? appearance : null;
         endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
         return this.http.post('/api/reservations/' + type + '/repetition', JSON.stringify({ reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
     };
-    ReservationService.prototype.editRepeatingReservation = function (type, repetitionId, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
+    ReservationService.prototype.editRepeatingReservation = function (type, id, reservationId, repetation, interval, endType, appearance, endingDate) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         appearance = (endType == 'appearance') ? appearance : null;
         endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
-        return this.http.put('/api/reservations/' + type + '/repetition/' + repetitionId, JSON.stringify({ repetitionId: repetitionId, reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
+        return this.http.put('/api/reservations/' + type + '/repetition/' + id, JSON.stringify({ id: id, reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
     };
     ReservationService.prototype.deleteRepeatingReservation = function (type, repetitionId) {
         return this.http.delete('/api/reservations/' + type + '/repetition/' + repetitionId);

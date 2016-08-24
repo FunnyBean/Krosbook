@@ -16,14 +16,19 @@ export class LoginComponent {
   private year = '2016';
   private rememberActive:boolean = false;
 
+  public saving:boolean = false;
+
   constructor(private router: Router, private userService: UserService) {
     if(Cookie.get("RememberMe") != null){
+      this.saving = true;
       var loginString = Cookie.get("RememberMe").split(":");
       this.userService.loginWithCookie(loginString[0], loginString[1]).subscribe(
         response => {
+          this.saving = false;
           this.router.navigate(['/']);
         },
         error => {
+          this.saving = false;
           Cookie.delete('RememberMe');
           this.error = 'Nesprávne údaje na automatické prihlásenie';
           console.log(error.text());
@@ -33,11 +38,14 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.saving = true;
     this.userService.login(this.email, this.password, this.rememberActive).subscribe(
       response => {
+        this.saving = false;
         this.router.navigate(['/']);
       },
       error => {
+        this.saving = false;
         this.error = 'Nesprávny email/heslo';
         console.log(error.text());
       }

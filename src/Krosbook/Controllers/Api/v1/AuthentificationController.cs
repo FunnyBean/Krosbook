@@ -105,7 +105,7 @@ namespace Krosbook.Controllers.Api.v1
                 await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
                 return Ok();
             }
-            return Unauthorized();
+            return Forbid();
         }
 
         private async Task<IActionResult> SignInCoreEmailCookie(string email, string password, string selector, string validator)
@@ -124,7 +124,7 @@ namespace Krosbook.Controllers.Api.v1
                 await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
                 return Ok();
             }
-            return Unauthorized();
+            return Forbid();
         }
 
         private async Task<IActionResult> SignInCoreCookie(string selector, string validator)
@@ -136,7 +136,7 @@ namespace Krosbook.Controllers.Api.v1
                 await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
                 return Ok();
             }
-            return Unauthorized();
+            return Forbid();
         }
 
 

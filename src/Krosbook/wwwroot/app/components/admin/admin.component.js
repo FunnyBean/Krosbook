@@ -20,6 +20,13 @@ var AdminComponent = (function () {
             document.getElementById("content").style.minHeight = this.contentHeight;
         });
     };
+    AdminComponent.prototype.ngAfterContentInit = function () {
+        $("#leftMenu a:nth-child(1)").addClass("active");
+        $("#leftMenu a").on("click", function () {
+            $("a.active").removeClass("active");
+            $(this).addClass("active");
+        });
+    };
     AdminComponent = __decorate([
         core_1.Component({
             selector: 'admin',

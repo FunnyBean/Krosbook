@@ -19,11 +19,15 @@ var LoginComponent = (function () {
         this.userService = userService;
         this.year = '2016';
         this.rememberActive = false;
+        this.saving = false;
         if (ng2_cookies_1.Cookie.get("RememberMe") != null) {
+            this.saving = true;
             var loginString = ng2_cookies_1.Cookie.get("RememberMe").split(":");
             this.userService.loginWithCookie(loginString[0], loginString[1]).subscribe(function (response) {
+                _this.saving = false;
                 _this.router.navigate(['/']);
             }, function (error) {
+                _this.saving = false;
                 ng2_cookies_1.Cookie.delete('RememberMe');
                 _this.error = 'Nesprávne údaje na automatické prihlásenie';
                 console.log(error.text());
@@ -32,9 +36,12 @@ var LoginComponent = (function () {
     }
     LoginComponent.prototype.onSubmit = function () {
         var _this = this;
+        this.saving = true;
         this.userService.login(this.email, this.password, this.rememberActive).subscribe(function (response) {
+            _this.saving = false;
             _this.router.navigate(['/']);
         }, function (error) {
+            _this.saving = false;
             _this.error = 'Nesprávny email/heslo';
             console.log(error.text());
         });

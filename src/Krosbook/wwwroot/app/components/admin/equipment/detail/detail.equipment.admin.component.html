@@ -27,10 +27,14 @@
 
     <!--SUBMIT BUTTON-->
     <div *ngIf="!equipmentData.id">
-      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newEquipment()" [disabled]="!equipmentForm.form.valid">Pridať vybavenie</button>
+      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newEquipment()" [disabled]="!equipmentForm.form.valid">Pridať vybavenie
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
     <div *ngIf="equipmentData.id">
-      <button type="submit" id="edit_button" class="btn btn-success  btn-block" (click)="editEquipment()" [disabled]="!equipmentForm.form.valid">Editovať vybavenie</button>
+      <button type="submit" id="edit_button" class="btn btn-success  btn-block" (click)="editEquipment()" [disabled]="!equipmentForm.form.valid">Editovať vybavenie
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
 
   </form>

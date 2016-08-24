@@ -54,10 +54,14 @@
 
     <!--SUBMIT BUTTON-->
     <div *ngIf="!officeData.id">
-      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newOffice()" [disabled]="!officeForm.form.valid">Vytvoriť miestnosť</button>
+      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newOffice()" [disabled]="!officeForm.form.valid">Vytvoriť miestnosť
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
     <div *ngIf="officeData.id">
-      <button type="submit" id="edit_button" class="btn btn-success  btn-block" (click)="editOffice()" [disabled]="!officeForm.form.valid">Editovať miestnosť</button>
+      <button type="submit" id="edit_button" class="btn btn-success  btn-block" (click)="editOffice()" [disabled]="!officeForm.form.valid">Editovať miestnosť
+        <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+      </button>
     </div>
 
   </form>

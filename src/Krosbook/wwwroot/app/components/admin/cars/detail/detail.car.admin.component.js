@@ -15,6 +15,7 @@ var plate_validator_1 = require('../../../../validators/plate.validator');
 var DetailCarAdminComponent = (function () {
     function DetailCarAdminComponent(carService) {
         this.carService = carService;
+        this.saving = false;
         this.formReset = true;
         this.carData = new car_model_1.Car();
         this.windowClose = new core_1.EventEmitter();
@@ -30,12 +31,15 @@ var DetailCarAdminComponent = (function () {
     };
     DetailCarAdminComponent.prototype.newCar = function () {
         var _this = this;
+        this.saving = true;
         var plate = this.carData.plate.toUpperCase();
         var name = this.carData.name;
         this.carService.addCar(JSON.stringify({ plate: plate, name: name })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
+            _this.saving = false;
         }, function () {
+            _this.saving = false;
             _this.success = 'Vozidlo úspešne vytvorené.';
             _this.carData = new car_model_1.Car();
             _this.formReset = false;
@@ -45,13 +49,16 @@ var DetailCarAdminComponent = (function () {
     };
     DetailCarAdminComponent.prototype.editCar = function () {
         var _this = this;
+        this.saving = true;
         var id = this.carData.id;
         var plate = this.carData.plate.toUpperCase();
         var name = this.carData.name;
         this.carService.editCar(id, JSON.stringify({ id: id, name: name, plate: plate })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
+            _this.saving = false;
         }, function () {
+            _this.saving = false;
             _this.success = 'Vozidlo úspešne upravené.';
             _this.updateList.emit(true);
         });
