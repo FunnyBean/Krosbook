@@ -13,15 +13,11 @@ export class CarService {
   }
 
   public getCars() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/cars', { headers  } ); /*headers tu nemusi byt*/
+    return this.http.get('/api/cars');
   }
 
   public getCar(id:number) {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/cars/'+id, { headers  } ); /*headers tu nemusi byt*/
+    return this.http.get('/api/cars/'+id);
   }
 
   public addCar(car:string) {

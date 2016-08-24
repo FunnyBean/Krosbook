@@ -31,20 +31,12 @@ export class UserService {
   }
 
   public logout() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
     Cookie.delete("RememberMe");
-    return this.http.get('/api/authentification/logout', { headers  } );
+    return this.http.get('/api/authentification/logout');
   }
 
   public isLoggedIn() {
-    if(Cookie.get('KrosbookAuth')!=null){
-      return true;
-    }
-    else {
-      return false;
-    }
-    //return this.http.get('/api/authentification/IsLoggedIn');
+    return this.http.get('/api/authentification/IsLoggedIn');
   }
 
   public myProfile() {
@@ -64,15 +56,11 @@ export class UserService {
   }
 
   public getUsers() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/users', {headers});
+    return this.http.get('/api/users');
   }
 
   public getUser(id:number) {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/users/' + id, {headers});
+    return this.http.get('/api/users/' + id);
   }
 
   public addUser(user:string) {
@@ -92,9 +80,7 @@ export class UserService {
   }
 
   public getRoles() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/roles', {headers});
+    return this.http.get('/api/roles');
   }
 
   private generateRandomString() {

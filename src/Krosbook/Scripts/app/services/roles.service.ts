@@ -13,15 +13,11 @@ export class RolesService {
   }
 
   public getRoles(){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/roles', { headers  } );
+    return this.http.get('/api/roles');
   }
 
   public getRole(id:number){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/roles/'+id, { headers  } );
+    return this.http.get('/api/roles/'+id);
   }
 
   public addRole(role:string) {

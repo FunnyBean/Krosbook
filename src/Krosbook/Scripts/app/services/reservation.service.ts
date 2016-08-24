@@ -15,9 +15,7 @@ export class ReservationService {
   }
 
   public getReservation(type:string, id:number){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/reservations/'+type+'/'+id, {headers});
+    return this.http.get('/api/reservations/'+type+'/'+id);
   }
 
   public getReservations(type:string, id:number, from:any, to:any){
@@ -52,14 +50,12 @@ export class ReservationService {
   }
 
   public deleteReservation(type:string, id:number){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.delete('/api/reservations/'+type+'/'+id, {headers});
+    return this.http.delete('/api/reservations/'+type+'/'+id);
   }
 
   public getRepeatingReservation(type:string, repetitionId:number)
   {
-    return this.http.get('/api/reservations/'+type+'/'+repetitionId);
+    return this.http.get('/api/reservations/'+type+'/repetition/'+repetitionId);
   }
 
   public addRepeatingReservation(type:string, reservationId:number, startDate:any, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){

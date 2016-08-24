@@ -13,15 +13,11 @@ export class OfficeService {
   }
 
   public getOffices() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/rooms', { headers  } );
+    return this.http.get('/api/rooms');
   }
 
   public getOffice(id: number) { //with equipment
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/rooms/'+id, {headers});
+    return this.http.get('/api/rooms/'+id);
   }
 
   public addOffice(office:string) {
@@ -41,9 +37,7 @@ export class OfficeService {
   }
 
   public getEquipment(){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/equipment/', {headers});
+    return this.http.get('/api/equipment/');
   }
 
   public filterOffices(date:string, length:number, filterType:string) {

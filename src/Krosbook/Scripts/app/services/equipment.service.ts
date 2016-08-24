@@ -13,15 +13,11 @@ export class EquipmentService {
   }
 
   public getEquipments(){
-      let headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      return this.http.get('/api/equipment', { headers  } );
+      return this.http.get('/api/equipment');
   }
 
   public getEquipment(id:number){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.get('/api/equipment/'+id, { headers  } );
+    return this.http.get('/api/equipment/'+id);
   }
 
   public addEquipment(equipment:string) {
