@@ -21,14 +21,10 @@ var CarService = (function () {
         };
     }
     CarService.prototype.getCars = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/cars', { headers: headers }); /*headers tu nemusi byt*/
+        return this.http.get('/api/cars');
     };
     CarService.prototype.getCar = function (id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/cars/' + id, { headers: headers }); /*headers tu nemusi byt*/
+        return this.http.get('/api/cars/' + id);
     };
     CarService.prototype.addCar = function (car) {
         var headers = new http_1.Headers();

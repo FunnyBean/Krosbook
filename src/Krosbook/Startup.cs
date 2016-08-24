@@ -138,7 +138,7 @@ namespace Krosbook
                 ExpireTimeSpan = TimeSpan.FromHours(8),
                 LoginPath = new PathString("/login"),
                 AccessDeniedPath = new PathString("/login"),
-                CookieHttpOnly = false //ak je false tak mozno editovat cookie v prehliadaci
+                CookieHttpOnly = true //ak je false tak mozno editovat cookie v prehliadaci
             });
 
             app.UseStaticFiles();

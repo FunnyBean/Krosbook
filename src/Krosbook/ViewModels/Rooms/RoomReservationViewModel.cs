@@ -36,6 +36,6 @@ namespace Krosbook.ViewModels.Rooms
 
         public string FilterType { get; set; }
 
-        public int RoomReservationRepeaterId { get; set; }
+        public int? RoomReservationRepeaterId { get; set; }
     }
 }

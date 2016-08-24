@@ -21,14 +21,10 @@ var OfficeService = (function () {
         };
     }
     OfficeService.prototype.getOffices = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/rooms', { headers: headers });
+        return this.http.get('/api/rooms');
     };
     OfficeService.prototype.getOffice = function (id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/rooms/' + id, { headers: headers });
+        return this.http.get('/api/rooms/' + id);
     };
     OfficeService.prototype.addOffice = function (office) {
         var headers = new http_1.Headers();
@@ -44,9 +40,7 @@ var OfficeService = (function () {
         return this.http.delete('/api/rooms/' + id);
     };
     OfficeService.prototype.getEquipment = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/equipment/', { headers: headers });
+        return this.http.get('/api/equipment/');
     };
     OfficeService.prototype.filterOffices = function (date, length, filterType) {
         var headers = new http_1.Headers();
