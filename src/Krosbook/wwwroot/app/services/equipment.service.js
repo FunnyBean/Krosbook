@@ -21,14 +21,10 @@ var EquipmentService = (function () {
         };
     }
     EquipmentService.prototype.getEquipments = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/equipment', { headers: headers });
+        return this.http.get('/api/equipment');
     };
     EquipmentService.prototype.getEquipment = function (id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/equipment/' + id, { headers: headers });
+        return this.http.get('/api/equipment/' + id);
     };
     EquipmentService.prototype.addEquipment = function (equipment) {
         var headers = new http_1.Headers();

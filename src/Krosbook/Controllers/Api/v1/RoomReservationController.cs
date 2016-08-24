@@ -223,10 +223,10 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpGet("repetition/{reservationId}")]
-        public IActionResult GetReservationRepetitionById(int repetitionnId)
+        [HttpGet("repetition/{repetitionId}")]
+        public IActionResult GetReservationRepetitionById(int repetitionId)
         {
-            var repetition = _reservationRepeaterRepository.GetItem(repetitionnId);
+            var repetition = _reservationRepeaterRepository.GetItem(repetitionId);
             if (repetition == null)
             {
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -237,6 +237,29 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(repetition));
             }
         }
+
+
+        [HttpDelete("repetition/{repetitionId}")]
+        public IActionResult DeleteReservationRepetition(int repetitionId)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                if (_reservationRepository.GetItem(_reservationRepeaterRepository.GetItem(repetitionId).ReservationId).UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't delete reservation repetition, that was created by user with id " + _reservationRepository.GetItem(repetitionId).UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
+            }
+            return SaveData(() =>
+            {
+                _reservationRepeaterRepository.Delete(repetitionId);              
+            });
+        }
+
+
+
 
         [HttpPost("repetition")]
         [ValidateModelState, CheckArgumentsForNull]

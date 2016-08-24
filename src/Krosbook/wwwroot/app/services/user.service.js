@@ -37,19 +37,11 @@ var UserService = (function () {
         return this.http.post('/api/authentification/loginWithCookie', JSON.stringify({ selector: selector, validator: validator }), { headers: headers });
     };
     UserService.prototype.logout = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
         ng2_cookies_1.Cookie.delete("RememberMe");
-        return this.http.get('/api/authentification/logout', { headers: headers });
+        return this.http.get('/api/authentification/logout');
     };
     UserService.prototype.isLoggedIn = function () {
-        if (ng2_cookies_1.Cookie.get('KrosbookAuth') != null) {
-            return true;
-        }
-        else {
-            return false;
-        }
-        //return this.http.get('/api/authentification/IsLoggedIn');
+        return this.http.get('/api/authentification/IsLoggedIn');
     };
     UserService.prototype.myProfile = function () {
         return this.http.get('/api/users/profile');
@@ -65,14 +57,10 @@ var UserService = (function () {
         return this.http.put('/api/users/changeImage', JSON.stringify({ photoBase64: photoBase64 }), { headers: headers });
     };
     UserService.prototype.getUsers = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/users', { headers: headers });
+        return this.http.get('/api/users');
     };
     UserService.prototype.getUser = function (id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/users/' + id, { headers: headers });
+        return this.http.get('/api/users/' + id);
     };
     UserService.prototype.addUser = function (user) {
         var headers = new http_1.Headers();
@@ -88,9 +76,7 @@ var UserService = (function () {
         return this.http.delete('/api/users/' + id);
     };
     UserService.prototype.getRoles = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/roles', { headers: headers });
+        return this.http.get('/api/roles');
     };
     UserService.prototype.generateRandomString = function () {
         var randString = '';

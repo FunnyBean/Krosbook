@@ -21,14 +21,10 @@ var RolesService = (function () {
         };
     }
     RolesService.prototype.getRoles = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/roles', { headers: headers });
+        return this.http.get('/api/roles');
     };
     RolesService.prototype.getRole = function (id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/roles/' + id, { headers: headers });
+        return this.http.get('/api/roles/' + id);
     };
     RolesService.prototype.addRole = function (role) {
         var headers = new http_1.Headers();

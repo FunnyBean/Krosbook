@@ -22,9 +22,7 @@ var ReservationService = (function () {
         };
     }
     ReservationService.prototype.getReservation = function (type, id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/reservations/' + type + '/' + id, { headers: headers });
+        return this.http.get('/api/reservations/' + type + '/' + id);
     };
     ReservationService.prototype.getReservations = function (type, id, from, to) {
         var headers = new http_1.Headers();
@@ -57,12 +55,10 @@ var ReservationService = (function () {
         }
     };
     ReservationService.prototype.deleteReservation = function (type, id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.delete('/api/reservations/' + type + '/' + id, { headers: headers });
+        return this.http.delete('/api/reservations/' + type + '/' + id);
     };
     ReservationService.prototype.getRepeatingReservation = function (type, repetitionId) {
-        return this.http.get('/api/reservations/' + type + '/' + repetitionId);
+        return this.http.get('/api/reservations/' + type + '/repetition/' + repetitionId);
     };
     ReservationService.prototype.addRepeatingReservation = function (type, reservationId, startDate, repetation, interval, endType, appearance, endingDate) {
         var headers = new http_1.Headers();
