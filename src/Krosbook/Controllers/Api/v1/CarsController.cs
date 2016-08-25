@@ -129,7 +129,7 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpPost("filter")]
+        /*[HttpPost("filter")]
         public IEnumerable<CarViewModel> GetAllUnreservedCars([FromBody] CarReservationViewModel reservationVM)
         {
             IQueryable<Car> cars = _carRepository.GetAll();
@@ -142,7 +142,7 @@ namespace Krosbook.Controllers.Api.v1
                 }
             }
             return _mapper.Map<IEnumerable<CarViewModel>>(exp);
-        }
+        }*/
 
         #endregion
 
@@ -181,9 +181,9 @@ namespace Krosbook.Controllers.Api.v1
 
 
 
-        public bool CheckUnreservedCar(int carId, DateTime date, int length)
+        /*public bool CheckUnreservedCar(int carId, DateTime date, int length)
         {
-            IQueryable<CarReservation> reservations = _carReservationRepository.Get(r => r.CarId == carId && r.dateTime.Date == date.Date); //all reservations my car of current day 
+            IQueryable<CarReservation> reservations = _carReservationRepository.Get(r => r.CarId == carId && r.DateTimeStart.Date == date.Date); //all reservations my car of current day 
             var isFree = true;
             foreach (var res in reservations)
             {
@@ -191,7 +191,7 @@ namespace Krosbook.Controllers.Api.v1
                 //go through reservations, add their length and check if isn't any time duplication
                 for (var a = length; a >= 0; a -= 30)
                 {
-                    if (res.dateTime.TimeOfDay != dat.TimeOfDay)
+                    if (res.DateTimeStart.TimeOfDay != dat.TimeOfDay)
                     {
                         var reservationTime = res.dateTime;
                         for (var i = res.length; i > 0; i -= 30)
@@ -223,7 +223,7 @@ namespace Krosbook.Controllers.Api.v1
                 }
             }
             return isFree;
-        }
+        }*/
 
 
 
