@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild, Inject} from '@angular/core';
-import {ReservationService} from '../../../../services/reservation.service';
-import {HolidayService} from '../../../../services/holiday.service';
+import {ReservationService} from '../../../../../services/reservation.service';
+import {HolidayService} from '../../../../../services/holiday.service';
 import {DetailReservationComponent} from './detail/detail.reservation.component';
 import * as moment from 'moment';
 
@@ -9,7 +9,7 @@ declare var $:any;
 
 @Component({
   selector: 'tbody',
-  templateUrl: 'app/components/home/carReservations/table/table.reservations.component.html',
+  templateUrl: 'app/components/home/carReservations/reservations/table/table.reservations.component.html',
   directives: [DetailReservationComponent],
   providers: [ReservationService, HolidayService]
 })
@@ -34,8 +34,7 @@ export class TableReservationComponent implements OnInit {
 
   constructor(private reservationService:ReservationService, private holidayService:HolidayService) { }
 
-  ngOnInit() {
-    
+  ngOnInit() {  
     this.updateData();
     this.data.color = (this.data.color === undefined) ? '#337ab7' : this.data.color;
     var thisDocument = this;
@@ -81,7 +80,7 @@ export class TableReservationComponent implements OnInit {
     $(".records"+this.data.id+" > tr").remove();
     $(".records"+this.data.id).prepend(table);
 
-    $(".records"+this.data.id+" td.full").on("click", function(event){
+    /*$(".records"+this.data.id+" td.full").on("click", function(event){
       setTimeout(() => thisDocument.detailReset = true, 0);
       var element = $(this);
       var id =  element.attr("reservationId");
@@ -128,10 +127,10 @@ export class TableReservationComponent implements OnInit {
         isMouseDown = false;
         length = 1;
       }
-    });
+    });*/
   }
 
-  makeReservation(fromRow:number, fromCol:number, length:number) {
+  /*makeReservation(fromRow:number, fromCol:number, length:number) {
     this.reservationInProgress = true;
     var date, hours = 7, minutes = 0;
     if(fromRow % 2 != 0){
@@ -158,7 +157,7 @@ export class TableReservationComponent implements OnInit {
       return false;
     }*/
     //saves the data  
-    this.reservationService.addReservation(this.reservationType, this.data.id, 1, 'Rezervácia', date, length*30).subscribe(
+    /*this.reservationService.addReservation(this.reservationType, this.data.id, 1, 'Rezervácia', date, length*30).subscribe(
       data => {   
         this.detailReset = true;            
         this.reservationDetailId = [data.json().id, this.reservationDetailId[1],this.reservationDetailId[2], 0];  //okno na potvrdenie rezervacie      
@@ -170,7 +169,7 @@ export class TableReservationComponent implements OnInit {
         $(".filterSelected").removeClass("filterSelected");
       }
     );
-  }
+  }*/
 
   updateData(weeks = this.week) {
     this.reservationService.getReservations(this.reservationType, this.data.id, moment().add(weeks, 'weeks').weekday(1).format("DD.MM.YYYY"), moment().add(weeks, 'weeks').weekday(6).format("DD.MM.YYYY")).subscribe(
@@ -189,30 +188,62 @@ export class TableReservationComponent implements OnInit {
         //for each record, set table data
         for (var i = 0; i < this.reservationsData.length; i++) {
           var record = this.reservationsData[i];
-          var time = moment(record.dateTime, "YYYY-MM-DD HH:mm:ss").format("HH:mm"), endTime = moment(record.dateTime, "YYYY-MM-DD HH:mm:ss").add(record.length, 'minutes').format('HH:mm'), day = moment(record.dateTime, "YYYY-MM-DD HH:mm:ss").weekday() - 1;
-
-          while (time < endTime && time <= '17:30') {
-            if (time == moment(record.dateTime, "YYYY-MM-DD HH:mm:ss").format("HH:mm"))
-              this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.name + '", "reservationId": "'+record.id+'"}');
-            else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
-            time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
+          var startDay = moment(record.dateTimeStart, "YYYY-MM-DDTHH:mm:ss"), endDay = moment(record.dateTimeEnd, "YYYY-MM-DDTHH:mm:ss"), currentDay = moment(record.dateTimeStart, "YYYY-MM-DDTHH:mm:ss"), time = startDay.format("HH:mm"), endTime = endDay.format('HH:mm');
+          if(startDay.format("YYYY-MM-DD") == endDay.format("YYYY-MM-DD"))
+          {
+            var day = startDay.weekday() - 1;
+            while (time < endTime && time <= '17:30') {
+              if (time == startDay.format("HH:mm"))
+                this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
+              else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+              time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
+            }
+          }
+          else
+          {
+            while(currentDay.format("YYYY-MM-DD") <= endDay.format("YYYY-MM-DD"))
+            {
+              var day = currentDay.weekday() - 1;
+              if(day == 5 || day == -1 || currentDay.format("YYYY-MM-DD") < moment().add(weeks, 'weeks').weekday(1).format("YYYY-MM-DD") || currentDay.format("YYYY-MM-DD") > moment().add(weeks, 'weeks').weekday(5).format("YYYY-MM-DD")){
+                currentDay.add(1, 'days');
+                continue;
+              }
+              
+              if(startDay.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD"))
+              {
+                while (time <= '17:30') {
+                  if (time == moment(record.dateTimeStart, "YYYY-MM-DD HH:mm:ss").format("HH:mm"))
+                    this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
+                  else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+                  time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                }
+              }
+              else if(endDay.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD"))
+              {
+                var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
+                while (tempTime <= endTime) {
+                  if (tempTime == "07:00")
+                    this.tableData[tempTime][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
+                  else this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+                  tempTime = moment(tempTime, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                }
+              }
+              else {
+                var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
+                while (tempTime <= '17:30') {
+                  if (tempTime == "07:00")
+                    this.tableData[tempTime][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
+                  else this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+                  tempTime = moment(tempTime, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                }
+              }
+              currentDay.add(1, 'days');
+            }
           }
         }
         this.fillTable();
       }
     );
   }
-
-  closeWindow($event){
-    this.reservationDetailId = [0,0,0];
-    this.detailReset = false;
-    if($event)
-      this.updateData();
-  }  
-
-
-
-
-
 
 }

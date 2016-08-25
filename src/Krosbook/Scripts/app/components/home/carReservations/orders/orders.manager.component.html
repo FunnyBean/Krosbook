@@ -1,0 +1,45 @@
+<h2>Objednávky</h2>
+ <button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
+ <div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
+      <div class="form-group col-xs-3" > 
+         <!-- <label for="approvedOrders" class="control-label">Zobraziť  vybavené objednávky?: </label>   -->    
+         <input type="checkbox" id="approvedOrders" name="approvedOrders" value="approvedOrders"> Zobraziť  vybavené objednávky?<br>
+         <input type="checkbox" id="notApprovedOrders" name="notApprovedOrders" value="notApprovedOrders"> Zobraziť nebavené objednávky? <br>
+         <input type="checkbox" id="allOrders" name="allOrders" value="allOrders"> Zobraziť všeky objednávky?<br>
+         <button (click)="filterReservation()" class="btn btn-success" style="margin-top: 5px;" type="button" >Filtrovať</button>
+      </div>
+      
+       
+    
+    </div>
+<table class="table table-hover col-md-12">
+  <thead>
+  <tr>    
+    <th>Ciel</th>
+    <th>Osoba</th>
+    <th>Auto</th>
+    <th>Dátum a čas začiatku</th> 
+    <th>Dátum a čas konca</th>  
+    <th>Status</th>
+    <th class="buttonsRight">Akcie</th>
+  </tr>
+  </thead>
+  <tr *ngFor="let order of orders">
+    
+    <td>{{order.destination}}</td>
+    <td>{{users[order.userId]}}</td>
+    <td>{{cars[order.carId]}}</td>
+    <td>{{formatDateTime(order.dateTimeStart)}}</td>
+    <td>{{formatDateTime(order.dateTimeEnd)}}</td>
+    <td [class]="order.reservationState == 2 ? 'success' : 'danger'">{{states[order.reservationState - 1]}}
+    
+    <td class="buttonsRight">
+      <div class="btn-group" role="group" aria-label="...">
+        <button type="button" *ngIf="order.reservationState == 1" class="btn btn-success glyphicon glyphicon-ok" (click)="approveOrder(order.id)"></button>
+        <button type="button" *ngIf="order.reservationState != 3" class="btn btn-warning glyphicon glyphicon-edit" (click)="editOrder(order.id)"></button>
+        <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removeOrder(order.id)"></button>
+      </div>
+    </td>
+  </tr>
+</table>
+

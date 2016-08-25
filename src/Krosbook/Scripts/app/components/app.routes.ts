@@ -13,7 +13,10 @@ import {CarsAdminComponent} from "./admin/cars/cars.admin.component";
 import {EquipmentAdminComponent} from "./admin/equipment/equipment.admin.component";
 import {RolesAdminComponent} from './admin/roles/roles.admin.component';
 
-
+import {OrdersManagerComponent} from './home/carReservations/orders/orders.manager.component';
+import {ReservationsComponent} from './home/carReservations/reservations/reservations.component';
+import {MyReservationsComponent} from './home/carReservations/myreservations/myReservations.component';
+import {OrderDetailComponent } from './home/carReservations/order/order.detail.component';
 import {RoomReservationsComponent} from './home/roomReservations/room.reservations.component';
 import {CarsReservationsComponent} from './home/carReservations/car.reservations.component';
 import {AvatarComponent} from "./home/profile/avatar/avatar.component";
@@ -22,8 +25,10 @@ import {PasswordComponent} from "./home/profile/password/password.component";
 
 const routes: RouterConfig = [
   { path: '', redirectTo: 'home', terminal: true},
+  
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard],
     children: [
+      
       {
         path:'profile',component:ProfileComponent,
 
@@ -48,12 +53,37 @@ const routes: RouterConfig = [
       },
       {
         path: 'reservations/cars',
-        component: CarsReservationsComponent
+        component: CarsReservationsComponent,
+         children:[
+          {
+             path:'',
+             component: ReservationsComponent
+          },
+          {
+           path:'newreservation',
+           component:OrderDetailComponent
+          },
+          {
+           path:'editreservation/:id',
+           component:OrderDetailComponent
+          },
+          {
+           path:'myreservations',
+           component:MyReservationsComponent
+          },
+          {
+          path: 'orders',
+          component:  OrdersManagerComponent
+          }
+        ]
+       
+
       },
-       {
+      {
         path: 'reservations/rooms',
         component: RoomReservationsComponent
       }
+     
     ]
   },
   { path: 'login', component: LoginComponent },
@@ -83,6 +113,7 @@ const routes: RouterConfig = [
         path: 'roles',
         component: RolesAdminComponent
       }
+      
     ]
   }
 ];

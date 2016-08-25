@@ -1,41 +1,44 @@
-<div id="darkBackground" (click)="closeWindow()" ></div>
-
-<div id="orderWindow" class="col-md-8 col-md-offset-2">
-
-  <button type="button" class="close" (click)="closeWindow()" style="font-size: 25px"><span aria-hidden="true">×</span></button>
-
+<div class="col-md-10 col-md-offset-1">
   <h3>Vytvorenie novej objednávky</h3>
-  
+
 
   <form role="form" *ngIf="formReset" #orderForm="ngForm">
-
+    <div class="alert alert-success" *ngIf="success">
+      {{ success }}
+    </div>
     <!--DATUM ZACIATKU-->
     <div class="form-group">
-      <label for="beginOrder">Zadajte dátum a čas začiatku plánovanej cesty:</label>
-      <input type="datetime-local" name="beginOrder" [(ngModel)]="reservationData.dateTimeStart" id="beginOrder"  class="form-control" step="1800" aria-describedby="helpBlockDate" validateDate required>
-     
-
+      <label for="beginOrder">Preferované auto:</label>
+      <select name="preferedCar" [(ngModel)]="reservationData.carId" class="form-control">
+        <option *ngFor="let car of cars" [value]="car.id" class="form-control">{{ car.name }} : {{ car.plate }}
+      </select>
     </div>
-  	<!--DATUM KONIEC-->
+    <!--DATUM ZACIATKU-->
     <div class="form-group">
-      <label for="endOrder">Zadajte dátum a čas ukončenia plánovanej cesty:</label>
+      <label for="beginOrder">Dátum a čas začiatku plánovanej cesty:</label>
+      <input type="datetime-local" name="beginOrder" [(ngModel)]="reservationData.dateTimeStart" id="beginOrder"  class="form-control" step="1800" aria-describedby="helpBlockDate" validateDate required>
+    </div>
+    <!--DATUM KONIEC-->
+    <div class="form-group">
+      <label for="endOrder">Dátum a čas ukončenia plánovanej cesty:</label>
       <input type="datetime-local" name="endOrder" id="endOrder" [(ngModel)]="reservationData.dateTimeEnd"  class="form-control" step="1800" aria-describedby="helpBlockDate" validateDate required>
-   </div>
-   <!--NAZOV DESTINACIE-->
-   <div class="form-group">
-     <label for="destinationName">Zadajte miesto resp. smer cesty:</label>
-     <input type="text" name="destinationName" [(ngModel)]="reservationData.destination" id="destinationName" class="form-control" required>
-   </div>
-   <!--SPOLUCESTUJUCI-->
-   <div class="form-group">
-     <label for="insurance">Ak sa jedná o služobnú cestu do zahraničia, vypíšte mená osôb pre cestovné poistenie:</label>
-      <input type="text" name="insurance" [(ngModel)]="reservationData.travelInsurane" id="insurance" class="form-control" >
-   </div>
-   <!--GPS -->
-     <div class="form-group">
-       <label for="gpsRequirement">Žiadate o navigačný systém?</label><br>
-       <input type="radio" name="gpsRequirement" [(ngModel)]="reservationData.GPSSystem" value="true" checked> Áno
-       <input type="radio" name="gpsRequirement" [(ngModel)]="reservationData.GPSSystem" value="false"  checked="checked"> Nie
+    </div>
+    <!--NAZOV DESTINACIE-->
+    <div class="form-group">
+      <label for="destinationName">Miesto resp. smer cesty:</label>
+      <input type="text" name="destinationName" [(ngModel)]="reservationData.destination" id="destinationName" class="form-control" required>
+    </div>
+    <!--SPOLUCESTUJUCI-->
+    <div class="form-group">
+      <label for="insurance">Ak sa jedná o služobnú cestu do zahraničia, vypíšte mená osôb pre cestovné poistenie:</label>
+      <input type="text" name="insurance" [(ngModel)]="reservationData.travelInsurance" id="insurance" class="form-control" >
+    </div>
+    <!--GPS -->
+      <div class="form-group">
+        <label for="gpsRequirement">Žiadate o navigačný systém?</label><br>
+        <input type="radio" name="gpsRequirement" id="gpsValue1" [(ngModel)]="reservationData.gpsSystem" value="true" checked="{{reservationData.gpsSystem == true ? 'checked' : ''}}"> Áno
+        <input type="radio" name="gpsRequirement" id="gpsValue2" [(ngModel)]="reservationData.gpsSystem" value="false" checked="{{reservationData.gpsSystem == false ? 'checked' : ''}}"> Nie
+        {{reservationData.gpsSystem}}
       </div>
       <!--INE POZIADAVKY -->
       <div class="form-group">        
@@ -49,17 +52,20 @@
       <!--SUKROMNE UCELY-->
       <div class="form-group">
         <label for="privateUse">Žiadate o auto na súkromné účely?</label><br>
-        <input type="radio" name="privateUse" [(ngModel)]="reservationData.privateUse" value="true" > Áno
-        <input type="radio" name="privateUse" [(ngModel)]="reservationData.privateUse" value="false" checked="checked"> Nie
+        <input type="radio" name="privateUse" [(ngModel)]="reservationData.privateUse" value="true" checked="{{reservationData.privateUse == true ? 'checked' : ''}}"> Áno
+        <input type="radio" name="privateUse" [(ngModel)]="reservationData.privateUse" value="false" checked="{{reservationData.privateUse == false ? 'checked' : ''}}"> Nie
       </div>
-     
+      
     <!--SUBMIT BUTTON-->
     <div>
-      <button type="submit" id="add_button" class="btn btn-success  btn-block" (click)="newOrder()">Vytvoriť objednávku</button>
+      <button type="submit" *ngIf="!reservationId" id="add_button" class="btn btn-success  btn-block" (click)="newOrder()">Vytvoriť objednávku</button>
+       <button type="submit" *ngIf="reservationId" id="add_button" class="btn btn-default  btn-block" (click)="editOrder()">Editovať objednávku</button>
+       <button type="submit" *ngIf="reservationId" id="add_button" class="btn btn-success  btn-block" (click)="editAndApproveOrder()">Editovať a schváliť objednávku</button>
     </div>
-  
+
 
   </form>
-
 </div>
+
+
 
