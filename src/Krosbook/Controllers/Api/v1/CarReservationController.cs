@@ -48,6 +48,12 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetAll());
         }
 
+        [HttpGet("byState/{reservationState}")]
+        public IEnumerable<CarReservationViewModel> GetAllCarReservationsByState(int reservationState)
+        {
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsByState(reservationState));
+        }
+
         [HttpGet("byLoggedInUser")]
         public IEnumerable<CarReservationViewModel> GetAllCarReservationByLoggedUser()
         {
@@ -170,6 +176,32 @@ namespace Krosbook.Controllers.Api.v1
             {
                 _reservationRepository.Delete(reservationId);
             });
+        }
+
+        [HttpDelete("safe/{reservationId}")]
+        public IActionResult AskForSafeDeleteReservation(int reservationId)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                CarReservation reservation = _reservationRepository.GetItem(reservationId);
+                if (reservation == null)
+                {
+                    this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    return this.Json(null);
+                }
+                IActionResult result;
+                reservation.ReservationState = 3;
+                result = SaveData(() =>
+                {
+                    _reservationRepository.Edit(reservation);
+                });
+                return result;
+            }
+            else
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                return this.Json(null);
+            }
         }
 
         #endregion
