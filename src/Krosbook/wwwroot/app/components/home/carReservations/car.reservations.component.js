@@ -19,7 +19,7 @@ var user_admin_model_1 = require('../../../models/user.admin.model');
 var table_reservations_component_1 = require('./table/table.reservations.component');
 var moment = require('moment');
 var time_validator_1 = require("../../../validators/time.validator");
-var order_detail_component_1 = require('../../home/carReservations/order.detail/order.detail.component');
+var order_detail_component_1 = require('./order/order.detail.component');
 var CarsReservationsComponent = (function () {
     function CarsReservationsComponent(route, carService, userService) {
         this.route = route;

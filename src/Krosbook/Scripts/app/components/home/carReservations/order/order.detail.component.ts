@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {TimeValidator, DateValidator} from '../../../../validators/time.validator';
 import {CarReservation} from '../../../../models/carReservation.model';
 import {CarOrderService} from '../../../../services/carReservation.service';
+import * as moment from 'moment';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class OrderDetailComponent {
   }
 
   newOrder(){
-    this.carOrderService.addOrder(this.reservationData.carId, this.reservationData.dateTimeStart, this.reservationData.dateTimeEnd, this.reservationData.destination, this.reservationData.GPSSystem, this.reservationData.privateUse, this.reservationData.requirements, this.reservationData.travelInsurance, 1).subscribe(
+      this.carOrderService.addOrder(8, moment(this.reservationData.dateTimeStart).format("DD.MM.YYYY HH:mm"), moment(this.reservationData.dateTimeEnd).format("DD.MM.YYYY HH:mm"), this.reservationData.destination, this.reservationData.GPSSystem, this.reservationData.privateUse, this.reservationData.requirements, this.reservationData.travelInsurance, 1).subscribe(
       data => {
       },
       error => {

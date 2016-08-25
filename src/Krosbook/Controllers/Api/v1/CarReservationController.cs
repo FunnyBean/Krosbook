@@ -48,28 +48,20 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetAll());
         }
 
+        [HttpGet("byLoggedInUser")]
+        public IEnumerable<CarReservationViewModel> GetAllCarReservationByLoggedUser()
+        {
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsCarByUser(GetUserId()));
+        }
 
 
         [HttpPost("byCar/{carId}")]
         public IEnumerable<CarReservationViewModel> GetReservationByCar([FromBody] CarReservationIntervalViewModel reservation, int carId)
         {
-            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsByCarInTimeInterval(carId, DateTime.Parse(reservation.from), DateTime.Parse(reservation.to)));
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetReservationsByCarInTimeInterval(carId, DateTime.ParseExact(reservation.from, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture), DateTime.ParseExact(reservation.to, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture)));
         }
 
-
-
-        [HttpPost()]
-        [ValidateModelState, CheckArgumentsForNull]
-        public IActionResult CreateNewCarReservation([FromBody] CarReservationViewModel reservationVm)
-        {
-            reservationVm.DateTimeStart = DateTime.ParseExact(reservationVm.dateStart, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-            reservationVm.DateTimeEnd = DateTime.ParseExact(reservationVm.dateEnd, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-            return this.CreateNewReservation(reservationVm);
-        }
-
-
-
-        [HttpGet("{reservationId}")]        
+        [HttpGet("{reservationId}")]
         public IActionResult GetReservationById(int reservationId)
         {
             var reservation = _reservationRepository.GetItem(reservationId);
@@ -84,7 +76,14 @@ namespace Krosbook.Controllers.Api.v1
             }
         }
 
-
+        [HttpPost()]
+        [ValidateModelState, CheckArgumentsForNull]
+        public IActionResult CreateNewCarReservation([FromBody] CarReservationViewModel reservationVm)
+        {
+            reservationVm.DateTimeStart = DateTime.ParseExact(reservationVm.dateStart, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            reservationVm.DateTimeEnd = DateTime.ParseExact(reservationVm.dateEnd, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            return this.CreateNewReservation(reservationVm);
+        }
 
 
         [HttpPut("{reservationId}")]
@@ -102,28 +101,54 @@ namespace Krosbook.Controllers.Api.v1
                 }
             }
           
-                if (reservationVm.Id != reservationId)
-                {
-                    var message = $"Invalid argument. Id '{reservationId}' and userVm.Id '{reservationVm.Id}' are not equal.";
-                    _logger.LogWarning(message);
+            if (reservationVm.Id != reservationId)
+            {
+                var message = $"Invalid argument. Id '{reservationId}' and userVm.Id '{reservationVm.Id}' are not equal.";
+                _logger.LogWarning(message);
 
-                    this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return this.Json(new { Message = message });
-                }
+                this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return this.Json(new { Message = message });
+            }
 
-                CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
-                if (oldReservation == null)
+            CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
+            if (oldReservation == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            IActionResult result;
+            CarReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
+            result = SaveData(() =>
+            {
+                _reservationRepository.Edit(editedReservation);
+            });
+            return result;
+        }
+
+        [HttpPut("approve/{reservationId}")]
+        public IActionResult ApproveReservation(int reservationId)
+        {
+            if(User.IsInRole("Admin"))
+            {
+                CarReservation reservation = _reservationRepository.GetItem(reservationId);
+                if(reservation == null)
                 {
                     this.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     return this.Json(null);
                 }
                 IActionResult result;
-                CarReservation editedReservation = _mapper.Map(reservationVm, oldReservation);
+                reservation.ReservationState = 2;
                 result = SaveData(() =>
                 {
-                    _reservationRepository.Edit(editedReservation);
+                    _reservationRepository.Edit(reservation);
                 });
                 return result;
+            }
+            else
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                return this.Json(null);
+            } 
         }
 
 

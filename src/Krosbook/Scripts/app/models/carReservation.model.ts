@@ -4,8 +4,8 @@ export class CarReservation{
   public id:number;
   public carId:number;
   public userId:number;
-  public dateTimeStart:any = moment().format("YYYY-MM-DDTHH:mm:ss");
-  public dateTimeEnd:any = moment().format("YYYY-MM-DDTHH:mm:ss");
+  public dateTimeStart:any = moment().minutes(0).format("YYYY-MM-DDTHH:mm");
+  public dateTimeEnd:any = moment().minutes(0).format("YYYY-MM-DDTHH:mm");
   public destination:string;
   public travelInsurance:string;
   public GPSSystem:boolean = false;
