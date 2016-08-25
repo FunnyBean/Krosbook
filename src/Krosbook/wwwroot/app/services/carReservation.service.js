@@ -23,25 +23,36 @@ var CarOrderService = (function () {
     CarOrderService.prototype.getOrders = function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/orders', { headers: headers });
+        return this.http.get('http://funnybean.cloudapp.net/api/reservations/cars/', { headers: headers });
     };
     CarOrderService.prototype.getOrder = function (id) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/orders/' + id, { headers: headers });
+        return this.http.get('http://funnybean.cloudapp.net/api/reservations/cars/' + id, { headers: headers });
+    };
+    CarOrderService.prototype.getUserOrders = function () {
+        return this.http.get('http://funnybean.cloudapp.net/api/reservations/cars/byLoggedInUser');
     };
     CarOrderService.prototype.addOrder = function (carId, dateStart, dateEnd, destination, GPSSystem, privateUse, requirements, travelInsurane, reservationState) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('/api/reservations/cars', JSON.stringify({ carId: carId, dateStart: dateStart, dateEnd: dateEnd, destination: destination, GPSSystem: GPSSystem, privateUse: privateUse, requirements: requirements, travelInsurane: travelInsurane, reservationState: reservationState }), { headers: headers });
+        return this.http.post('http://funnybean.cloudapp.net/api/reservations/cars', JSON.stringify({ carId: carId, dateStart: dateStart, dateEnd: dateEnd, destination: destination, GPSSystem: GPSSystem, privateUse: privateUse, requirements: requirements, travelInsurane: travelInsurane, reservationState: reservationState }), { headers: headers });
     };
-    CarOrderService.prototype.editOrder = function (id, order) {
+    CarOrderService.prototype.editOrder = function (id, carId, dateStart, dateEnd, destination, GPSSystem, privateUse, requirements, travelInsurane, reservationState) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("/api/orders/" + id, order, { headers: headers });
+        return this.http.put("http://funnybean.cloudapp.net/api/reservations/cars/" + id, JSON.stringify({ id: id, carId: carId, dateStart: dateStart, dateEnd: dateEnd, destination: destination, GPSSystem: GPSSystem, privateUse: privateUse, requirements: requirements, travelInsurane: travelInsurane, reservationState: reservationState }), { headers: headers });
     };
     CarOrderService.prototype.removeOrder = function (id) {
-        return this.http.delete('/api/orders/' + id);
+        return this.http.delete('http://funnybean.cloudapp.net/api/reservations/cars/' + id);
+    };
+    CarOrderService.prototype.safeRemoveOrder = function (id) {
+        return this.http.delete('http://funnybean.cloudapp.net/api/reservations/cars/safe/' + id);
+    };
+    CarOrderService.prototype.approveOrder = function (id) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.put('http://funnybean.cloudapp.net/api/reservations/cars/approve/' + id, { headers: headers });
     };
     CarOrderService = __decorate([
         core_1.Injectable(), 

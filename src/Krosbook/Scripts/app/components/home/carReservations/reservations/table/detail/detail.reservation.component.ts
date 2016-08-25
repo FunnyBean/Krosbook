@@ -1,16 +1,16 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {ReservationService} from '../../../../../services/reservation.service';
-import {UserService} from '../../../../../services/user.service';
-import {Reservation} from '../../../../../models/reservation.model';
-import {User} from '../../../../../models/user.admin.model';
-import {TimeValidator, DateValidator} from '../../../../../validators/time.validator';
-import {Repetition} from '../../../../../models/repetition.model';
+import {ReservationService} from '../../../../../../services/reservation.service';
+import {UserService} from '../../../../../../services/user.service';
+import {Reservation} from '../../../../../../models/reservation.model';
+import {User} from '../../../../../../models/user.admin.model';
+import {TimeValidator, DateValidator} from '../../../../../../validators/time.validator';
+import {Repetition} from '../../../../../../models/repetition.model';
 import * as moment from 'moment';
 
 @Component({
     selector: 'reservation-detail',
-    templateUrl: 'app/components/home/carReservations/table/detail/detail.reservation.component.html',
-    styleUrls: ['app/components/home/carReservations/table/detail/detail.reservation.component.css'],
+    templateUrl: 'app/components/home/carReservations/reservations/table/detail/detail.reservation.component.html',
+    styleUrls: ['app/components/home/carReservations/reservations/table/detail/detail.reservation.component.css'],
     directives: [TimeValidator, DateValidator],
     providers: [ReservationService]
 })

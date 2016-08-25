@@ -9,23 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var router_1 = require('@angular/router');
 var carReservation_model_1 = require('../../../../models/carReservation.model');
 var carReservation_service_1 = require('../../../../services/carReservation.service');
+var car_service_1 = require('../../../../services/car.service');
 var moment = require('moment');
 var OrderDetailComponent = (function () {
-    function OrderDetailComponent(carOrderService) {
+    function OrderDetailComponent(route, carOrderService, carService) {
+        this.route = route;
         this.carOrderService = carOrderService;
+        this.carService = carService;
         this.reservationData = new carReservation_model_1.CarReservation();
+        this.cars = new Array();
         this.formReset = true;
-        this.windowClose = new core_1.EventEmitter();
-        this.updateList = new core_1.EventEmitter();
+        this.reservationId = undefined;
     }
-    OrderDetailComponent.prototype.closeWindow = function () {
-        this.windowClose.emit(false);
+    OrderDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.params.subscribe(function (params) {
+            _this.reservationId = params['id'];
+            _this.carService.getCars().subscribe(function (data) {
+                _this.cars = data.json();
+                if (_this.reservationId !== undefined)
+                    _this.getReservationData();
+            }, function (error) { return console.log(error); });
+        });
     };
     OrderDetailComponent.prototype.newOrder = function () {
         var _this = this;
-        this.carOrderService.addOrder(8, moment(this.reservationData.dateTimeStart).format("DD.MM.YYYY HH:mm"), moment(this.reservationData.dateTimeEnd).format("DD.MM.YYYY HH:mm"), this.reservationData.destination, this.reservationData.GPSSystem, this.reservationData.privateUse, this.reservationData.requirements, this.reservationData.travelInsurance, 1).subscribe(function (data) {
+        this.carOrderService.addOrder(this.reservationData.carId, moment(this.reservationData.dateTimeStart).format("DD.MM.YYYY HH:mm"), moment(this.reservationData.dateTimeEnd).format("DD.MM.YYYY HH:mm"), this.reservationData.destination, this.reservationData.gpsSystem, this.reservationData.privateUse, this.reservationData.requirements, this.reservationData.travelInsurance, 1).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
         }, function () {
@@ -35,14 +47,22 @@ var OrderDetailComponent = (function () {
             setTimeout(function () { return _this.formReset = true; }, 0);
         });
     };
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], OrderDetailComponent.prototype, "windowClose", void 0);
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], OrderDetailComponent.prototype, "updateList", void 0);
+    OrderDetailComponent.prototype.editOrder = function () {
+        var _this = this;
+        this.carOrderService.editOrder(this.reservationData.id, this.reservationData.carId, moment(this.reservationData.dateTimeStart).format("DD.MM.YYYY HH:mm"), moment(this.reservationData.dateTimeEnd).format("DD.MM.YYYY HH:mm"), this.reservationData.destination, this.reservationData.gpsSystem, this.reservationData.privateUse, this.reservationData.requirements, this.reservationData.travelInsurance, this.reservationData.reservationState).subscribe(function (data) {
+            _this.success = "Zmeny boli uložené.";
+        });
+    };
+    OrderDetailComponent.prototype.editAndApproveOrder = function () {
+        var _this = this;
+        this.carOrderService.editOrder(this.reservationData.id, this.reservationData.carId, moment(this.reservationData.dateTimeStart).format("DD.MM.YYYY HH:mm"), moment(this.reservationData.dateTimeEnd).format("DD.MM.YYYY HH:mm"), this.reservationData.destination, this.reservationData.gpsSystem, this.reservationData.privateUse, this.reservationData.requirements, this.reservationData.travelInsurance, this.reservationData.reservationState).subscribe(function (data) {
+            _this.carOrderService.approveOrder(_this.reservationData.id).subscribe(function (data) { _this.success = "Zmeny boli uložené."; });
+        });
+    };
+    OrderDetailComponent.prototype.getReservationData = function () {
+        var _this = this;
+        this.carOrderService.getOrder(this.reservationId).subscribe(function (data) { _this.reservationData = data.json(); }, function (error) { return console.log(error); });
+    };
     OrderDetailComponent = __decorate([
         core_1.Component({
             selector: 'order',
@@ -50,7 +70,7 @@ var OrderDetailComponent = (function () {
             styleUrls: ['lib/css/modalWindow.css'],
             providers: [carReservation_service_1.CarOrderService]
         }), 
-        __metadata('design:paramtypes', [carReservation_service_1.CarOrderService])
+        __metadata('design:paramtypes', [router_1.ActivatedRoute, carReservation_service_1.CarOrderService, car_service_1.CarService])
     ], OrderDetailComponent);
     return OrderDetailComponent;
 }());
