@@ -57,12 +57,20 @@ namespace Krosbook.Models.Reservation
         /// <summary>
         /// Date and Time.
         /// </summary>       
-        public DateTime dateTime { get; set; }
+        public DateTime DateTimeStart { get; set; }
 
+        public DateTime DateTimeEnd { get; set; }
 
-        public int length { get; set; }
+        public string Destination { get; set; }
+        
+        public string TravelInsurance { get; set; }
+        
+        public Boolean GPSSystem { get; set; }
 
+        public string Requirements { get; set; }
 
-        public string name { get; set; }
+        public Boolean PrivateUse { get; set; }
+
+        public int ReservationState { get; set; }
     }
 }

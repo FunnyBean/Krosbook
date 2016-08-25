@@ -50,7 +50,7 @@ namespace Krosbook.Models.Reservation
 
         public IQueryable<CarReservation> GetReservationsByCarInTimeInterval(int carId, DateTime from, DateTime to)
         {
-            return this.Get(r => r.CarId == carId && r.dateTime >= from && r.dateTime <= to);
+            return this.Get(r => r.CarId == carId && r.DateTimeStart >= from && r.DateTimeStart <= to);
         }
 
 

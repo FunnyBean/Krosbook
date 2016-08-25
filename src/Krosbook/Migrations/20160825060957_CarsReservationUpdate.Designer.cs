@@ -8,9 +8,10 @@ using Krosbook.Models;
 namespace Krosbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160825060957_CarsReservationUpdate")]
+    partial class CarsReservationUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -55,8 +56,6 @@ namespace Krosbook.Migrations
                     b.Property<bool>("PrivateUse");
 
                     b.Property<string>("Requirements");
-
-                    b.Property<int>("ReservationState");
 
                     b.Property<string>("TravelInsurance");
 

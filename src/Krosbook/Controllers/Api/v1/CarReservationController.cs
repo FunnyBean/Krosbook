@@ -62,7 +62,8 @@ namespace Krosbook.Controllers.Api.v1
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CreateNewCarReservation([FromBody] CarReservationViewModel reservationVm)
         {
-            reservationVm.dateTime = DateTime.Parse(reservationVm.date);
+            reservationVm.DateTimeStart = DateTime.ParseExact(reservationVm.dateStart, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            reservationVm.DateTimeEnd = DateTime.ParseExact(reservationVm.dateEnd, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             return this.CreateNewReservation(reservationVm);
         }
 
