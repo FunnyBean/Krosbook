@@ -116,6 +116,9 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(new { Message = message });
             }
 
+            reservationVm.UserId = GetUserId();
+            reservationVm.DateTimeStart = DateTime.ParseExact(reservationVm.dateStart, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            reservationVm.DateTimeEnd = DateTime.ParseExact(reservationVm.dateEnd, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
             if (oldReservation == null)
             {

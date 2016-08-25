@@ -21,28 +21,28 @@ var CarService = (function () {
         };
     }
     CarService.prototype.getCars = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/cars');
+        return this.http.get('/api/cars');
     };
     CarService.prototype.getCar = function (id) {
-        return this.http.get('http://funnybean.cloudapp.net/api/cars/' + id);
+        return this.http.get('/api/cars/' + id);
     };
     CarService.prototype.addCar = function (car) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/cars', car, { headers: headers });
+        return this.http.post('/api/cars', car, { headers: headers });
     };
     CarService.prototype.editCar = function (id, car) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://funnybean.cloudapp.net/api/cars/" + id, car, { headers: headers });
+        return this.http.put("/api/cars/" + id, car, { headers: headers });
     };
     CarService.prototype.removeCar = function (id) {
-        return this.http.delete('http://funnybean.cloudapp.net/api/cars/' + id);
+        return this.http.delete('/api/cars/' + id);
     };
     CarService.prototype.filterCars = function (date, length) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/cars/filter', JSON.stringify({ date: date, length: length }), { headers: headers });
+        return this.http.post('/api/cars/filter', JSON.stringify({ date: date, length: length }), { headers: headers });
     };
     CarService = __decorate([
         core_1.Injectable(), 

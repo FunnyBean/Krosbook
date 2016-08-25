@@ -14,7 +14,7 @@ export class MyReservationsComponent
 {
     private reservations:Array<CarReservation> = new Array<CarReservation>();
     private cars:Array<string> = new Array<string>();
-    public states = ['V poardí', 'Schválená', 'Zaradená na vymazanie'];
+    public states = ['V poradí', 'Schválená', 'Zaradená na vymazanie'];
 
     constructor(private carReservationService: CarOrderService, private carService:CarService, private router:Router){ 
         this.carService.getCars().subscribe(

@@ -29,54 +29,54 @@ var UserService = (function () {
             validator = this.generateRandomString();
             ng2_cookies_1.Cookie.set('RememberMe', selector + ':' + validator, 30);
         }
-        return this.http.post('http://funnybean.cloudapp.net/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe, selector: selector, validator: validator }), { headers: headers });
+        return this.http.post('/api/authentification/login', JSON.stringify({ Email: Email, Password: Password, RememberMe: RememberMe, selector: selector, validator: validator }), { headers: headers });
     };
     UserService.prototype.loginWithCookie = function (selector, validator) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/authentification/loginWithCookie', JSON.stringify({ selector: selector, validator: validator }), { headers: headers });
+        return this.http.post('/api/authentification/loginWithCookie', JSON.stringify({ selector: selector, validator: validator }), { headers: headers });
     };
     UserService.prototype.logout = function () {
         ng2_cookies_1.Cookie.delete("RememberMe");
-        return this.http.get('http://funnybean.cloudapp.net/api/authentification/logout');
+        return this.http.get('/api/authentification/logout');
     };
     UserService.prototype.isLoggedIn = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/authentification/IsLoggedIn');
+        return this.http.get('/api/authentification/IsLoggedIn');
     };
     UserService.prototype.myProfile = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/users/profile');
+        return this.http.get('/api/users/profile');
     };
     UserService.prototype.updatePassword = function (oldPassword, newPassword) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://funnybean.cloudapp.net/api/users/changePassword', JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword }), { headers: headers });
+        return this.http.put('/api/users/changePassword', JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword }), { headers: headers });
     };
     UserService.prototype.updateImage = function (photoBase64) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://funnybean.cloudapp.net/api/users/changeImage', JSON.stringify({ photoBase64: photoBase64 }), { headers: headers });
+        return this.http.put('/api/users/changeImage', JSON.stringify({ photoBase64: photoBase64 }), { headers: headers });
     };
     UserService.prototype.getUsers = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/users');
+        return this.http.get('/api/users');
     };
     UserService.prototype.getUser = function (id) {
-        return this.http.get('http://funnybean.cloudapp.net/api/users/' + id);
+        return this.http.get('/api/users/' + id);
     };
     UserService.prototype.addUser = function (user) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/users/', user, { headers: headers });
+        return this.http.post('/api/users/', user, { headers: headers });
     };
     UserService.prototype.editUser = function (id, user) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://funnybean.cloudapp.net/api/users/' + id, user, { headers: headers });
+        return this.http.put('/api/users/' + id, user, { headers: headers });
     };
     UserService.prototype.removeUser = function (id) {
-        return this.http.delete('http://funnybean.cloudapp.net/api/users/' + id);
+        return this.http.delete('/api/users/' + id);
     };
     UserService.prototype.getRoles = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/roles');
+        return this.http.get('/api/roles');
     };
     UserService.prototype.generateRandomString = function () {
         var randString = '';

@@ -38,7 +38,6 @@
         <label for="gpsRequirement">Žiadate o navigačný systém?</label><br>
         <input type="radio" name="gpsRequirement" id="gpsValue1" [(ngModel)]="reservationData.gpsSystem" value="true" checked="{{reservationData.gpsSystem == true ? 'checked' : ''}}"> Áno
         <input type="radio" name="gpsRequirement" id="gpsValue2" [(ngModel)]="reservationData.gpsSystem" value="false" checked="{{reservationData.gpsSystem == false ? 'checked' : ''}}"> Nie
-        {{reservationData.gpsSystem}}
       </div>
       <!--INE POZIADAVKY -->
       <div class="form-group">        
