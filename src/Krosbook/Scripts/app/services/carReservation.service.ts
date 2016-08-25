@@ -24,10 +24,10 @@ export class CarOrderService {
     return this.http.get('/api/orders/'+id, { headers  } ); 
   }
 
-  public addOrder(order:string) {
+  public addOrder(carId, dateStart, dateEnd, destination, GPSSystem, privateUse, requirements, travelInsurane, reservationState) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/orders',order, {headers});
+    return this.http.post('/api/reservations/cars', JSON.stringify({carId, dateStart, dateEnd, destination, GPSSystem, privateUse, requirements, travelInsurane, reservationState}), {headers});
   }
 
   public editOrder(id:string, order:string){

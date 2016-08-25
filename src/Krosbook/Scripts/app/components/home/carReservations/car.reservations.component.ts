@@ -11,7 +11,7 @@ import {User} from '../../../models/user.admin.model';
 import {TableReservationComponent} from './table/table.reservations.component';
 import * as moment from 'moment';
 import {TimeValidator, DateValidator} from "../../../validators/time.validator";
-import {OrderDetailComponent} from '../../home/carReservations/order.detail/order.detail.component';
+import {OrderDetailComponent} from './order/order.detail.component';
 
 declare var $:any;
 
