@@ -41,7 +41,6 @@ export class OrdersManagerComponent {
             
             for(var i = 0; i < cars.length; i++)
                 this.cars[cars[i].id] = cars[i].name + " : " + cars[i].plate;
-                console.log("auta",this.cars); 
         },
         error => console.log(error),
         () => { this.getUsers() }

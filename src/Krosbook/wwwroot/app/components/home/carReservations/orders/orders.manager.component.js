@@ -31,7 +31,6 @@ var OrdersManagerComponent = (function () {
             _this.carsData = data.json();
             for (var i = 0; i < cars.length; i++)
                 _this.cars[cars[i].id] = cars[i].name + " : " + cars[i].plate;
-            console.log("auta", _this.cars);
         }, function (error) { return console.log(error); }, function () { _this.getUsers(); });
     }
     OrdersManagerComponent.prototype.ngOnInit = function () {
