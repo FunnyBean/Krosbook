@@ -5,7 +5,7 @@ export class CarReservation{
   public carId:number;
   public userId:number;
   public dateTimeStart:any = moment().minutes(0).format("YYYY-MM-DDTHH:mm");
-  public dateTimeEnd:any = moment().minutes(0).format("YYYY-MM-DDTHH:mm");
+  public dateTimeEnd:any = moment().add(1, 'hour').minutes(0).format("YYYY-MM-DDTHH:mm");
   public destination:string;
   public travelInsurance:string;
   public gpsSystem:boolean = false;

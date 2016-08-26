@@ -41,6 +41,7 @@ var UsersAdminComponent = (function () {
             }
         }
         this.windowOpen();
+        window.scrollTo(0, 0); /*scroll top*/
     };
     UsersAdminComponent.prototype.removeUser = function (id) {
         var _this = this;

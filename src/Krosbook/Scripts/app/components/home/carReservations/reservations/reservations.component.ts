@@ -51,6 +51,15 @@ export class ReservationsComponent implements OnInit  {
     this.loadUsersData();
     this.updateTime();
     this.updateWeek(); 
+
+    $("li.active").removeClass("active");
+    $("#liCars").addClass("active");
+
+    
+  }
+
+  ngOnDestroy(){
+    $("#content").unbind("scroll");
   }
 
   ngAfterViewInit(){

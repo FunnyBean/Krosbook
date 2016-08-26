@@ -46,6 +46,7 @@ export class UsersAdminComponent implements OnInit {
       }
     }
     this.windowOpen();
+    window.scrollTo(0,0);  /*scroll top*/
   }
 
   removeUser(id:string) {

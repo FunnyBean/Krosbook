@@ -2,13 +2,17 @@
   <h3>Rezervácia áut</h3>
  
   <div class="col-md-12 remove-padding" style="margin-bottom: 15px">
-    <a [routerLink]="['newreservation']"><button type="button" class="btn btn-success">Nová objednávka</button></a>
-    <a [routerLink]="['/home/reservations/cars']"><button type="button" class="btn btn-default" >Prehľad rezervácií</button></a>
-    <a [routerLink]="['myreservations']"><button type="button" class="btn btn-default" >Moje objednávky</button></a>
-    <a [routerLink]="['orders']"><button type="button" class="btn btn-default" >Manažér objednávok</button></a>
+    <nav class="navbar navbar-nav ">
+      <ul class="nav nav-pills">
+        <li (click)="setActiveClass($event.target)" id="liNewReservation"><a [routerLink]="['newreservation']">Nová objednávka</a></li>
+        <li (click)="setActiveClass($event.target)" id="liCars"><a [routerLink]="['/home/reservations/cars']">Prehľad rezervácií</a></li>
+        <li (click)="setActiveClass($event.target)" id="liMyreservation"><a [routerLink]="['myreservations']">Moje objednávky</a></li> 
+        <li (click)="setActiveClass($event.target)" id="liOrders" *ngIf="prevadzkar"><a  [routerLink]="['orders']" >Manažér objednávok</a></li>
+      </ul>
+    </nav>
   </div>
 
-  <router-outlet></router-outlet>
+  <router-outlet ></router-outlet>
 
 </div>
 
