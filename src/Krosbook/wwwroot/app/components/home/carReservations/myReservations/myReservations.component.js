@@ -21,17 +21,27 @@ var MyReservationsComponent = (function () {
         this.router = router;
         this.reservations = new Array();
         this.cars = new Array();
-        this.states = ['V poradí', 'Schválená', 'Zaradená na vymazanie'];
+        this.states = ['Nespracovaná', 'Schválená', 'Zaradená na vymazanie'];
         this.carService.getCars().subscribe(function (data) {
             var cars = data.json();
             for (var i = 0; i < cars.length; i++)
                 _this.cars[cars[i].id] = cars[i].name + " : " + cars[i].plate;
         }, function (error) { return console.log(error); }, function () { _this.updateReservationsData(); });
     }
+    MyReservationsComponent.prototype.ngOnInit = function () {
+        $("li.active").removeClass("active");
+        $("#liMyreservation").addClass("active");
+    };
     MyReservationsComponent.prototype.updateReservationsData = function () {
         var _this = this;
         this.carReservationService.getUserOrders().subscribe(function (data) {
             _this.reservations = data.json();
+            /*sortovanie start*/
+            var pole = _this.reservations;
+            pole.sort(function (a, b) {
+                return new Date(a.dateTimeStart).getTime() - new Date(b.dateTimeStart).getTime();
+            });
+            /*sortovanie end */
         }, function (error) { return console.log(error); });
     };
     MyReservationsComponent.prototype.editReservation = function (id) {

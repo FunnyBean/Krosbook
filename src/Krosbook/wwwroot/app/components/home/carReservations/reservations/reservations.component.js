@@ -42,6 +42,11 @@ var ReservationsComponent = (function () {
         this.loadUsersData();
         this.updateTime();
         this.updateWeek();
+        $("li.active").removeClass("active");
+        $("#liCars").addClass("active");
+    };
+    ReservationsComponent.prototype.ngOnDestroy = function () {
+        $("#content").unbind("scroll");
     };
     ReservationsComponent.prototype.ngAfterViewInit = function () {
         var tables = this.tableReservationComponent.toArray();

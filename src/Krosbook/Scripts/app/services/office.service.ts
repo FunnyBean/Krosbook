@@ -13,36 +13,36 @@ export class OfficeService {
   }
 
   public getOffices() {
-    return this.http.get('/api/rooms');
+    return this.http.get('http://funnybean.cloudapp.net/api/rooms');
   }
 
   public getOffice(id: number) { //with equipment
-    return this.http.get('/api/rooms/'+id);
+    return this.http.get('http://funnybean.cloudapp.net/api/rooms/'+id);
   }
 
   public addOffice(office:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/rooms',office, {headers});
+    return this.http.post('http://funnybean.cloudapp.net/api/rooms',office, {headers});
   }
 
   public editOffice(id:string, office:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put("/api/rooms/"+id, office, {headers});
+    return this.http.put("http://funnybean.cloudapp.net/api/rooms/"+id, office, {headers});
   }
 
   public removeOffice(id: string) {
-    return this.http.delete('/api/rooms/'+id);
+    return this.http.delete('http://funnybean.cloudapp.net/api/rooms/'+id);
   }
 
   public getEquipment(){
-    return this.http.get('/api/equipment/');
+    return this.http.get('http://funnybean.cloudapp.net/api/equipment/');
   }
 
   public filterOffices(date:string, length:number, filterType:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/rooms/filter', JSON.stringify({date, length, filterType}), { headers  } );
+    return this.http.post('http://funnybean.cloudapp.net/api/rooms/filter', JSON.stringify({date, length, filterType}), { headers  } );
   }
 }

@@ -21,66 +21,66 @@ export class UserService {
       validator = this.generateRandomString();
       Cookie.set('RememberMe', selector+':'+validator, 30);
     }
-    return this.http.post('/api/authentification/login', JSON.stringify({ Email, Password, RememberMe, selector, validator }), {headers});
+    return this.http.post('http://funnybean.cloudapp.net/api/authentification/login', JSON.stringify({ Email, Password, RememberMe, selector, validator }), {headers});
   }
 
   public loginWithCookie(selector:string, validator:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/authentification/loginWithCookie', JSON.stringify({ selector, validator }), {headers});
+    return this.http.post('http://funnybean.cloudapp.net/api/authentification/loginWithCookie', JSON.stringify({ selector, validator }), {headers});
   }
 
   public logout() {
     Cookie.delete("RememberMe");
-    return this.http.get('/api/authentification/logout');
+    return this.http.get('http://funnybean.cloudapp.net/api/authentification/logout');
   }
 
   public isLoggedIn() {
-    return this.http.get('/api/authentification/IsLoggedIn');
+    return this.http.get('http://funnybean.cloudapp.net/api/authentification/IsLoggedIn');
   }
 
   public myProfile() {
-    return this.http.get('/api/users/profile');
+    return this.http.get('http://funnybean.cloudapp.net/api/users/profile');
   }
 
   public updatePassword(oldPassword:string, newPassword:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put('/api/users/changePassword', JSON.stringify({oldPassword, newPassword}), { headers  } );
+    return this.http.put('http://funnybean.cloudapp.net/api/users/changePassword', JSON.stringify({oldPassword, newPassword}), { headers  } );
   }
 
   public updateImage(photoBase64:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put('/api/users/changeImage', JSON.stringify({photoBase64}), { headers  } );
+    return this.http.put('http://funnybean.cloudapp.net/api/users/changeImage', JSON.stringify({photoBase64}), { headers  } );
   }
 
   public getUsers() {
-    return this.http.get('/api/users');
+    return this.http.get('http://funnybean.cloudapp.net/api/users');
   }
 
   public getUser(id:number) {
-    return this.http.get('/api/users/' + id);
+    return this.http.get('http://funnybean.cloudapp.net/api/users/' + id);
   }
 
   public addUser(user:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/users/', user, {headers});
+    return this.http.post('http://funnybean.cloudapp.net/api/users/', user, {headers});
   }
 
   public editUser(id:string, user:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put('/api/users/' + id, user, {headers});
+    return this.http.put('http://funnybean.cloudapp.net/api/users/' + id, user, {headers});
   }
 
   public removeUser(id:string) {
-    return this.http.delete('/api/users/' + id);
+    return this.http.delete('http://funnybean.cloudapp.net/api/users/' + id);
   }
 
   public getRoles() {
-    return this.http.get('/api/roles');
+    return this.http.get('http://funnybean.cloudapp.net/api/roles');
   }
 
   private generateRandomString() {

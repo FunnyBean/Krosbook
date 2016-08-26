@@ -4,7 +4,7 @@ import {CarService} from '../../../../services/car.service';
 import {CarReservation} from '../../../../models/carReservation.model';
 import {Router} from '@angular/router';
 import * as moment from 'moment';
-
+declare var $:any;
 @Component({
     templateUrl: 'app/components/home/carReservations/myReservations/myReservations.component.html',
     providers: [CarOrderService]
@@ -14,7 +14,7 @@ export class MyReservationsComponent
 {
     private reservations:Array<CarReservation> = new Array<CarReservation>();
     private cars:Array<string> = new Array<string>();
-    public states = ['V poradí', 'Schválená', 'Zaradená na vymazanie'];
+    public states = ['Nespracovaná', 'Schválená', 'Zaradená na vymazanie'];
 
     constructor(private carReservationService: CarOrderService, private carService:CarService, private router:Router){ 
         this.carService.getCars().subscribe(
@@ -29,18 +29,37 @@ export class MyReservationsComponent
         
     }
 
+    ngOnInit(){  
+    $("li.active").removeClass("active");
+    $("#liMyreservation").addClass("active");   
+    
+    }
+
     updateReservationsData()
     {
         this.carReservationService.getUserOrders().subscribe(
             data => {
                 this.reservations = data.json();
+                
+                   /*sortovanie start*/
+                    var pole=this.reservations;
+                    pole.sort(function(a,b) { 
+                        return new Date(a.dateTimeStart).getTime() - new Date(b.dateTimeStart).getTime() 
+                    });
+                   /*sortovanie end */
+              
+ 
+                
             },
             error => console.log(error)
-        )
+        )       
     }
+
+   
 
     editReservation(id)
     {
+        
         this.router.navigate(['/home/reservations/cars/editreservation/', id]);
     }
 

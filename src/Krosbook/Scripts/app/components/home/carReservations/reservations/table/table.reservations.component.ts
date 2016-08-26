@@ -48,7 +48,7 @@ export class TableReservationComponent implements OnInit {
   }
 
   fillTable() {
-    var table = '<tr><td colspan="6" class="officeName" style="background-color: '+this.data.color+'"><h4>'+this.data.name+'</h4></td></tr>', fromRow, fromCol, length = 1, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0;
+    var table = '<tr><td colspan="6" class="officeName" style="background-color: '+this.data.color+'"><h4>'+this.data.name+' &nbsp &nbsp '+this.data.plate+'</h4></td></tr>', fromRow, fromCol, length = 1, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0;
     for (var i = 0; i < this.times.length; i++) {
       table += '<tr>';
       table += '<td class="col-md-1">' + this.times[i].time + '</td>';
@@ -193,9 +193,11 @@ export class TableReservationComponent implements OnInit {
           {
             var day = startDay.weekday() - 1;
             while (time < endTime && time <= '17:30') {
-              if (time == startDay.format("HH:mm"))
-                this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
-              else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+              if(time >= '07:00'){
+                if (time == startDay.format("HH:mm"))
+                  this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
+                else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+              }
               time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
             }
           }
@@ -212,16 +214,18 @@ export class TableReservationComponent implements OnInit {
               if(startDay.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD"))
               {
                 while (time <= '17:30') {
-                  if (time == moment(record.dateTimeStart, "YYYY-MM-DD HH:mm:ss").format("HH:mm"))
-                    this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
-                  else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+                  if(time >= '07:00'){
+                    if (time == moment(record.dateTimeStart, "YYYY-MM-DD HH:mm:ss").format("HH:mm"))
+                      this.tableData[time][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
+                    else this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');
+                  }
                   time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
                 }
               }
               else if(endDay.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD"))
               {
                 var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
-                while (tempTime <= endTime) {
+                while (tempTime <= endTime && tempTime <= '17:30') {
                   if (tempTime == "07:00")
                     this.tableData[tempTime][day] = JSON.parse('{"userName": "' + this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "'+record.id+'"}');
                   else this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "'+record.id+'"}');

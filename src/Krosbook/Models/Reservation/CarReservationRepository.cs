@@ -47,20 +47,20 @@ namespace Krosbook.Models.Reservation
         {
             return this.Get(r => r.CarId == carId);
         }
+
         public IQueryable<CarReservation> GetReservationsByState(int reservationState)
         {
             return this.Get(r => r.ReservationState == reservationState);
         }
 
-
         public IQueryable<CarReservation> GetReservationsCarByUser(int userId)
         {
-            return this.Get(r => r.UserId == userId);
+            return this.Get(r => r.UserId == userId).OrderByDescending(r => r.DateTimeStart);
         }
 
         public IQueryable<CarReservation> GetReservationsByCarInTimeInterval(int carId, DateTime from, DateTime to)
         {
-            return this.Get(r => r.CarId == carId && ((r.DateTimeStart >= from && r.DateTimeStart <= to) || (r.DateTimeEnd >= from && r.DateTimeEnd <= to)) && r.ReservationState == 2);
+            return this.Get(r => r.CarId == carId && ((r.DateTimeStart >= from && r.DateTimeStart <= to) || (r.DateTimeEnd >= from && r.DateTimeEnd <= to) || (from > r.DateTimeStart && to < r.DateTimeEnd)) && r.ReservationState == 2);
         }
 
 

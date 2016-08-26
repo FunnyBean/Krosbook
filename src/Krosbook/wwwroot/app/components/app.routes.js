@@ -7,6 +7,7 @@ var admin_component_1 = require('./admin/admin.component');
 var login_routes_1 = require('./login.routes');
 var AuthGuard_1 = require("./AuthGuard");
 var AdminGuard_1 = require("./AdminGuard");
+var OperatorGuard_1 = require('./OperatorGuard');
 var users_admin_component_1 = require('./admin/users/users.admin.component');
 var offices_admin_component_1 = require('./admin/offices/offices.admin.component');
 var cars_admin_component_1 = require("./admin/cars/cars.admin.component");
@@ -28,16 +29,13 @@ var routes = [
                 path: 'profile', component: profile_component_1.ProfileComponent,
                 children: [
                     {
-                        path: '',
-                        component: avatar_component_1.AvatarComponent
+                        path: '', component: avatar_component_1.AvatarComponent
                     },
                     {
-                        path: 'avatar',
-                        component: avatar_component_1.AvatarComponent
+                        path: 'avatar', component: avatar_component_1.AvatarComponent
                     },
                     {
-                        path: 'password',
-                        component: password_component_1.PasswordComponent
+                        path: 'password', component: password_component_1.PasswordComponent
                     }
                 ]
             },
@@ -50,24 +48,19 @@ var routes = [
                 component: car_reservations_component_1.CarsReservationsComponent,
                 children: [
                     {
-                        path: '',
-                        component: reservations_component_1.ReservationsComponent
+                        path: '', component: reservations_component_1.ReservationsComponent
                     },
                     {
-                        path: 'newreservation',
-                        component: order_detail_component_1.OrderDetailComponent
+                        path: 'newreservation', component: order_detail_component_1.OrderDetailComponent
                     },
                     {
-                        path: 'editreservation/:id',
-                        component: order_detail_component_1.OrderDetailComponent
+                        path: 'editreservation/:id', component: order_detail_component_1.OrderDetailComponent
                     },
                     {
-                        path: 'myreservations',
-                        component: myReservations_component_1.MyReservationsComponent
+                        path: 'myreservations', component: myReservations_component_1.MyReservationsComponent,
                     },
                     {
-                        path: 'orders',
-                        component: orders_manager_component_1.OrdersManagerComponent
+                        path: 'orders', component: orders_manager_component_1.OrdersManagerComponent, canActivate: [OperatorGuard_1.OperatorGuard]
                     }
                 ]
             },

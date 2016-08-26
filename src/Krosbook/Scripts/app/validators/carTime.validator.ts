@@ -31,7 +31,7 @@ export class DateValidator{
 
   validate(c:FormControl){
     var date = moment(c.value);
-    if(date.minute() % 30 == 0 && ((date.hour() >= 7 && date.hour() <= 18) || date.hour() == 0)  && date.day() != 6 && date.day() != 0 && !this.holidayService.isHoliday(date.format("DD/MM"), date.format("YYYY")))
+    if(date.minute() % 30 == 0)
       return null;
     else return {validateDate: true}
   }

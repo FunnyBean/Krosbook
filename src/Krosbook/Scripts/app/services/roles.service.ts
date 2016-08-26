@@ -13,27 +13,27 @@ export class RolesService {
   }
 
   public getRoles(){
-    return this.http.get('/api/roles');
+    return this.http.get('http://funnybean.cloudapp.net/api/roles');
   }
 
   public getRole(id:number){
-    return this.http.get('/api/roles/'+id);
+    return this.http.get('http://funnybean.cloudapp.net/api/roles/'+id);
   }
 
   public addRole(role:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/roles',role, {headers});
+    return this.http.post('http://funnybean.cloudapp.net/api/roles',role, {headers});
   }
 
   public editRole(id:number, role:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put("/api/roles/"+id, role, {headers});
+    return this.http.put("http://funnybean.cloudapp.net/api/roles/"+id, role, {headers});
   }
 
   public removeRole(id: string) {
-    return this.http.delete('/api/roles/'+id);
+    return this.http.delete('http://funnybean.cloudapp.net/api/roles/'+id);
   }
 
 

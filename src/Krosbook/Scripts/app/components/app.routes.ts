@@ -6,6 +6,7 @@ import {AdminComponent} from './admin/admin.component';
 import {authProviders }      from './login.routes';
 import {AuthGuard} from "./AuthGuard";
 import {AdminGuard} from "./AdminGuard";
+import {OperatorGuard} from './OperatorGuard';
 
 import {UsersAdminComponent} from './admin/users/users.admin.component';
 import {OfficesAdminComponent} from './admin/offices/offices.admin.component';
@@ -25,25 +26,19 @@ import {PasswordComponent} from "./home/profile/password/password.component";
 
 const routes: RouterConfig = [
   { path: '', redirectTo: 'home', terminal: true},
-  
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard],
-    children: [
-      
+    children: [     
       {
         path:'profile',component:ProfileComponent,
-
         children:[
           {
-            path:'',
-            component:AvatarComponent
+            path:'', component:AvatarComponent
           },
           {
-            path:'avatar',
-            component:AvatarComponent
+            path:'avatar', component:AvatarComponent
           },
           {
-            path:'password',
-            component:PasswordComponent
+            path:'password', component:PasswordComponent
           }
         ]
       },
@@ -54,30 +49,23 @@ const routes: RouterConfig = [
       {
         path: 'reservations/cars',
         component: CarsReservationsComponent,
-         children:[
+        children:[
           {
-             path:'',
-             component: ReservationsComponent
+            path:'', component: ReservationsComponent
           },
           {
-           path:'newreservation',
-           component:OrderDetailComponent
+            path:'newreservation', component:OrderDetailComponent
           },
           {
-           path:'editreservation/:id',
-           component:OrderDetailComponent
+            path:'editreservation/:id', component:OrderDetailComponent
           },
           {
-           path:'myreservations',
-           component:MyReservationsComponent
+            path:'myreservations', component:MyReservationsComponent,
           },
           {
-          path: 'orders',
-          component:  OrdersManagerComponent
+            path: 'orders', component:  OrdersManagerComponent, canActivate: [OperatorGuard]
           }
         ]
-       
-
       },
       {
         path: 'reservations/rooms',
