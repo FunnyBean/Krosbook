@@ -195,7 +195,7 @@ namespace Krosbook.Controllers.Api.v1
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(chgpVM.newPassword);
                 user.Password = chgpVM.newPassword;
 
-                _userRepository.Edit(user);
+                _userRepository.EditWithoutRoles(user);
                 _userRepository.Save();
                 return Ok();
             }
@@ -208,7 +208,7 @@ namespace Krosbook.Controllers.Api.v1
         {
             var user = _userRepository.GetItem(x => x.Id == this.GetUserId());
             user.Photo = Convert.FromBase64String(chgiVM.photoBase64);
-                _userRepository.Edit(user);
+                _userRepository.EditWithoutRoles(user);
                 _userRepository.Save();
                 return Ok();              
         }

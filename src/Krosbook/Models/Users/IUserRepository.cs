@@ -14,6 +14,8 @@ namespace Krosbook.Models.Users
 
         IEnumerable<Role> GetUserRoles(string username);
 
-        IEnumerable<Role> GetUserRolesById(int id); 
+        IEnumerable<Role> GetUserRolesById(int id);
+
+        void EditWithoutRoles(User user);
     }
 }

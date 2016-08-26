@@ -76,10 +76,17 @@ namespace Krosbook.Controllers.Api.v1
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return this.Json(null);
             }
-            else
+            if (!User.IsInRole("Prevádzkar"))
             {
-                return this.Json(_mapper.Map<CarReservationViewModel>(reservation));
+                if (reservation.UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't update reservation, that was created by user with id " + reservation.UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
             }
+            return this.Json(_mapper.Map<CarReservationViewModel>(reservation));
         }
 
         [HttpPost()]
@@ -96,9 +103,9 @@ namespace Krosbook.Controllers.Api.v1
         [ValidateModelState, CheckArgumentsForNull]    
         public IActionResult UpdateReservation(int reservationId, [FromBody] CarReservationViewModel reservationVm)
         {
-            if (!User.IsInRole("Admin"))
+            if (!User.IsInRole("Prevádzkar"))
             {
-                if (reservationVm.UserId != GetUserId())
+                if (reservationVm.UserId != GetUserId() || reservationVm.ReservationState != 1)
                 {
                     var message = $"User with id " + GetUserId() + " can't update reservation, that was created by user with id " + reservationVm.UserId;
                     _logger.LogWarning(message);
@@ -115,8 +122,6 @@ namespace Krosbook.Controllers.Api.v1
                 this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return this.Json(new { Message = message });
             }
-
-            reservationVm.UserId = GetUserId();
             reservationVm.DateTimeStart = DateTime.ParseExact(reservationVm.dateStart, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             reservationVm.DateTimeEnd = DateTime.ParseExact(reservationVm.dateEnd, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
@@ -137,7 +142,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPut("approve/{reservationId}")]
         public IActionResult ApproveReservation(int reservationId)
         {
-            if(User.IsInRole("Admin"))
+            if(User.IsInRole("Prevádzkar"))
             {
                 CarReservation reservation = _reservationRepository.GetItem(reservationId);
                 if(reservation == null)
@@ -165,9 +170,10 @@ namespace Krosbook.Controllers.Api.v1
         [HttpDelete("{reservationId}")]
         public IActionResult DeleteReservation(int reservationId)
         {
-            if (!User.IsInRole("Admin"))
+            if (!User.IsInRole("Prevádzkar"))
             {
-                if (_reservationRepository.GetItem(reservationId).UserId != GetUserId())
+                CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
+                if (oldReservation.UserId != GetUserId() || oldReservation.ReservationState != 1)
                 {
                     var message = $"User with id " + GetUserId() + " can't delete reservation, that was created by user with id " + _reservationRepository.GetItem(reservationId).UserId;
                     _logger.LogWarning(message);
@@ -184,27 +190,19 @@ namespace Krosbook.Controllers.Api.v1
         [HttpDelete("safe/{reservationId}")]
         public IActionResult AskForSafeDeleteReservation(int reservationId)
         {
-            if (User.IsInRole("Admin"))
+            CarReservation reservation = _reservationRepository.GetItem(reservationId);
+            if (reservation == null)
             {
-                CarReservation reservation = _reservationRepository.GetItem(reservationId);
-                if (reservation == null)
-                {
-                    this.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    return this.Json(null);
-                }
-                IActionResult result;
-                reservation.ReservationState = 3;
-                result = SaveData(() =>
-                {
-                    _reservationRepository.Edit(reservation);
-                });
-                return result;
-            }
-            else
-            {
-                this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return this.Json(null);
             }
+            IActionResult result;
+            reservation.ReservationState = 3;
+            result = SaveData(() =>
+            {
+                _reservationRepository.Edit(reservation);
+            });
+            return result;
         }
 
         #endregion

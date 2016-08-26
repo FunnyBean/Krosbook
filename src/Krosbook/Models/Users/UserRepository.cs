@@ -106,7 +106,7 @@ namespace Krosbook.Models.Users
 
             if (userRoles != null)
             {
-                var oldRole = _dbContext.Set<UserRole>().Where(p => p.RoleId == user.Id);
+                var oldRole = _dbContext.Set<UserRole>().Where(p => p.UserId == user.Id);
 
                 SetAddOrModifiedStatesForRole(user, userRoles);
 
@@ -126,10 +126,18 @@ namespace Krosbook.Models.Users
 
         private void SetDeleteStateForNotUsedRole(ICollection<UserRole> userRole, IQueryable<UserRole> oldRole)
         {
-            foreach (var role in oldRole.Where((r) => !userRole.Any(p => (p.RoleId == r.RoleId))))
+            foreach (var role in oldRole.Where(r => !userRole.Any(p => (p.RoleId == r.RoleId))))
             {
                 _dbContext.Entry(role).State = EntityState.Deleted;
             }
+        }
+
+        public void EditWithoutRoles(User user)
+        {
+            var userRoles = user.Roles;
+
+            user.Roles = null;
+            base.Edit(user);
         }
 
         private bool HasUserRole(int userId, int roleId)
