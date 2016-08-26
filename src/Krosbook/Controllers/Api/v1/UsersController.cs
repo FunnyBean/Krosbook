@@ -311,7 +311,9 @@ namespace Krosbook.Controllers.Api.v1
             RNGCryptoServiceProvider cryptRNG = new RNGCryptoServiceProvider();
             byte[] tokenBuffer = new byte[length];
             cryptRNG.GetBytes(tokenBuffer);
-            return Convert.ToBase64String(tokenBuffer);
+            string str = Convert.ToBase64String(tokenBuffer);
+            str = str.Substring(0, str.Length - 1);
+            return str;
         }
 
 

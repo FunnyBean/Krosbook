@@ -51,19 +51,186 @@ namespace Krosbook.Models.Reservation
         }
 
         public IQueryable<RoomReservation> GetReservationsByRoomInTimeInterval(int roomId, DateTime from, DateTime to)
-        {  
+        {
             var reservations = this.Get(r => r.RoomId == roomId && r.dateTime >= from && r.dateTime <= to);
 
             IList<RoomReservation> export = new List<RoomReservation>();
 
-            foreach (var res in reservations) {
+            foreach (var res in reservations)
+            {
                 export.Add(res);
-               // if (_repeaterRepository.GetSingleByReservationId(res.Id) != null) {
-                   //prejde tabulkou roomReservationRepeater a pouzije zanamy, ktorych EndDate >= to && from>= startDate 
-                    //nastavi nejake pravidla opakovania rezervacii a prida v cykle do Listu
-//                }
+                //pre denne opakovania v danom tyzdni
+                var repeater = _repeaterRepository.GetSingleByReservationId(res.Id);
+                if (repeater != null && repeater.Repetation == "days")
+                {
+                    DateTime tempDate = res.dateTime;
+                    while (tempDate < repeater.EndDate && tempDate <= to)
+                    {
+                        if (tempDate.DayOfWeek == DayOfWeek.Monday || tempDate.DayOfWeek == DayOfWeek.Tuesday
+                           || tempDate.DayOfWeek == DayOfWeek.Wednesday || tempDate.DayOfWeek == DayOfWeek.Thursday)
+                        {
+                            RoomReservation res2 = new RoomReservation();
+                            res2.G2MeetingID = res.G2MeetingID;
+                            res2.Id = res.Id;
+                            res2.length = res.length;
+                            res2.Room = res.Room;
+                            res2.RoomId = res.RoomId;
+                            res2.RoomReservationRepeater = res.RoomReservationRepeater;
+                            res2.RoomReservationRepeaterId = res.RoomReservationRepeaterId;
+                            res2.User = res.User;
+                            res2.UserId = res.UserId;
+                            res2.name = res.name;
+
+                            tempDate = tempDate.AddDays(1 * repeater.Interval);
+                            res2.dateTime = tempDate;
+                            export.Add(res2);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
             }
-            
+
+            //vsetky rezervacie s opakovaniami, ktorych opakovania este neskoncili
+            IList<RoomReservation> otherReservations = new List<RoomReservation>();
+            var reservationIds = _repeaterRepository.Get(x => x.EndDate >= from && x.EndDate >= to && x.RoomReservation.RoomId == roomId);
+
+            foreach (var i in reservationIds)
+            {
+                var reser = this.GetItem(i.ReservationId);
+                if (reser != null && reser.dateTime <= from)
+                {
+                    otherReservations.Add(reser);
+                }
+            }
+
+            foreach (var res in otherReservations)
+            {
+                var repeater = _repeaterRepository.GetItem((int)res.RoomReservationRepeaterId);
+
+                DateTime tempDate = res.dateTime;
+                if (repeater != null && repeater.Repetation == "days")
+                {
+                    while (tempDate <= to)
+                    {
+                        if (tempDate.DayOfWeek == DayOfWeek.Monday || tempDate.DayOfWeek == DayOfWeek.Tuesday
+                            || tempDate.DayOfWeek == DayOfWeek.Wednesday || tempDate.DayOfWeek == DayOfWeek.Thursday || tempDate.DayOfWeek == DayOfWeek.Friday)
+                        {
+                          
+                            if (tempDate.Date >= from.Date && tempDate.Date <= repeater.EndDate.Date)
+                            {
+                                RoomReservation res2 = new RoomReservation();
+                                res2.G2MeetingID = res.G2MeetingID;
+                                res2.Id = res.Id;
+                                res2.length = res.length;
+                                res2.Room = res.Room;
+                                res2.RoomId = res.RoomId;
+                                res2.RoomReservationRepeater = res.RoomReservationRepeater;
+                                res2.RoomReservationRepeaterId = res.RoomReservationRepeaterId;
+                                res2.User = res.User;
+                                res2.UserId = res.UserId;
+                                res2.name = res.name;
+                                res2.dateTime = tempDate;
+                                export.Add(res2);
+                            }
+                            else
+                            {
+                                if (tempDate >= to)
+                                {
+                                    break;
+                                }
+                            }
+                            if (tempDate.DayOfWeek == DayOfWeek.Friday)
+                            {
+                                tempDate = tempDate.AddDays(3);
+
+                            }
+                            else
+                            {
+                                tempDate = tempDate.AddDays(1 * repeater.Interval);
+                            }
+                        }             
+
+                    }
+                }
+
+                tempDate = res.dateTime;
+                if (repeater != null && repeater.Repetation == "weeks")
+                {
+                    while (tempDate <= to)
+                    {
+                        tempDate = tempDate.AddDays(7 * repeater.Interval);
+                        if (from <= tempDate && tempDate <= to)
+                        {
+                            RoomReservation res2 = new RoomReservation();
+                            res2.G2MeetingID = res.G2MeetingID;
+                            res2.Id = res.Id;
+                            res2.length = res.length;
+                            res2.Room = res.Room;
+                            res2.RoomId = res.RoomId;
+                            res2.RoomReservationRepeater = res.RoomReservationRepeater;
+                            res2.RoomReservationRepeaterId = res.RoomReservationRepeaterId;
+                            res2.User = res.User;
+                            res2.UserId = res.UserId;
+                            res2.name = res.name;
+                            res2.dateTime = tempDate;
+                            export.Add(res2);
+                        }
+                    }
+                }
+                tempDate = res.dateTime;
+                if (repeater != null && repeater.Repetation == "months")
+                {
+                    while (tempDate <= to)
+                    {
+                        tempDate = tempDate.AddMonths(1 * repeater.Interval);
+                        if (from <= tempDate && tempDate <= to)
+                        {
+                            RoomReservation res2 = new RoomReservation();
+                            res2.G2MeetingID = res.G2MeetingID;
+                            res2.Id = res.Id;
+                            res2.length = res.length;
+                            res2.Room = res.Room;
+                            res2.RoomId = res.RoomId;
+                            res2.RoomReservationRepeater = res.RoomReservationRepeater;
+                            res2.RoomReservationRepeaterId = res.RoomReservationRepeaterId;
+                            res2.User = res.User;
+                            res2.UserId = res.UserId;
+                            res2.name = res.name;
+                            res2.dateTime = tempDate;
+                            export.Add(res2);
+                        }
+                    }
+                }
+                tempDate = res.dateTime;
+                if (repeater != null && repeater.Repetation == "years")
+                {
+                    while (tempDate <= to)
+                    {
+                        tempDate = tempDate.AddYears(1 * repeater.Interval);
+                        if (from <= tempDate && tempDate <= to)
+                        {
+                            RoomReservation res2 = new RoomReservation();
+                            res2.G2MeetingID = res.G2MeetingID;
+                            res2.Id = res.Id;
+                            res2.length = res.length;
+                            res2.Room = res.Room;
+                            res2.RoomId = res.RoomId;
+                            res2.RoomReservationRepeater = res.RoomReservationRepeater;
+                            res2.RoomReservationRepeaterId = res.RoomReservationRepeaterId;
+                            res2.User = res.User;
+                            res2.UserId = res.UserId;
+                            res2.name = res.name;
+                            res2.dateTime = tempDate;
+                            export.Add(res2);
+                        }
+                    }
+                }
+
+                //nastavia sa jednotlive rezervacie a pridaju sa do exportu
+            }
 
 
             return export.AsQueryable();

@@ -76,7 +76,7 @@ namespace Krosbook.Controllers.Api.v1
                 this.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return this.Json(null);
             }
-            if (!User.IsInRole("Prevádzkar"))
+            if (!User.IsInRole("Prevadzkar"))
             {
                 if (reservation.UserId != GetUserId())
                 {
@@ -103,7 +103,7 @@ namespace Krosbook.Controllers.Api.v1
         [ValidateModelState, CheckArgumentsForNull]    
         public IActionResult UpdateReservation(int reservationId, [FromBody] CarReservationViewModel reservationVm)
         {
-            if (!User.IsInRole("Prevádzkar"))
+            if (!User.IsInRole("Prevadzkar"))
             {
                 if (reservationVm.UserId != GetUserId() || reservationVm.ReservationState != 1)
                 {
@@ -142,7 +142,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPut("approve/{reservationId}")]
         public IActionResult ApproveReservation(int reservationId)
         {
-            if(User.IsInRole("Prevádzkar"))
+            if(User.IsInRole("Admin"))
             {
                 CarReservation reservation = _reservationRepository.GetItem(reservationId);
                 if(reservation == null)
@@ -170,7 +170,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpDelete("{reservationId}")]
         public IActionResult DeleteReservation(int reservationId)
         {
-            if (!User.IsInRole("Prevádzkar"))
+            if (!User.IsInRole("Prevadzkar"))
             {
                 CarReservation oldReservation = _reservationRepository.GetItem(reservationId);
                 if (oldReservation.UserId != GetUserId() || oldReservation.ReservationState != 1)
