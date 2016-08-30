@@ -14,14 +14,17 @@ namespace Krosbook.Models.Reservation
     public class RoomReservationRepository : BaseRepository<RoomReservation>, IRoomReservationRepository
     {
         private IRoomReservationRepeaterRepository _repeaterRepository;
+        private IRoomReservationChangesRepository _changesRepository;
         /// <summary>
         /// Initializes a new instance of the <see cref="RoomReservationRepository"/> class.
         /// </summary>
         /// <param name="dbContext">The database context.</param>
-        public RoomReservationRepository(ApplicationDbContext dbContext, IRoomReservationRepeaterRepository repeaterRepository)
+        public RoomReservationRepository(ApplicationDbContext dbContext, IRoomReservationRepeaterRepository repeaterRepository,
+            IRoomReservationChangesRepository changesRepository)
             : base(dbContext)
         {
             this._repeaterRepository = repeaterRepository;
+            this._changesRepository = changesRepository;
         }
 
         /// <summary>
@@ -50,15 +53,20 @@ namespace Krosbook.Models.Reservation
             return this.Get(r => r.RoomId == roomId);
         }
 
+
+
         public IQueryable<RoomReservation> GetReservationsByRoomInTimeInterval(int roomId, DateTime from, DateTime to)
         {
             var reservations = this.Get(r => r.RoomId == roomId && r.dateTime >= from && r.dateTime <= to);
 
             IList<RoomReservation> export = new List<RoomReservation>();
 
+
+
             foreach (var res in reservations)
             {
-                export.Add(res);
+                var changes = _changesRepository.GetChangesByReservation(res.Id);
+                  export.Add(res);
                 //pre denne opakovania v danom tyzdni
                 var repeater = _repeaterRepository.GetSingleByReservationId(res.Id);
                 if (repeater != null && repeater.Repetation == "days")
@@ -83,7 +91,25 @@ namespace Krosbook.Models.Reservation
 
                             tempDate = tempDate.AddDays(1 * repeater.Interval);
                             res2.dateTime = tempDate;
-                            export.Add(res2);
+                            bool canCreateReservation = true;
+
+                            foreach (var c in changes)
+                            {
+                                if (c.dateTime==res2.dateTime)
+                                {
+                                    canCreateReservation = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    canCreateReservation = true;                                    
+                                }
+                            }
+                            if (canCreateReservation)
+                            {
+                                export.Add(res2);
+                            }
+
                         }
                         else
                         {
@@ -95,7 +121,7 @@ namespace Krosbook.Models.Reservation
 
             //vsetky rezervacie s opakovaniami, ktorych opakovania este neskoncili
             IList<RoomReservation> otherReservations = new List<RoomReservation>();
-            var reservationIds = _repeaterRepository.Get(x => x.EndDate >= from && x.EndDate >= to && x.RoomReservation.RoomId == roomId);
+            var reservationIds = _repeaterRepository.Get(x => x.EndDate >= from && x.RoomReservation.RoomId == roomId);
 
             foreach (var i in reservationIds)
             {
@@ -109,6 +135,7 @@ namespace Krosbook.Models.Reservation
             foreach (var res in otherReservations)
             {
                 var repeater = _repeaterRepository.GetItem((int)res.RoomReservationRepeaterId);
+                var changes = _changesRepository.GetChangesByReservation(res.Id);
 
                 DateTime tempDate = res.dateTime;
                 if (repeater != null && repeater.Repetation == "days")
@@ -118,7 +145,7 @@ namespace Krosbook.Models.Reservation
                         if (tempDate.DayOfWeek == DayOfWeek.Monday || tempDate.DayOfWeek == DayOfWeek.Tuesday
                             || tempDate.DayOfWeek == DayOfWeek.Wednesday || tempDate.DayOfWeek == DayOfWeek.Thursday || tempDate.DayOfWeek == DayOfWeek.Friday)
                         {
-                          
+
                             if (tempDate.Date >= from.Date && tempDate.Date <= repeater.EndDate.Date)
                             {
                                 RoomReservation res2 = new RoomReservation();
@@ -133,7 +160,25 @@ namespace Krosbook.Models.Reservation
                                 res2.UserId = res.UserId;
                                 res2.name = res.name;
                                 res2.dateTime = tempDate;
-                                export.Add(res2);
+
+                                bool canCreateReservation = true;
+
+                                foreach (var c in changes)
+                                {
+                                    if (c.dateTime == res2.dateTime)
+                                    {
+                                        canCreateReservation = false;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        canCreateReservation = true;
+                                    }
+                                }
+                                if (canCreateReservation)
+                                {
+                                    export.Add(res2);
+                                }                             
                             }
                             else
                             {
@@ -151,7 +196,7 @@ namespace Krosbook.Models.Reservation
                             {
                                 tempDate = tempDate.AddDays(1 * repeater.Interval);
                             }
-                        }             
+                        }
 
                     }
                 }
@@ -176,7 +221,24 @@ namespace Krosbook.Models.Reservation
                             res2.UserId = res.UserId;
                             res2.name = res.name;
                             res2.dateTime = tempDate;
-                            export.Add(res2);
+                            bool canCreateReservation = true;
+
+                            foreach (var c in changes)
+                            {
+                                if (c.dateTime == res2.dateTime)
+                                {
+                                    canCreateReservation = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    canCreateReservation = true;
+                                }
+                            }
+                            if (canCreateReservation)
+                            {
+                                export.Add(res2);
+                            }
                         }
                     }
                 }
@@ -200,7 +262,24 @@ namespace Krosbook.Models.Reservation
                             res2.UserId = res.UserId;
                             res2.name = res.name;
                             res2.dateTime = tempDate;
-                            export.Add(res2);
+                            bool canCreateReservation = true;
+
+                            foreach (var c in changes)
+                            {
+                                if (c.dateTime == res2.dateTime)
+                                {
+                                    canCreateReservation = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    canCreateReservation = true;
+                                }
+                            }
+                            if (canCreateReservation)
+                            {
+                                export.Add(res2);
+                            }
                         }
                     }
                 }
@@ -224,7 +303,24 @@ namespace Krosbook.Models.Reservation
                             res2.UserId = res.UserId;
                             res2.name = res.name;
                             res2.dateTime = tempDate;
-                            export.Add(res2);
+                            bool canCreateReservation = true;
+
+                            foreach (var c in changes)
+                            {
+                                if (c.dateTime == res2.dateTime)
+                                {
+                                    canCreateReservation = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    canCreateReservation = true;
+                                }
+                            }
+                            if (canCreateReservation)
+                            {
+                                export.Add(res2);
+                            }
                         }
                     }
                 }
@@ -234,6 +330,20 @@ namespace Krosbook.Models.Reservation
 
 
             return export.AsQueryable();
+        }
+
+
+        //overim ci mozno vytvorit opakovanie na dany datum
+        public bool CanMakeReservation(int roomId, DateTime from, int length)
+        {
+            if (GetReservationsByRoomInTimeInterval(roomId, from, from.AddMinutes(length)).Count() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

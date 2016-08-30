@@ -21,23 +21,23 @@ var RolesService = (function () {
         };
     }
     RolesService.prototype.getRoles = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/roles');
+        return this.http.get('/api/roles');
     };
     RolesService.prototype.getRole = function (id) {
-        return this.http.get('http://funnybean.cloudapp.net/api/roles/' + id);
+        return this.http.get('/api/roles/' + id);
     };
     RolesService.prototype.addRole = function (role) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/roles', role, { headers: headers });
+        return this.http.post('/api/roles', role, { headers: headers });
     };
     RolesService.prototype.editRole = function (id, role) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://funnybean.cloudapp.net/api/roles/" + id, role, { headers: headers });
+        return this.http.put("/api/roles/" + id, role, { headers: headers });
     };
     RolesService.prototype.removeRole = function (id) {
-        return this.http.delete('http://funnybean.cloudapp.net/api/roles/' + id);
+        return this.http.delete('/api/roles/' + id);
     };
     RolesService = __decorate([
         core_1.Injectable(), 

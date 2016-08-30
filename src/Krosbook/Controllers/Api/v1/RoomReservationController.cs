@@ -29,6 +29,7 @@ namespace Krosbook.Controllers.Api.v1
 
         private IRoomReservationRepository _reservationRepository;
         private IRoomReservationRepeaterRepository _reservationRepeaterRepository;
+        private IRoomReservationChangesRepository _reservationChangesRepository;
         private ILogger<RoomReservationController> _logger;
         private IMapper _mapper;
         private IEmailService _emailService;
@@ -40,7 +41,8 @@ namespace Krosbook.Controllers.Api.v1
         #region Constructor
         public RoomReservationController(IRoomReservationRepository reservationRepository,
                       ILogger<RoomReservationController> logger,
-                                       IMapper mapper, IEmailService emailService, IG2MService G2MService, IRoomReservationRepeaterRepository reservationRepeaterRepository
+                                       IMapper mapper, IEmailService emailService, IG2MService G2MService, IRoomReservationRepeaterRepository reservationRepeaterRepository,
+                                       IRoomReservationChangesRepository reservationChangesRepository
                                        )
         {
             _reservationRepository = reservationRepository;
@@ -49,6 +51,7 @@ namespace Krosbook.Controllers.Api.v1
             _emailService = emailService;
             _G2MService = G2MService;
             _reservationRepeaterRepository = reservationRepeaterRepository;
+            _reservationChangesRepository = reservationChangesRepository;
         }
 
         #endregion
@@ -237,7 +240,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(repetition));
             }
         }
-
+           
 
         [HttpDelete("repetition/{repetitionId}")]
         public IActionResult DeleteReservationRepetition(int repetitionId)
@@ -405,6 +408,43 @@ namespace Krosbook.Controllers.Api.v1
 
         }
 
+
+        [HttpGet("changes/{changesId}")]
+        public IActionResult GetReservationChangesById(int changesId)
+        {
+            var changes = _reservationChangesRepository.GetItem(changesId);
+            if (changes == null)
+            {
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(null);
+            }
+            else
+            {
+                return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(changes));
+            }
+        }
+
+        [HttpDelete("changes/{changesId}")]
+        public IActionResult DeleteReservationChanges(int changesId)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                if (_reservationRepository.GetItem(_reservationChangesRepository.GetItem(changesId).RoomReservationId).UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't delete reservation change, that was created by user with id " + _reservationRepository.GetItem(_reservationChangesRepository.GetItem(changesId).RoomReservationId).UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
+            }
+            return SaveData(() =>
+            {
+                _reservationChangesRepository.Delete(changesId);
+            });
+        }
+
+        //este treba dorobit to, ze ked sa edituje iba jeden termin rezervacie, ktora ma opakovanie, tak ze sa ten termin ulozi do tabulky roomReservationChanges
+        //a vytvori sa nova rezervacia pod novym ID
 
         #endregion
 

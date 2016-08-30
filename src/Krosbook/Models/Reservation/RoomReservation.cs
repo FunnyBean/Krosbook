@@ -67,5 +67,7 @@ namespace Krosbook.Models.Reservation
         public virtual RoomReservationRepeater RoomReservationRepeater { get; set; }
 
         public int? RoomReservationRepeaterId { get; set; }
+
+        public ICollection<RoomReservationChanges> ReservationsChanges { get; set; }
     }
 }

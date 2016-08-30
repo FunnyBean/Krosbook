@@ -190,6 +190,7 @@ namespace Krosbook
 
             services.AddScoped<IRememberMeRepository, RememberMeRepository>();
             services.AddScoped<IRoomReservationRepeaterRepository, RoomReservationRepeaterRepository>();
+            services.AddScoped<IRoomReservationChangesRepository, RoomReservationChangesRepository>();
         }
 
         private static void InitializeAutoMapper(IServiceCollection services)

@@ -21,31 +21,31 @@ var OfficeService = (function () {
         };
     }
     OfficeService.prototype.getOffices = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/rooms');
+        return this.http.get('/api/rooms');
     };
     OfficeService.prototype.getOffice = function (id) {
-        return this.http.get('http://funnybean.cloudapp.net/api/rooms/' + id);
+        return this.http.get('/api/rooms/' + id);
     };
     OfficeService.prototype.addOffice = function (office) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/rooms', office, { headers: headers });
+        return this.http.post('/api/rooms', office, { headers: headers });
     };
     OfficeService.prototype.editOffice = function (id, office) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.put("http://funnybean.cloudapp.net/api/rooms/" + id, office, { headers: headers });
+        return this.http.put("/api/rooms/" + id, office, { headers: headers });
     };
     OfficeService.prototype.removeOffice = function (id) {
-        return this.http.delete('http://funnybean.cloudapp.net/api/rooms/' + id);
+        return this.http.delete('/api/rooms/' + id);
     };
     OfficeService.prototype.getEquipment = function () {
-        return this.http.get('http://funnybean.cloudapp.net/api/equipment/');
+        return this.http.get('/api/equipment/');
     };
     OfficeService.prototype.filterOffices = function (date, length, filterType) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://funnybean.cloudapp.net/api/rooms/filter', JSON.stringify({ date: date, length: length, filterType: filterType }), { headers: headers });
+        return this.http.post('/api/rooms/filter', JSON.stringify({ date: date, length: length, filterType: filterType }), { headers: headers });
     };
     OfficeService = __decorate([
         core_1.Injectable(), 
