@@ -35,7 +35,7 @@ export class CarsReservationsComponent  {
       },
       error =>{console.log(error)}
     )      
-    $("li.active").removeClass("active");;
+    $("li.active").removeClass("active");
     $("#liOrders").addClass("active");  
   }
 

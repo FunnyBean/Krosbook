@@ -28,7 +28,7 @@ export class TableReservationComponent implements OnInit {
   public tableData = [];
   public reservationsData;
   public detailReset:boolean = false;
-  public reservationDetailId:Array<any> = [0, 0, 0, 0];
+  public reservationDetailId:Array<any> = [0, 0, 0, 0, 0];
 
   private reservationInProgress:boolean = false;
 
@@ -84,15 +84,16 @@ export class TableReservationComponent implements OnInit {
     $(".records"+this.data.id+" td.full").on("click", function(event){
       setTimeout(() => thisDocument.detailReset = true, 0);
       var element = $(this);
+      var thisDate = moment().add(this.week, 'weeks').day(0).add($(this).index(), 'days').format("DD.MM.YYYY");
       var id =  element.attr("reservationId");
       if(thisDocument.reservationDetailId[0] == 0 || thisDocument.reservationDetailId[0] != id){
         thisDocument.detailReset = false;
         var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left  + element.width() - 294).toString() + 'px';
-        thisDocument.reservationDetailId = [id, horizontalPosition, (element.position().top + $("#content").scrollTop() + 25).toString() + 'px', 1];
+        thisDocument.reservationDetailId = [id, horizontalPosition, (element.position().top + $("#content").scrollTop() + 25).toString() + 'px', 1, thisDate];
       }
       else {
         thisDocument.detailReset = false;
-        thisDocument.reservationDetailId = [0, 0, 0, 0];
+        thisDocument.reservationDetailId = [0, 0, 0, 0, 0];
       }
     });
 
@@ -204,7 +205,7 @@ export class TableReservationComponent implements OnInit {
   }
 
   closeWindow($event){
-    this.reservationDetailId = [0,0,0];
+    this.reservationDetailId = [0,0,0,0,0];
     this.detailReset = false;
     if($event)
       this.updateData();

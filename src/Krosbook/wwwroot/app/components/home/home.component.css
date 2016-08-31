@@ -15,13 +15,12 @@ div {
 @media (max-width: 991px) {
   .col-sm-center {
     text-align: center; } }
+
 @media (max-width: 972px) {
   .col-xs-center {
     text-align: center; }
-
   #left_menu a span {
-    display: none; } 
-}
+    display: none; } }
 
 #mainApp, #left_menu, #right_menu {
   height: 100%; }
@@ -31,11 +30,10 @@ div {
   padding: 20px !important;
   background-color: white;
   overflow-x: hidden;
-  overflow-y: scroll;
-}
+  overflow-y: scroll; }
 
 #header {
-  background: url("../images/bcg_header.png") no-repeat center ;
+  background: url("../images/bcg_header.png") no-repeat center;
   background-size: 100% 100%;
   display: table;
   width: 100%; }
@@ -43,59 +41,39 @@ div {
     line-height: 78px;
     height: 78px; }
   #header img {
-    vertical-align: initial; 
-    }
+    vertical-align: initial; }
 
 #searchInput {
   line-height: 78px;
   padding-left: 35px;
   display: initial;
-  width: 250px;
+  width: 350px;
   background-image: url("../images/search_icon.png");
-  background-repeat: no-repeat;
-  background-size: 24px 21px;  
-  background-position-y:6px; 
-   }   
-
-.avatarImg{
-  width: 60px;
-  height: 60px;    
-  border-radius: 50%;   
-  margin-top: 9px;
-  cursor: pointer;
-}
-
+  background-repeat: no-repeat; }
 
 #left_menu {
   padding-top: 20px;
   background-color: #f2f2f2;
   border-right: 1px #b3b3b3 solid; }
 
-#left_menu a.active {
-  background: #dbdbdb;
-}
-
 .menu_icon {
-  padding: 0px 10px 0px 0px; 
-  vertical-align: sub;  
-}
+  padding: 0px 10px 0px 0px; }
 
-#left_menu a {
-  padding: 5px 0px 5px 15px;
-  margin-bottom: 5px;
-  font-size: 1.2em;
-  color: #4d4d4d;
-  }
-  #left_menu a:link {
+#left_menu a, #left_menu div {
+  padding-left: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  color: #4d4d4d; }
+  #left_menu a:link, #left_menu div:link {
     text-decoration: none; }
-  #left_menu a:hover {
-    text-decoration: none; 
-  }
+  #left_menu a:hover, #left_menu div:hover {
+    text-decoration: none; }
+  #left_menu a .active, #left_menu div .active {
+    border-bottom: 1px solid blue; }
 
 #right_menu {
   background-color: #f2f2f2;
-  border-left: 1px solid #b3b3b3; 
-}
+  border-left: 1px solid #b3b3b3; }
 
 #right_menu img {
   padding-left: 0px;
@@ -103,7 +81,6 @@ div {
 
 #envelope_ico, #user_ico {
   color: white;
-  cursor: pointer;
   font-size: 30pt;
   margin: 0;
   line-height: 78px;
@@ -111,6 +88,19 @@ div {
 
 .badge {
   margin-left: -45px;
+  font-size: 15px;
+  color: white;
+  background-color: transparent; }
+
+#footer {
+  text-align: center;
+  color: #4d4d4d;
+  height: 30px;
+  margin-top: -30px;
+  line-height: 30px;
+  background-color: #f2f2f2;
+  border-top: 1px solid #b3b3b3; }
+ margin-left: -45px;
   font-size: 15px;
   color: white;
   background-color: transparent; }

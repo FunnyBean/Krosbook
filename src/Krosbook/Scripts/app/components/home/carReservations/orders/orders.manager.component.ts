@@ -21,6 +21,8 @@ declare var $:any;
 })
 
 export class OrdersManagerComponent {
+  public stableOrders:Array<CarReservation>;
+
   public orders:Array<CarReservation>;
   public orderId:number;
   public isShowedFilterInput:boolean=false;
@@ -32,6 +34,7 @@ export class OrdersManagerComponent {
   private usersData:Array<User>;
  
   public states = ['Nespracovaná', 'Schválená', 'Žiada o vymazanie'];
+  public isEmpty:boolean;
   
   constructor(private router:Router,private carOrderService:CarOrderService, private carService:CarService, private userService:UserService) {
     this.carService.getCars().subscribe(
@@ -41,11 +44,58 @@ export class OrdersManagerComponent {
             
             for(var i = 0; i < cars.length; i++)
                 this.cars[cars[i].id] = cars[i].name + " : " + cars[i].plate;
+                
         },
         error => console.log(error),
         () => { this.getUsers() }
-    )
+    )    
   }
+
+ 
+  filterReservation() {
+   
+    var choosenCar = $("#filterCar").val();
+    var choosenUser = $("#filterUser").val();
+    var resevartionState = $("#approvedOrders").is(":checked") ? 2 : 1;//2=Nespracovaná;1=Spracovana
+    var filtered: Array<CarReservation> = new Array<CarReservation>();
+
+    //console.log(typeof choosenCar +' '+choosenCar);
+    //console.log(typeof choosenUser+' '+choosenUser);
+
+    if (choosenCar == 'all') {    
+      for (let order of this.stableOrders) {
+        if (order.userId == choosenUser && (order.reservationState == resevartionState)) {
+          filtered.push(order);        
+        }
+      }
+    }
+      if (choosenUser == 'all') {
+        for (let order of this.stableOrders) {
+          if (order.carId == choosenCar && (order.reservationState == resevartionState)) {
+            filtered.push(order);          
+          }
+        }
+      }
+      if (choosenUser == 'all' && choosenCar == 'all') {
+        for (let order of this.stableOrders) {
+          if ((order.reservationState == resevartionState)) {
+            filtered.push(order);           
+          }
+        }
+      }
+    
+    for (let order of this.stableOrders) {
+      if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == resevartionState)) {
+        filtered.push(order);       
+      }
+    }
+    this.orders = filtered;
+    
+    this.isEmpty=(filtered.length>0)?false:true;
+      
+  }
+
+
 
   ngOnInit(){ 
     $("li.active").removeClass("active");;
@@ -65,6 +115,7 @@ export class OrdersManagerComponent {
     );
   }
 
+  
 
   editOrder(id:number)
   {
@@ -108,12 +159,13 @@ export class OrdersManagerComponent {
 
   showFilterInput() {    
     this.isShowedFilterInput = !this.isShowedFilterInput;
-       
+         
      if(this.isShowedFilterInput){
         document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Skryť filter";
      }
      else{
        document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Zobraziť filter";
+       this.orders = this.stableOrders;
      }     
   }
 
@@ -125,7 +177,9 @@ export class OrdersManagerComponent {
     this.carOrderService.getOrders()
       .subscribe(
         data => {
-          this.orders = data.json()        
+          this.orders = data.json();
+          this.stableOrders = data.json();
+              
         },
         error => console.error(error)
       );

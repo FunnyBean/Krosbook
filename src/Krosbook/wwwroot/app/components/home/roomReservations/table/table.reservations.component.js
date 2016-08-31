@@ -19,7 +19,7 @@ var TableReservationComponent = (function () {
         this.holidayService = holidayService;
         this.tableData = [];
         this.detailReset = false;
-        this.reservationDetailId = [0, 0, 0, 0];
+        this.reservationDetailId = [0, 0, 0, 0, 0];
         this.reservationInProgress = false;
     }
     TableReservationComponent.prototype.ngOnInit = function () {
@@ -71,15 +71,16 @@ var TableReservationComponent = (function () {
         $(".records" + this.data.id + " td.full").on("click", function (event) {
             setTimeout(function () { return thisDocument.detailReset = true; }, 0);
             var element = $(this);
+            var thisDate = moment().add(this.week, 'weeks').day(0).add($(this).index(), 'days').format("DD.MM.YYYY");
             var id = element.attr("reservationId");
             if (thisDocument.reservationDetailId[0] == 0 || thisDocument.reservationDetailId[0] != id) {
                 thisDocument.detailReset = false;
                 var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left + element.width() - 294).toString() + 'px';
-                thisDocument.reservationDetailId = [id, horizontalPosition, (element.position().top + $("#content").scrollTop() + 25).toString() + 'px', 1];
+                thisDocument.reservationDetailId = [id, horizontalPosition, (element.position().top + $("#content").scrollTop() + 25).toString() + 'px', 1, thisDate];
             }
             else {
                 thisDocument.detailReset = false;
-                thisDocument.reservationDetailId = [0, 0, 0, 0];
+                thisDocument.reservationDetailId = [0, 0, 0, 0, 0];
             }
         });
         $(".records" + this.data.id + " td.empty").on("mouseenter", function (event) {
@@ -181,7 +182,7 @@ var TableReservationComponent = (function () {
         });
     };
     TableReservationComponent.prototype.closeWindow = function ($event) {
-        this.reservationDetailId = [0, 0, 0];
+        this.reservationDetailId = [0, 0, 0, 0, 0];
         this.detailReset = false;
         if ($event)
             this.updateData();

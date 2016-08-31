@@ -33,6 +33,46 @@ var OrdersManagerComponent = (function () {
                 _this.cars[cars[i].id] = cars[i].name + " : " + cars[i].plate;
         }, function (error) { return console.log(error); }, function () { _this.getUsers(); });
     }
+    OrdersManagerComponent.prototype.filterReservation = function () {
+        var choosenCar = $("#filterCar").val();
+        var choosenUser = $("#filterUser").val();
+        var resevartionState = $("#approvedOrders").is(":checked") ? 2 : 1; //2=Nespracovaná;1=Spracovana
+        var filtered = new Array();
+        //console.log(typeof choosenCar +' '+choosenCar);
+        //console.log(typeof choosenUser+' '+choosenUser);
+        if (choosenCar == 'all') {
+            for (var _i = 0, _a = this.stableOrders; _i < _a.length; _i++) {
+                var order = _a[_i];
+                if (order.userId == choosenUser && (order.reservationState == resevartionState)) {
+                    filtered.push(order);
+                }
+            }
+        }
+        if (choosenUser == 'all') {
+            for (var _b = 0, _c = this.stableOrders; _b < _c.length; _b++) {
+                var order = _c[_b];
+                if (order.carId == choosenCar && (order.reservationState == resevartionState)) {
+                    filtered.push(order);
+                }
+            }
+        }
+        if (choosenUser == 'all' && choosenCar == 'all') {
+            for (var _d = 0, _e = this.stableOrders; _d < _e.length; _d++) {
+                var order = _e[_d];
+                if ((order.reservationState == resevartionState)) {
+                    filtered.push(order);
+                }
+            }
+        }
+        for (var _f = 0, _g = this.stableOrders; _f < _g.length; _f++) {
+            var order = _g[_f];
+            if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == resevartionState)) {
+                filtered.push(order);
+            }
+        }
+        this.orders = filtered;
+        this.isEmpty = (filtered.length > 0) ? false : true;
+    };
     OrdersManagerComponent.prototype.ngOnInit = function () {
         $("li.active").removeClass("active");
         ;
@@ -85,6 +125,7 @@ var OrdersManagerComponent = (function () {
         }
         else {
             document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Zobraziť filter";
+            this.orders = this.stableOrders;
         }
     };
     OrdersManagerComponent.prototype.formatDateTime = function (dateTime) {
@@ -95,6 +136,7 @@ var OrdersManagerComponent = (function () {
         this.carOrderService.getOrders()
             .subscribe(function (data) {
             _this.orders = data.json();
+            _this.stableOrders = data.json();
         }, function (error) { return console.error(error); });
     };
     OrdersManagerComponent.prototype.isFree = function (carId, reservationId, from, to) {

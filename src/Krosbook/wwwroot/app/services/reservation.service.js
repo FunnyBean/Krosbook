@@ -54,6 +54,11 @@ var ReservationService = (function () {
             return this.http.put('/api/reservations/' + type + '/' + id, JSON.stringify({ id: id, name: name, carId: carId, dateTime: dateTime, userId: userId, length: length }), { headers: headers });
         }
     };
+    ReservationService.prototype.editOneRepeatingReservation = function (roomReservationId, dateAndTime) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.post('/api/reservations/rooms/changes/', JSON.stringify({ roomReservationId: roomReservationId, dateAndTime: dateAndTime }), { headers: headers });
+    };
     ReservationService.prototype.deleteReservation = function (type, id) {
         return this.http.delete('/api/reservations/' + type + '/' + id);
     };

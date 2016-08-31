@@ -1,36 +1,40 @@
+<!-- MANAZER OBJEDNAVOK-->
 <h4>Objednávky</h4>
+
  <button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
  <div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
-      <div class="form-group col-xs-3" > 
-         <!-- <label for="approvedOrders" class="control-label">Zobraziť  vybavené objednávky?: </label>   -->    
-         <input type="checkbox" id="approvedOrders" name="approvedOrders" value="approvedOrders" >  <label>Zobraziť  vybavené objednávky?</label><br>
-         <input type="checkbox" id="notApprovedOrders" name="notApprovedOrders" value="notApprovedOrders" checked>  <label>Zobraziť nevybavené objednávky? </label><br>
-        <!-- <input type="checkbox" id="allOrders" name="allOrders" value="allOrders"> Zobraziť všeky objednávky?<br>-->
-     
-         <button (click)="filterReservation()" class="btn btn-success" style="margin-top: 5px;" type="button" >Filtrovať</button>
-      </div>
-
-      <div class="form-group col-xs-3">
-        <label> Zobraziť len nasledujúce auto:</label>
-         <select name="filterCar"  class="form-control">
-           <option></option>
-          <option *ngFor="let car of carsData" class="form-control" [value]="car.id">{{ car.name }} : {{car.plate}}  </option> 
-        </select>
-        </div>
-        <div class="form-group col-xs-3">
-        <label>Zobraziť len nasledujúceho užívatela:</label>
-        <select name="filterUser" class="form-control">
-          <option></option>
-          <option *ngFor="let user of usersData"  class="form-control"  [value]="user.id">{{ user.name }} {{user.surname}}</option>
-        </select>
-
-        </div>
-      
-       
-    
+    <div class="form-group col-xs-3" > 
+      <label>
+        <input type="radio"  name="gender" id="approvedOrders"  value="approvedOrders" (click)="filterReservation()">Schválené objednávky
+      </label>
+      <label>
+        <input type="radio" name="gender" id="notApprovedOrders"  value="notApprovedOrders" (click)="filterReservation()">Nespracované objednávky
+      </label>
     </div>
+
+    <div class="form-group col-xs-3">
+      <label> Zobraziť len nasledujúce auto:</label>
+      <select name="filterCar" id="filterCar" class="form-control" (change)="filterReservation()">  
+        <option  selected value="all" >všetky</option>
+        <option *ngFor="let car of carsData" class="form-control" [value]="car.id">{{ car.name }} : {{car.plate}}  </option>
+      </select>
+    </div>
+
+    <div class="form-group col-xs-3">
+      <label>Zobraziť len nasledujúceho užívatela:</label>
+      <select name="filterUser" id="filterUser" class="form-control" (change)="filterReservation()">
+        <option  selected value='all'>všetky</option>
+        <option *ngFor="let user of usersData"  class="form-control"  [value]="user.id">{{ user.name }} {{user.surname}}</option>
+      </select>
+    </div>
+
+    <div class="form-group col-xs-3">
+      <label>Počet výsledkov vyhľadávania:</label>
+      <p>{{ orders.length }}</p>
+    </div>
+</div>
 <table class="table table-hover col-md-12">
-  <thead>
+  <thead> 
   <tr>    
     <th>Ciel</th>
     <th>Osoba</th>
@@ -41,6 +45,8 @@
     <th class="buttonsRight">Akcie</th>
   </tr>
   </thead>
+  <h4 *ngIf="isEmpty">Nebola nájdená žiadna zhoda</h4>
+
   <tr *ngFor="let order of orders">
     
     <td>{{order.destination}}</td>

@@ -46,7 +46,6 @@ export class DetailReservationComponent implements OnInit {
                     this.reservationService.getRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId).subscribe(
                         data => { 
                             this.repetitionData = data.json(); 
-                            console.log(this.repetitionData);
                             this.repetitionData.endDate = moment(this.repetitionData.endDate).format("YYYY-MM-DD");
                             this.repetitionData.end = (this.repetitionData.appearance == null) ? "date" : "appearance";
                             this.repeating = true; 
@@ -58,6 +57,7 @@ export class DetailReservationComponent implements OnInit {
                 this.authorizeActions();
                 this.updateMaxTime();
                 this.updateEndTime();
+                this.reservationDetailId[4] = moment(this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(this.data.dateTime).hours()).minute(moment(this.data.dateTime).minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
             },
             error => console.log(error)
         );
@@ -150,6 +150,41 @@ export class DetailReservationComponent implements OnInit {
                     }
                 );
             }
+        );
+    }
+
+    addNewReservationFromRepeating()
+    {
+        this.reservationService.addReservation(this.reservationType, this.data.roomId, 1, 'Rezervácia', this.data.dateTime, this.data.length*30).subscribe(
+            data => {          
+                this.reservationDetailId = [data.json().id, this.reservationDetailId[1],this.reservationDetailId[2], 0];  //okno na potvrdenie rezervacie      
+            },
+            error => { alert(error); },
+            () => { 
+                this.windowClose.emit(true)
+            }
+        );
+    }
+
+    editOneRepeatingReservation(form)
+    {
+        if(form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating && this.data.roomReservationRepeaterId == null){
+            this.windowClose.emit(true);
+            return false;
+        }
+        this.saving = true;
+        this.reservationService.editOneRepeatingReservation(this.data.id, this.reservationDetailId[4]).subscribe(
+            () => {
+                this.addNewReservationFromRepeating();    
+            }
+        );
+    }
+
+    deleteOneRepatingReservaion()
+    {
+        this.saving = true;
+        this.reservationService.editOneRepeatingReservation(this.data.id, this.reservationDetailId[4]).subscribe(
+            () => { this.windowClose.emit(true) }
         );
     }
 

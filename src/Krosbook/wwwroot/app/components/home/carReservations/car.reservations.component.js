@@ -32,7 +32,6 @@ var CarsReservationsComponent = (function () {
             }
         }, function (error) { console.log(error); });
         $("li.active").removeClass("active");
-        ;
         $("#liOrders").addClass("active");
     };
     CarsReservationsComponent.prototype.setActiveClass = function (element) {

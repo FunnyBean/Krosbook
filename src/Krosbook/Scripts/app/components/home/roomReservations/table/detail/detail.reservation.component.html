@@ -54,10 +54,37 @@
 
       <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
 
-      <button (click)="editReservation(reservationForm)" class="text-right btn btn-success" [disabled]="!reservationForm.valid">Uložiť zmeny
+      <div *ngIf="data.roomReservationRepeaterId">
+        <div class="btn-group col-md-6 remove-padding">
+          <button (click)="editOneRepeatingReservation(reservationForm)" class="btn btn-success" [disabled]="!reservationForm.valid">Uložiť pre túto
+            <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
+          </button>
+          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <span (click)="editReservation(reservationForm)" class="btn btn-success">Uložiť pre všetky</span>
+          </ul>
+        </div>
+
+        <div class="btn-group col-md-6 remove-padding">
+          <button (click)="deleteOneRepatingReservaion()" class="btn btn-danger">Odstrániť túto</button>
+          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <span (click)="deleteReservation()" class="btn btn-danger">Odstrániť všetky</span>
+          </ul>
+        </div>
+      </div>
+
+      <button (click)="editReservation(reservationForm)" *ngIf="!data.roomReservationRepeaterId" class="text-right btn btn-success" [disabled]="!reservationForm.valid">Uložiť zmeny
         <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
       </button>
-      <button (click)="deleteReservation()" class="btn btn-danger">Odstrániť</button>
+
+      <button (click)="deleteReservation()" *ngIf="!data.roomReservationRepeaterId" class="btn btn-danger">Odstrániť</button>
     </form>
   </div>
 </div>
