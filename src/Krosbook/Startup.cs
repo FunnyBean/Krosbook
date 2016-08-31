@@ -24,6 +24,7 @@ using Krosbook.Services.Email;
 using Krosbook.Services.Template;
 using Microsoft.Extensions.DependencyInjection;
 using Krosbook.Services.G2Meeting;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Krosbook
 {
@@ -87,6 +88,12 @@ namespace Krosbook
             services.Configure<EmailOptions>(Configuration.GetSection("Email"));
 
 
+            //toto som pridal
+         /*   services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
+            */
 
 
             var corsBuilder = new CorsPolicyBuilder();

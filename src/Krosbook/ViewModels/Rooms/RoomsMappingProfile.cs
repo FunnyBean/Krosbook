@@ -38,6 +38,8 @@ namespace Krosbook.ViewModels.Rooms
 
             this.CreateMap<RoomReservationRepeater, RoomReservationRepeaterViewModel>().ReverseMap();
 
+            this.CreateMap<RoomReservationChanges, RoomReservationChangesViewModel>().ReverseMap();
+
             //   ForMember(vm => vm.dateTime, map => map.MapFrom(m => m.User.)).
             //    ReverseMap();
         }

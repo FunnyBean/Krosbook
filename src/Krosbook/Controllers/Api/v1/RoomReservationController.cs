@@ -240,7 +240,7 @@ namespace Krosbook.Controllers.Api.v1
                 return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(repetition));
             }
         }
-           
+
 
         [HttpDelete("repetition/{repetitionId}")]
         public IActionResult DeleteReservationRepetition(int repetitionId)
@@ -351,7 +351,7 @@ namespace Krosbook.Controllers.Api.v1
                 if (repeaterVm.Repetation == "days")
                 {
                     repeaterVm.EndDate = startDate;
-                    for (int i = 0; i < (repeaterVm.Appearance-1)*repeaterVm.Interval; i++)
+                    for (int i = 0; i < (repeaterVm.Appearance - 1) * repeaterVm.Interval; i++)
                     {
 
                         if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Monday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Tuesday
@@ -445,6 +445,45 @@ namespace Krosbook.Controllers.Api.v1
 
         //este treba dorobit to, ze ked sa edituje iba jeden termin rezervacie, ktora ma opakovanie, tak ze sa ten termin ulozi do tabulky roomReservationChanges
         //a vytvori sa nova rezervacia pod novym ID
+
+        [HttpPost("changes")]
+        [ValidateModelState, CheckArgumentsForNull]
+        public IActionResult CreateNewRoomChangesReservation([FromBody] RoomReservationChangesViewModel changesVm)
+        {
+            changesVm.dateTime = DateTime.ParseExact(changesVm.dateAndTime, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            if (!User.IsInRole("Admin"))
+            {
+                if (_reservationRepository.GetItem(changesVm.RoomReservationId).UserId != GetUserId())
+                {
+                    var message = $"User with id " + GetUserId() + " can't update reservation, that was created by user with id " + _reservationRepository.GetItem(changesVm.RoomReservationId).UserId;
+                    _logger.LogWarning(message);
+                    this.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return this.Json(new { Message = message });
+                }
+            }
+            if (_reservationRepository.GetItem(changesVm.RoomReservationId) == null)
+            {
+                var message = $"Invalid argument. ReservationId '{changesVm.RoomReservationId}' not exists.";
+                _logger.LogWarning(message);
+                this.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return this.Json(new { Message = message });
+            }
+
+
+            var changes = _mapper.Map<RoomReservationChanges>(changesVm);
+            return SaveData(() =>
+            {
+                _reservationChangesRepository.Add(changes);
+            },
+                () =>
+                {
+                    var reservation = _reservationRepository.GetItem(changes.RoomReservationId);
+                    var chan = _reservationChangesRepository.Get(x=>x.dateTime==changesVm.dateTime && x.RoomReservationId==changesVm.RoomReservationId).ToList();
+                    this.Response.StatusCode = (int)HttpStatusCode.Created;
+                    return this.Json(_mapper.Map<RoomReservationChanges>(chan[0]));
+                });
+        }
+
 
         #endregion
 

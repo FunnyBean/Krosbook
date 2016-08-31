@@ -10,6 +10,10 @@ using Krosbook.ViewModels.Users;
 using Microsoft.AspNetCore.Cors;
 using System.Linq;
 using System.Net;
+using Krosbook.Filters;
+using Krosbook.Models;
+using Microsoft.AspNetCore.Identity;
+using Krosbook.Services.Email;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -27,16 +31,21 @@ namespace Krosbook.Controllers.Api.v1
         private ILogger<AuthenticationController> _logger;
         private readonly IRoleRepository _roleRepository;
         private IRememberMeRepository _rememberMeRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private IEmailService _emailService;
         #endregion
 
 
         #region Constructors
-        public AuthenticationController(IUserRepository userRepository, IRoleRepository roleRepository, ILogger<AuthenticationController> logger, IRememberMeRepository rememberMeRepository)
+        public AuthenticationController(IUserRepository userRepository, IRoleRepository roleRepository, ILogger<AuthenticationController> logger,
+            IRememberMeRepository rememberMeRepository, UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
             _userRepository = userRepository;
             _logger = logger;
             _roleRepository = roleRepository;
             _rememberMeRepository = rememberMeRepository;
+            _userManager = userManager;
+            _emailService = emailService;
         }
         #endregion
 
@@ -48,7 +57,7 @@ namespace Krosbook.Controllers.Api.v1
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel user)
         {
-            if(user.RememberMe)
+            if (user.RememberMe)
                 return await SignInCoreEmailCookie(user.Email, user.Password, user.Selector, user.Validator);
             else return await SignInCore(user.Email, user.Password);
         }
@@ -78,18 +87,45 @@ namespace Krosbook.Controllers.Api.v1
         }
 
 
-        [HttpGet("isLoggedIn")]    
+        [HttpGet("isLoggedIn")]
         public IActionResult IsLoggedIn()
         {
             var claims = User.Claims.Count();
             if (claims != 0)
-            {             
+            {
                 return Ok();
             }
             else
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost]
+        [Route("forgotPassword")]
+        //    [ValidateModelState, CheckArgumentsForNull]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel passwordVM)
+        {
+            var userRepository = _userRepository.GetSingleByEmail(passwordVM.Email);
+            if (userRepository != null)
+            {
+                var usr = new ApplicationUser { UserName = passwordVM.Email, Email = passwordVM.Email, Id=userRepository.Id.ToString(), PasswordHash=userRepository.PasswordHash };
+           //     var result = _userManager.CreateAsync(usr, userRepository.PasswordHash);
+            //    if (result.Result.Succeeded)
+              //  {
+                  /*  var user = await _userManager.FindByNameAsync(passwordVM.Email);
+                    if (user == null)
+                    {// Don't reveal that the user does not exist
+                        return NotFound();
+                    }*/
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(usr);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { UserId = usr.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    _emailService.SendPasswordReset(passwordVM.Email, callbackUrl.ToString());
+                    return Ok();
+         //       }
+            }
+            //nieco sa pokaslalo
+            return BadRequest();
         }
         #endregion
 
@@ -118,7 +154,7 @@ namespace Krosbook.Controllers.Api.v1
                 rem.Selector = selector;
                 rem.Validator = validator;
                 rem.userId = user.Id;
-               // rem.
+                // rem.
                 _rememberMeRepository.Add(rem);
                 _rememberMeRepository.Save();
                 await HttpContext.Authentication.SignInAsync(Startup.AuthenticationScheme, CreatePrincipal(user));
@@ -157,7 +193,7 @@ namespace Krosbook.Controllers.Api.v1
         {
             user = _userRepository.GetItem(_rememberMeRepository.GetSingleBySelector(selector).userId);
 
-            if(user != null)
+            if (user != null)
             {
                 if (BCrypt.Net.BCrypt.Verify(validator, _rememberMeRepository.GetSingleByUserId(user.Id).ValidatorHash))
                 {

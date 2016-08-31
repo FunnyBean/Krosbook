@@ -68,7 +68,6 @@ namespace Krosbook.Services.Email
             _sender.SendEmail(msg);
         }
 
-
         public void CreateEmailCalendarEvent(RoomReservationViewModel rvm)
         {
             string schLocation = _roomRepository.GetItem(rvm.RoomId).Name;
