@@ -207,8 +207,10 @@ export class TableReservationComponent implements OnInit {
   closeWindow($event){
     this.reservationDetailId = [0,0,0,0,0];
     this.detailReset = false;
-    if($event)
-      this.updateData();
+    if ($event) {
+        this.updateData();
+        console.log("data update");
+    }
   }  
 
 

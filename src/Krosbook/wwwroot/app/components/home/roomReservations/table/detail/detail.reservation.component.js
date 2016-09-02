@@ -117,8 +117,8 @@ var DetailReservationComponent = (function () {
                         _this.data.roomReservationRepeaterId = null;
                     }, function (error) { _this.saving = false; });
                 }
+                setTimeout(function () { return _this.windowClose.emit(true); }, 1000);
                 _this.saving = false;
-                _this.windowClose.emit(true);
             });
         });
     };

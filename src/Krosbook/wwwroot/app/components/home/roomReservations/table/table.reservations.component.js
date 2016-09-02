@@ -184,8 +184,10 @@ var TableReservationComponent = (function () {
     TableReservationComponent.prototype.closeWindow = function ($event) {
         this.reservationDetailId = [0, 0, 0, 0, 0];
         this.detailReset = false;
-        if ($event)
+        if ($event) {
             this.updateData();
+            console.log("data update");
+        }
     };
     __decorate([
         core_1.Input(), 

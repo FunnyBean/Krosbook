@@ -147,8 +147,8 @@ export class DetailReservationComponent implements OnInit {
                                 error => { this.saving = false }
                             )
                         }  
+                        setTimeout(() => this.windowClose.emit(true), 1000);
                         this.saving = false;
-                        this.windowClose.emit(true);
                     }
                 );
             }
