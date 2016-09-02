@@ -7,6 +7,8 @@ import {authProviders }      from './login.routes';
 import {AuthGuard} from "./AuthGuard";
 import {AdminGuard} from "./AdminGuard";
 import {OperatorGuard} from './OperatorGuard';
+import {PasswordResetComponent} from './login/passwordReset/passwordReset.component';
+import {PasswordSetComponent} from './login/passwordSet/passwordSet.component';
 
 import {UsersAdminComponent} from './admin/users/users.admin.component';
 import {OfficesAdminComponent} from './admin/offices/offices.admin.component';
@@ -25,87 +27,91 @@ import {PasswordComponent} from "./home/profile/password/password.component";
 
 
 const routes: RouterConfig = [
-  { path: '', redirectTo: 'home', terminal: true},
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard],
-    children: [     
-      {
-        path:'profile',component:ProfileComponent,
-        children:[
-          {
-            path:'', component:AvatarComponent
-          },
-          {
-            path:'avatar', component:AvatarComponent
-          },
-          {
-            path:'password', component:PasswordComponent
-          }
+    { path: '', redirectTo: 'home', terminal: true },
+    {
+        path: 'home', component: HomeComponent, canActivate: [AuthGuard],
+        children: [
+            {
+                path: 'profile', component: ProfileComponent,
+                children: [
+                    {
+                        path: '', component: AvatarComponent
+                    },
+                    {
+                        path: 'avatar', component: AvatarComponent
+                    },
+                    {
+                        path: 'password', component: PasswordComponent
+                    }
+                ]
+            },
+            {
+                path: '',
+                component: RoomReservationsComponent
+            },
+            {
+                path: 'reservations/cars',
+                component: CarsReservationsComponent,
+                children: [
+                    {
+                        path: '', component: ReservationsComponent
+                    },
+                    {
+                        path: 'newreservation', component: OrderDetailComponent
+                    },
+                    {
+                        path: 'editreservation/:id', component: OrderDetailComponent
+                    },
+                    {
+                        path: 'myreservations', component: MyReservationsComponent,
+                    },
+                    {
+                        path: 'orders', component: OrdersManagerComponent, canActivate: [OperatorGuard]
+                    }
+                ]
+            },
+            {
+                path: 'reservations/rooms',
+                component: RoomReservationsComponent
+            }
+
         ]
-      },
-      {
-        path: '',
-        component: RoomReservationsComponent
-      },
-      {
-        path: 'reservations/cars',
-        component: CarsReservationsComponent,
-        children:[
-          {
-            path:'', component: ReservationsComponent
-          },
-          {
-            path:'newreservation', component:OrderDetailComponent
-          },
-          {
-            path:'editreservation/:id', component:OrderDetailComponent
-          },
-          {
-            path:'myreservations', component:MyReservationsComponent,
-          },
-          {
-            path: 'orders', component:  OrdersManagerComponent, canActivate: [OperatorGuard]
-          }
+    },
+    { path: 'login', component: LoginComponent },
+    { path: 'passwordReset', component: PasswordResetComponent },
+    { path: 'passwordReset/:token', component: PasswordSetComponent },
+    {
+        path: 'admin', component: AdminComponent, canActivate: [AuthGuard, AdminGuard],
+        children: [
+            {
+                path: '',
+                component: UsersAdminComponent
+            },
+            {
+                path: 'offices',
+                component: OfficesAdminComponent
+            },
+            {
+                path: 'cars',
+                component: CarsAdminComponent
+            },
+            {
+                path: 'users',
+                component: UsersAdminComponent
+            },
+            {
+                path: 'equipment',
+                component: EquipmentAdminComponent
+            },
+            {
+                path: 'roles',
+                component: RolesAdminComponent
+            }
+
         ]
-      },
-      {
-        path: 'reservations/rooms',
-        component: RoomReservationsComponent
-      }
-     
-    ]
-  },
-  { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard, AdminGuard],
-    children: [
-      {
-        path: '',
-        component: UsersAdminComponent
-      },
-      {
-        path: 'offices',
-        component: OfficesAdminComponent
-      },
-      {
-        path: 'cars',
-        component: CarsAdminComponent
-      },
-      {
-        path: 'users',
-        component: UsersAdminComponent
-      },
-      {
-        path: 'equipment',
-        component: EquipmentAdminComponent
-      },
-      {
-        path: 'roles',
-        component: RolesAdminComponent
-      }
-      
-    ]
-  }
+    }
 ];
 
 export const APP_ROUTER_PROVIDERS = [
-  provideRouter(routes), authProviders
+    provideRouter(routes), authProviders
 ];

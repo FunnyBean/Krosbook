@@ -26,7 +26,7 @@ namespace Krosbook.Services.Email
             this.carName = car.Name + " : " + car.Plate;
             this.startDateTime = carReservation.DateTimeStart.ToString("dd.MM.yyyy HH:mm");
             this.endDateTime = carReservation.DateTimeEnd.ToString("dd.MM.yyyy HH:mm");
-            this.gps = carReservation.GPSSystem ? 'pridelená' : 'nepridelená';
+            this.gps = (carReservation.GPSSystem == true) ? "pridelená" : "nepridelená";
         }
 
         #endregion

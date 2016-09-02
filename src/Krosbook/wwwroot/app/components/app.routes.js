@@ -8,6 +8,8 @@ var login_routes_1 = require('./login.routes');
 var AuthGuard_1 = require("./AuthGuard");
 var AdminGuard_1 = require("./AdminGuard");
 var OperatorGuard_1 = require('./OperatorGuard');
+var passwordReset_component_1 = require('./login/passwordReset/passwordReset.component');
+var passwordSet_component_1 = require('./login/passwordSet/passwordSet.component');
 var users_admin_component_1 = require('./admin/users/users.admin.component');
 var offices_admin_component_1 = require('./admin/offices/offices.admin.component');
 var cars_admin_component_1 = require("./admin/cars/cars.admin.component");
@@ -23,7 +25,8 @@ var avatar_component_1 = require("./home/profile/avatar/avatar.component");
 var password_component_1 = require("./home/profile/password/password.component");
 var routes = [
     { path: '', redirectTo: 'home', terminal: true },
-    { path: 'home', component: home_component_1.HomeComponent, canActivate: [AuthGuard_1.AuthGuard],
+    {
+        path: 'home', component: home_component_1.HomeComponent, canActivate: [AuthGuard_1.AuthGuard],
         children: [
             {
                 path: 'profile', component: profile_component_1.ProfileComponent,
@@ -71,7 +74,10 @@ var routes = [
         ]
     },
     { path: 'login', component: login_component_1.LoginComponent },
-    { path: 'admin', component: admin_component_1.AdminComponent, canActivate: [AuthGuard_1.AuthGuard, AdminGuard_1.AdminGuard],
+    { path: 'passwordReset', component: passwordReset_component_1.PasswordResetComponent },
+    { path: 'passwordReset/:token', component: passwordSet_component_1.PasswordSetComponent },
+    {
+        path: 'admin', component: admin_component_1.AdminComponent, canActivate: [AuthGuard_1.AuthGuard, AdminGuard_1.AdminGuard],
         children: [
             {
                 path: '',

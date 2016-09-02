@@ -4,13 +4,13 @@
  <button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
  <div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
     <div class="form-group col-xs-3" > 
-      <label>
+      <label class="col-md-12 remove-padding">
         <input type="radio"  name="orders" class="orderType" id="allOrders"  value="0" (click)="filterReservation()" checked>Všetky objednávky
       </label>
-      <label>
+      <label class="col-md-12 remove-padding">
         <input type="radio"  name="orders" class="orderType" id="approvedOrders"  value="2" (click)="filterReservation()">Schválené objednávky
       </label>
-      <label>
+      <label class="col-md-12 remove-padding">
         <input type="radio" name="orders" class="orderType" id="notApprovedOrders"  value="1" (click)="filterReservation()">Nespracované objednávky
       </label>
     </div>
