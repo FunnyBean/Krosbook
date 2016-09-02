@@ -17,6 +17,7 @@ var AvatarComponent = (function () {
         this.userData = new user_admin_model_1.User();
         this.newImage = '';
         this.progress = 0;
+        this.saving = false;
     }
     AvatarComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -45,11 +46,14 @@ var AvatarComponent = (function () {
     };
     AvatarComponent.prototype.editAvatar = function () {
         var _this = this;
+        this.error = "";
+        this.saving = true;
         this.userService.updateImage(this.newImage).subscribe(function (data) {
             $("#profilePicture").attr("src", 'data:image/png;base64,' + _this.newImage);
             $("#result").removeAttr("src");
             $("#avatarImg").attr("src", "data:image/jpeg;base64," + _this.newImage);
-        }, function (error) { return console.log(error); });
+            _this.saving = false;
+        }, function (error) { _this.error = "Pri ukladaní nastala chyba."; _this.saving = false; });
     };
     AvatarComponent.prototype.dismiss = function () {
         this.error = "";

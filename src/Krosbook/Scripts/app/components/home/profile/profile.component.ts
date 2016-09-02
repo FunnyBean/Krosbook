@@ -15,6 +15,7 @@ declare var $:any;
 export class ProfileComponent implements AfterContentInit{
 
   ngAfterContentInit(){
+    $("#left_menu a.active").removeClass("active");
     $(".nav a").on("click", function(){
       $("li.active").removeClass("active");
       $(this).parent("li").addClass("active");

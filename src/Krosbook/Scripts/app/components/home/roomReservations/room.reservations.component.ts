@@ -78,6 +78,8 @@ export class RoomReservationsComponent implements OnInit  {
         $("#contentHolder").hide(0).css({"height": '0px'});
       }
     });
+
+    $("#left_menu a:nth-child(3)").addClass("active");
   }
 
   updateMaxTime() {

@@ -1,13 +1,13 @@
 ﻿import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, ROUTER_DIRECTIVES} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {Cookie} from 'ng2-cookies/ng2-cookies';
 
 @Component({
     selector: 'login',
     templateUrl: 'app/components/login/login.component.html',
-    styleUrls: ['app/components/login/login.component.css']
-
+    styleUrls: ['app/components/login/login.component.css'],
+    directives: [ROUTER_DIRECTIVES]
 })
 export class LoginComponent {
   private email: string;
@@ -51,4 +51,10 @@ export class LoginComponent {
       }
     );
   }
+
+  PasswordRecovery(){
+    alert("zmena hesla ");
+  }
+
+
 }

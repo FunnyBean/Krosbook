@@ -66,6 +66,7 @@ var RoomReservationsComponent = (function () {
                 $("#contentHolder").hide(0).css({ "height": '0px' });
             }
         });
+        $("#left_menu a:nth-child(3)").addClass("active");
     };
     RoomReservationsComponent.prototype.updateMaxTime = function () {
         this.maxTime = ((18 - moment(this.dateTime).hour()) * 60 - moment(this.dateTime).minute()) / 60;

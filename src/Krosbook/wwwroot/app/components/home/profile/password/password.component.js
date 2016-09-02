@@ -18,6 +18,7 @@ var PasswordComponent = (function () {
     function PasswordComponent(userService) {
         this.userService = userService;
         this.passwordData = ['', '', ''];
+        this.saving = false;
     }
     PasswordComponent.prototype.ngAfterContentInit = function () {
         $(".active").removeClass("active");
@@ -25,11 +26,13 @@ var PasswordComponent = (function () {
     };
     PasswordComponent.prototype.updatePasswordData = function (col, value) {
         this.passwordData[col] = value;
-        console.log(this.passwordData);
     };
     PasswordComponent.prototype.savePassword = function () {
         var _this = this;
-        this.userService.updatePassword(this.passwordData[0], this.passwordData[1]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; $("input").val(''); }, function (error) { _this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; });
+        this.error = "";
+        this.success = "";
+        this.saving = true;
+        this.userService.updatePassword(this.passwordData[0], this.passwordData[1]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; $("input").val(''); _this.saving = false; }, function (error) { _this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; _this.saving = false; });
     };
     PasswordComponent = __decorate([
         core_1.Component({

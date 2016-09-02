@@ -83,6 +83,19 @@ export class UserService {
     return this.http.get('/api/roles');
   }
 
+  public sendPasswordResetEmail(email:string){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    var token:string = this.generateRandomString();
+    return this.http.post('/api/authentification/sendPasswordReset', JSON.stringify({email, token}), {headers});
+  }
+
+  public savePasswordReset(token:string, newPassword:string){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.put('/api/authentification/savePasswordReset', JSON.stringify({newPassword, token}), {headers});
+  }
+
   private generateRandomString() {
     var randString:string = '';
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
