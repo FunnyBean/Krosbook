@@ -37,6 +37,8 @@ export class CarsReservationsComponent  {
     )      
     $("li.active").removeClass("active");
     $("#liOrders").addClass("active");  
+
+    $("#left_menu a:nth-child(4)").addClass("active");
   }
 
   setActiveClass(element)

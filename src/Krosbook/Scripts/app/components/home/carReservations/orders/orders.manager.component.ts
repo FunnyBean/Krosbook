@@ -15,7 +15,7 @@ declare var $:any;
 @Component({
   templateUrl: 'app/components/home/carReservations/orders/orders.manager.component.html',
   providers:[CarOrderService],
-  styles: [' #filter{background-color: #f2f2f2; padding: 10px}']
+  styles: [' #filter{background-color: #f2f2f2; padding: 10px} input[type=radio]{margin-right: 5px}']
 
 
 })
@@ -52,47 +52,49 @@ export class OrdersManagerComponent {
   }
 
  
-  filterReservation() {
-   
+  filterReservation() {  
     var choosenCar = $("#filterCar").val();
     var choosenUser = $("#filterUser").val();
-    var resevartionState = $("#approvedOrders").is(":checked") ? 2 : 1;//2=Nespracovaná;1=Spracovana
-    var filtered: Array<CarReservation> = new Array<CarReservation>();
+    var reservationState = $(".orderType:checked").val();//2=Nespracovaná;1=Spracovana
+    var filtered:Array<CarReservation> = new Array<CarReservation>();
 
     //console.log(typeof choosenCar +' '+choosenCar);
     //console.log(typeof choosenUser+' '+choosenUser);
 
-    if (choosenCar == 'all') {    
+    if (choosenUser == 'all' && choosenCar == 'all') {
       for (let order of this.stableOrders) {
-        if (order.userId == choosenUser && (order.reservationState == resevartionState)) {
+        if (reservationState == 0 || order.reservationState == reservationState) {
+          filtered.push(order);           
+        }
+      }
+    }
+    
+    else if (choosenCar == 'all') {    
+      for (let order of this.stableOrders) {
+        if (order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
           filtered.push(order);        
         }
       }
     }
-      if (choosenUser == 'all') {
-        for (let order of this.stableOrders) {
-          if (order.carId == choosenCar && (order.reservationState == resevartionState)) {
-            filtered.push(order);          
-          }
-        }
-      }
-      if (choosenUser == 'all' && choosenCar == 'all') {
-        for (let order of this.stableOrders) {
-          if ((order.reservationState == resevartionState)) {
-            filtered.push(order);           
-          }
-        }
-      }
     
-    for (let order of this.stableOrders) {
-      if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == resevartionState)) {
-        filtered.push(order);       
+    else if (choosenUser == 'all') {
+      for (let order of this.stableOrders) {
+        if (order.carId == choosenCar && (reservationState == 0 || order.reservationState == reservationState)) {
+          filtered.push(order);          
+        }
       }
     }
-    this.orders = filtered;
     
+    else {
+      for (let order of this.stableOrders) {
+        if (order.carId == choosenCar && order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
+          filtered.push(order);       
+        }
+      }
+    }
+
+    this.orders = filtered;   
     this.isEmpty=(filtered.length>0)?false:true;
-      
   }
 
 

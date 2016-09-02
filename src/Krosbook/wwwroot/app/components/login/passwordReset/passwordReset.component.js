@@ -8,29 +8,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/**
- * Created by krosaci on 25.7.2016.
- */
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
-var ProfileComponent = (function () {
-    function ProfileComponent() {
+var user_service_1 = require('../../../services/user.service');
+var PasswordResetComponent = (function () {
+    function PasswordResetComponent(userService) {
+        this.userService = userService;
     }
-    ProfileComponent.prototype.ngAfterContentInit = function () {
-        $("#left_menu a.active").removeClass("active");
-        $(".nav a").on("click", function () {
-            $("li.active").removeClass("active");
-            $(this).parent("li").addClass("active");
-        });
+    PasswordResetComponent.prototype.onSubmit = function () {
+        var _this = this;
+        this.userService.sendPasswordResetEmail(this.email).subscribe(function (data) { _this.success = "Obnovovací email bol odoslaný."; }, function (error) { _this.error = "Akcia sa nepodarila. Užívateľ možno neexistuje."; });
     };
-    ProfileComponent = __decorate([
+    PasswordResetComponent = __decorate([
         core_1.Component({
-            selector: 'profile',
-            templateUrl: 'app/components/home/profile/profile.component.html',
+            templateUrl: 'app/components/login/passwordReset/passwordReset.component.html',
+            styleUrls: ['app/components/login/login.component.css'],
             directives: [router_1.ROUTER_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [])
-    ], ProfileComponent);
-    return ProfileComponent;
+        __metadata('design:paramtypes', [user_service_1.UserService])
+    ], PasswordResetComponent);
+    return PasswordResetComponent;
 }());
-exports.ProfileComponent = ProfileComponent;
+exports.PasswordResetComponent = PasswordResetComponent;

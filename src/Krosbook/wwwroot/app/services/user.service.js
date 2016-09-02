@@ -78,6 +78,17 @@ var UserService = (function () {
     UserService.prototype.getRoles = function () {
         return this.http.get('/api/roles');
     };
+    UserService.prototype.sendPasswordResetEmail = function (email) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        var token = this.generateRandomString();
+        return this.http.post('/api/authentification/sendPasswordReset', JSON.stringify({ email: email, token: token }), { headers: headers });
+    };
+    UserService.prototype.savePasswordReset = function (token, newPassword) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.put('/api/authentification/savePasswordReset', JSON.stringify({ newPassword: newPassword, token: token }), { headers: headers });
+    };
     UserService.prototype.generateRandomString = function () {
         var randString = '';
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

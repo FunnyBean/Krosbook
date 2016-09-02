@@ -17,6 +17,8 @@ export class AvatarComponent implements OnInit{
   public progress:number = 0;
   public error;
 
+  private saving:boolean = false;
+
   constructor(private userService:UserService) { }
 
   ngOnInit(){
@@ -50,14 +52,16 @@ export class AvatarComponent implements OnInit{
   }
 
   editAvatar(){
+    this.error = "";
+    this.saving = true;
     this.userService.updateImage(this.newImage).subscribe(
       data => { 
         $("#profilePicture").attr("src", 'data:image/png;base64,'+this.newImage);
-        $("#result").removeAttr("src");
-     
+        $("#result").removeAttr("src");    
         $("#avatarImg").attr("src","data:image/jpeg;base64,"+this.newImage);
+        this.saving = false;
      },
-      error => console.log(error)
+      error => {this.error = "Pri ukladaní nastala chyba."; this.saving = false;}
     );
 
     

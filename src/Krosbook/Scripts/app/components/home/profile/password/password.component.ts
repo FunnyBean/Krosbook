@@ -21,6 +21,8 @@ export class PasswordComponent implements AfterContentInit{
   public error:string;
   public success:string;
 
+  private saving:boolean = false;
+
   constructor(private userService:UserService) { }
 
   ngAfterContentInit() {
@@ -30,13 +32,15 @@ export class PasswordComponent implements AfterContentInit{
 
   updatePasswordData(col, value){
     this.passwordData[col] = value;
-    console.log(this.passwordData);
   }
 
   savePassword(){
+    this.error = "";
+    this.success = "";
+    this.saving = true;
       this.userService.updatePassword(this.passwordData[0], this.passwordData[1]).subscribe(
-          data => { this.success = "Heslo bolo úspešne zmenené."; $("input").val(''); },
-          error => { this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; }
+          data => { this.success = "Heslo bolo úspešne zmenené."; $("input").val(''); this.saving = false; },
+          error => { this.error = "Staré heslo sa nezhoduje so záznamom v databáze."; this.saving = false; }
       );
   }
 

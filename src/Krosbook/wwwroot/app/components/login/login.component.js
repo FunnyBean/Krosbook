@@ -46,11 +46,15 @@ var LoginComponent = (function () {
             console.log(error.text());
         });
     };
+    LoginComponent.prototype.PasswordRecovery = function () {
+        alert("zmena hesla ");
+    };
     LoginComponent = __decorate([
         core_1.Component({
             selector: 'login',
             templateUrl: 'app/components/login/login.component.html',
-            styleUrls: ['app/components/login/login.component.css']
+            styleUrls: ['app/components/login/login.component.css'],
+            directives: [router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [router_1.Router, user_service_1.UserService])
     ], LoginComponent);

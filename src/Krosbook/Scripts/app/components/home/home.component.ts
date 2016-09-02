@@ -44,7 +44,6 @@ export class HomeComponent implements OnInit{
       this.height = window.innerHeight - document.getElementById("header").clientHeight;
       $("#content").css({"height": this.height});
     });
-    $("#left_menu a:nth-child(3)").addClass("active");
     $("#left_menu a").on("click", function(){
       $("a.active").removeClass("active");
       $(this).addClass("active");

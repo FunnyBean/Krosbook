@@ -36,38 +36,40 @@ var OrdersManagerComponent = (function () {
     OrdersManagerComponent.prototype.filterReservation = function () {
         var choosenCar = $("#filterCar").val();
         var choosenUser = $("#filterUser").val();
-        var resevartionState = $("#approvedOrders").is(":checked") ? 2 : 1; //2=Nespracovaná;1=Spracovana
+        var reservationState = $(".orderType:checked").val(); //2=Nespracovaná;1=Spracovana
         var filtered = new Array();
         //console.log(typeof choosenCar +' '+choosenCar);
         //console.log(typeof choosenUser+' '+choosenUser);
-        if (choosenCar == 'all') {
+        if (choosenUser == 'all' && choosenCar == 'all') {
             for (var _i = 0, _a = this.stableOrders; _i < _a.length; _i++) {
                 var order = _a[_i];
-                if (order.userId == choosenUser && (order.reservationState == resevartionState)) {
+                if (reservationState == 0 || order.reservationState == reservationState) {
                     filtered.push(order);
                 }
             }
         }
-        if (choosenUser == 'all') {
+        else if (choosenCar == 'all') {
             for (var _b = 0, _c = this.stableOrders; _b < _c.length; _b++) {
                 var order = _c[_b];
-                if (order.carId == choosenCar && (order.reservationState == resevartionState)) {
+                if (order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
                     filtered.push(order);
                 }
             }
         }
-        if (choosenUser == 'all' && choosenCar == 'all') {
+        else if (choosenUser == 'all') {
             for (var _d = 0, _e = this.stableOrders; _d < _e.length; _d++) {
                 var order = _e[_d];
-                if ((order.reservationState == resevartionState)) {
+                if (order.carId == choosenCar && (reservationState == 0 || order.reservationState == reservationState)) {
                     filtered.push(order);
                 }
             }
         }
-        for (var _f = 0, _g = this.stableOrders; _f < _g.length; _f++) {
-            var order = _g[_f];
-            if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == resevartionState)) {
-                filtered.push(order);
+        else {
+            for (var _f = 0, _g = this.stableOrders; _f < _g.length; _f++) {
+                var order = _g[_f];
+                if (order.carId == choosenCar && order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
+                    filtered.push(order);
+                }
             }
         }
         this.orders = filtered;
@@ -174,7 +176,7 @@ var OrdersManagerComponent = (function () {
         core_1.Component({
             templateUrl: 'app/components/home/carReservations/orders/orders.manager.component.html',
             providers: [carReservation_service_1.CarOrderService],
-            styles: [' #filter{background-color: #f2f2f2; padding: 10px}']
+            styles: [' #filter{background-color: #f2f2f2; padding: 10px} input[type=radio]{margin-right: 5px}']
         }), 
         __metadata('design:paramtypes', [router_1.Router, carReservation_service_1.CarOrderService, car_service_1.CarService, user_service_1.UserService])
     ], OrdersManagerComponent);
