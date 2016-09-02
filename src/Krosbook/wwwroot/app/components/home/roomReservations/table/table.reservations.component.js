@@ -71,7 +71,7 @@ var TableReservationComponent = (function () {
         $(".records" + this.data.id + " td.full").on("click", function (event) {
             setTimeout(function () { return thisDocument.detailReset = true; }, 0);
             var element = $(this);
-            var thisDate = moment().add(this.week, 'weeks').day(0).add($(this).index(), 'days').format("DD.MM.YYYY");
+            var thisDate = moment().add(thisDocument.week, 'weeks').day(0).add($(this).index(), 'days').format("DD.MM.YYYY");
             var id = element.attr("reservationId");
             if (thisDocument.reservationDetailId[0] == 0 || thisDocument.reservationDetailId[0] != id) {
                 thisDocument.detailReset = false;

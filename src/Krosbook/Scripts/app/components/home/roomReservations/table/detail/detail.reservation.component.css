@@ -7,12 +7,19 @@
   background-color: white;
   padding: 10px; }
 
+.dropdown-toggle {
+    min-height: 34px;
+}
+
+.dropdown-menu {
+    min-width: 144px;
+    padding: 0px 0px;
+    margin: 0px;
+}
+
 .glyphicon {
   float: right;
   cursor: pointer; }
-
-.btn-danger {
-  float: right; }
 
 .ng-valid[required] {
   border-right: 5px solid #42a948; }

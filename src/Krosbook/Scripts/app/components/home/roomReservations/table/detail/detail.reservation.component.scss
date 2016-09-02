@@ -3,16 +3,13 @@
   z-index: 1000;
   border: 1px black solid;
   min-height: 200px;
-  width: 300px;
+  width: 310px;
   background-color: white;
   padding: 10px;
 }
 .glyphicon{
   float: right;
   cursor: pointer;
-}
-.btn-danger{
-  float: right;
 }
 
 .ng-valid[required]{
