@@ -15,6 +15,7 @@ using Krosbook.ViewModels.Rooms;
 using Krosbook.ViewModels.Reservation;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Krosbook.Services.Email;
 
 namespace Krosbook.Controllers.Api.v1
 {
@@ -27,16 +28,18 @@ namespace Krosbook.Controllers.Api.v1
         private ICarReservationRepository _reservationRepository;
         private ILogger<CarReservationController> _logger;
         private IMapper _mapper;
+        private IEmailService _emailService;
         #endregion
 
         #region Constructor
         public CarReservationController(ICarReservationRepository reservationRepository,
                       ILogger<CarReservationController> logger,
-                      IMapper mapper)
+                      IMapper mapper, IEmailService emailService)
         {
             _reservationRepository = reservationRepository;
             _logger = logger;
             _mapper = mapper;
+            _emailService = emailService;
         }
         #endregion
 
@@ -142,7 +145,7 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPut("approve/{reservationId}")]
         public IActionResult ApproveReservation(int reservationId)
         {
-            if(User.IsInRole("Admin"))
+            if(User.IsInRole("Prevadzkar"))
             {
                 CarReservation reservation = _reservationRepository.GetItem(reservationId);
                 if(reservation == null)
@@ -155,6 +158,7 @@ namespace Krosbook.Controllers.Api.v1
                 result = SaveData(() =>
                 {
                     _reservationRepository.Edit(reservation);
+                    _emailService.SendCarReservation(reservation);
                 });
                 return result;
             }

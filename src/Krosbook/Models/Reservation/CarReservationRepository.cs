@@ -29,7 +29,7 @@ namespace Krosbook.Models.Reservation
         /// </returns>
         public override IQueryable<CarReservation> GetAll()
         {
-            return _dbContext.Set<CarReservation>();
+            return _dbContext.Set<CarReservation>().OrderByDescending(r => r.DateTimeStart);
         }
 
 

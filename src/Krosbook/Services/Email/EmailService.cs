@@ -1,5 +1,7 @@
 ﻿using Krosbook.Models.Rooms;
 using Krosbook.Models.Users;
+using Krosbook.Models.Reservation;
+using Krosbook.Models.Cars;
 using Krosbook.Resources;
 using Krosbook.Services.Template;
 using Krosbook.ViewModels.Rooms;
@@ -25,6 +27,7 @@ namespace Krosbook.Services.Email
         private IEmailSender _sender;
         private IUserRepository _userRepository;
         private IRoomRepository _roomRepository;
+        private ICarRepository _carRepository;
         private readonly IHostingEnvironment _appEnvironment;
 
         #endregion
@@ -32,13 +35,14 @@ namespace Krosbook.Services.Email
 
         #region Constructors
 
-        public EmailService(IEmailCreator creator, IEmailSender sender, IUserRepository userRepository, IHostingEnvironment appEnvironment, IRoomRepository roomRepository)
+        public EmailService(IEmailCreator creator, IEmailSender sender, IUserRepository userRepository, IHostingEnvironment appEnvironment, IRoomRepository roomRepository, ICarRepository carRepository)
         {
             _creator = creator;
             _sender = sender;
             _userRepository = userRepository;
             _roomRepository = roomRepository;
             _appEnvironment = appEnvironment;
+            _carRepository = carRepository;
         }
 
         #endregion
@@ -160,6 +164,19 @@ namespace Krosbook.Services.Email
             var builder = new BodyBuilder();
             builder.HtmlBody = string.Format("<p>Na nasledujúcom odkaze: <a href=" + joinUrlG2M + ">" + joinUrlG2M + "</a> bol vytvorený meeting službou GoToMeeting</p>");     
             msg.Body = builder.ToMessageBody();
+            _sender.SendEmail(msg);
+        }
+
+        public void SendCarReservation(CarReservation rvm)
+        {
+            var data = new EmailCarReservation(rvm, _carRepository);
+            data.From = EmailFrom;
+            data.To.Add(this._userRepository.GetItem(rvm.UserId).Email);
+            var msg = _creator.CreateEmail(data);
+            //var builder = new BodyBuilder();
+            //Car car = this._carRepository.GetItem(rvm.CarId);
+            //builder.HtmlBody = string.Format("<table><tr><th>Auto<//th><td>"+car.Name+" "+car.Plate+"</td></tr>");
+            //msg.Body = builder.ToMessageBody();
             _sender.SendEmail(msg);
         }
 

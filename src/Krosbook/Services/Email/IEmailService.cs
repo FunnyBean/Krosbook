@@ -1,5 +1,6 @@
 ﻿using Krosbook.Services.Template;
 using Krosbook.ViewModels.Rooms;
+using Krosbook.Models.Reservation;
 
 namespace Krosbook.Services.Email
 {
@@ -19,6 +20,7 @@ namespace Krosbook.Services.Email
         void SendRoomReservation(string title, string emailTo, string filename);
         void SendRoomReservation(string title, string emailTo, string filename, string joinUrlG2M);
         void SendG2M(RoomReservationViewModel rvm, string joinUrlG2M);
+        void SendCarReservation(CarReservation rvm);
         void CreateEmailCalendarEvent(RoomReservationViewModel rvm);
         void CreateEmailCalendarEvent(RoomReservationViewModel rvm, string joinUrlG2M);
 
