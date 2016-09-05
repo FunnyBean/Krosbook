@@ -240,7 +240,7 @@ export class DetailReservationComponent implements OnInit {
     checkRepetitionFree()
     {
         return new Observable(observer => {
-            this.reservationService.checkDupliciteRepeatingReservations(this.data.id, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.appearance).subscribe(
+            this.reservationService.checkDupliciteRepeatingReservations(this.data.id, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.appearance, this.repetitionData.end, this.repetitionData.endDate).subscribe(
                 data => {
                     observer.next(true);
                     observer.complete();
