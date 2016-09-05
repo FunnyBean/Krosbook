@@ -81,8 +81,7 @@ var UserService = (function () {
     UserService.prototype.sendPasswordResetEmail = function (email) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        var token = this.generateRandomString();
-        return this.http.post('/api/authentification/sendPasswordReset', JSON.stringify({ email: email, token: token }), { headers: headers });
+        return this.http.post('/api/authentification/forgottenPassword', JSON.stringify({ email: email }), { headers: headers });
     };
     UserService.prototype.savePasswordReset = function (token, newPassword) {
         var headers = new http_1.Headers();

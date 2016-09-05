@@ -66,7 +66,7 @@ namespace Krosbook.Models.Reservation
             foreach (var res in reservations)
             {
                 var changes = _changesRepository.GetChangesByReservation(res.Id);
-                  export.Add(res);
+                export.Add(res);
                 //pre denne opakovania v danom tyzdni
                 var repeater = _repeaterRepository.GetSingleByReservationId(res.Id);
                 if (repeater != null && repeater.Repetation == "days")
@@ -95,14 +95,14 @@ namespace Krosbook.Models.Reservation
 
                             foreach (var c in changes)
                             {
-                                if (c.dateTime==res2.dateTime)
+                                if (c.dateTime == res2.dateTime)
                                 {
                                     canCreateReservation = false;
                                     break;
                                 }
                                 else
                                 {
-                                    canCreateReservation = true;                                    
+                                    canCreateReservation = true;
                                 }
                             }
                             if (canCreateReservation)
@@ -178,7 +178,7 @@ namespace Krosbook.Models.Reservation
                                 if (canCreateReservation)
                                 {
                                     export.Add(res2);
-                                }                             
+                                }
                             }
                             else
                             {
@@ -336,14 +336,26 @@ namespace Krosbook.Models.Reservation
         //overim ci mozno vytvorit opakovanie na dany datum
         public bool CanMakeReservation(int roomId, DateTime from, int length)
         {
-            if (GetReservationsByRoomInTimeInterval(roomId, from, from.AddMinutes(length)).Count() == 0)
+            List<RoomReservation> reservations = GetReservationsByRoomInTimeInterval(roomId, from.Date, from.AddHours(23)).ToList();
+            var ret = true;
+
+            foreach (var res in reservations)
             {
-                return true;
+
+                if ((from >= res.dateTime && from < res.dateTime.AddMinutes(res.length)) || (res.dateTime >= from && res.dateTime < from.AddMinutes(length)))
+                {
+                    ret = false;
+                    break;
+                    
+                }
+                else
+                {
+                    ret = true;
+                }
+
             }
-            else
-            {
-                return false;
-            }
+
+            return ret;
         }
 
     }

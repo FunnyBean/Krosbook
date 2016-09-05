@@ -478,11 +478,149 @@ namespace Krosbook.Controllers.Api.v1
                 () =>
                 {
                     var reservation = _reservationRepository.GetItem(changes.RoomReservationId);
-                    var chan = _reservationChangesRepository.Get(x=>x.dateTime==changesVm.dateTime && x.RoomReservationId==changesVm.RoomReservationId).ToList();
+                    var chan = _reservationChangesRepository.Get(x => x.dateTime == changesVm.dateTime && x.RoomReservationId == changesVm.RoomReservationId).ToList();
                     this.Response.StatusCode = (int)HttpStatusCode.Created;
                     return this.Json(_mapper.Map<RoomReservationChanges>(chan[0]));
                 });
         }
+
+
+
+        [HttpPost("CheckForDuplicity")]
+        [ValidateModelState, CheckArgumentsForNull]
+        public IActionResult CheckForDuplicity([FromBody] RoomReservationRepeaterViewModel repeaterVm)
+        {
+            List<DateTime> duplicateDates = new List<DateTime>();
+            #region checking
+            if (repeaterVm.Appearance == null)
+            {
+                repeaterVm.EndDate = DateTime.ParseExact(repeaterVm.endingDate, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+                var start = _reservationRepository.GetItem(repeaterVm.ReservationId).dateTime;
+                repeaterVm.Appearance = 1;
+
+                while (start <= repeaterVm.EndDate)
+                {
+                    if (repeaterVm.Repetation == "days")
+                    {
+                        if (start.DayOfWeek == DayOfWeek.Monday || start.DayOfWeek == DayOfWeek.Tuesday
+                            || start.DayOfWeek == DayOfWeek.Wednesday || start.DayOfWeek == DayOfWeek.Thursday)
+                        {
+                            repeaterVm.Appearance++;
+                            start = start.AddDays(1);
+
+                        }
+                        if (start.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            repeaterVm.Appearance++;
+                            start = start.AddDays(3);
+                        }
+                    }
+                    if (repeaterVm.Repetation == "weeks")
+                    {
+                        repeaterVm.Appearance++;
+                        start = start.AddDays(7 * repeaterVm.Interval);
+
+                    }
+                    if (repeaterVm.Repetation == "months")
+                    {
+                        repeaterVm.Appearance++;
+                        start = start.AddMonths(1 * repeaterVm.Interval);
+
+                    }
+                    if (repeaterVm.Repetation == "years")
+                    {
+                        repeaterVm.Appearance++;
+                        start = start.AddYears(1 * repeaterVm.Interval);
+
+                    }
+                }
+            }
+
+            var startDate = _reservationRepository.GetItem(repeaterVm.ReservationId).dateTime;
+            if (repeaterVm.Repetation == "days")
+            {
+                repeaterVm.EndDate = startDate;
+                for (int i = 0; i < (repeaterVm.Appearance - 1) * repeaterVm.Interval; i++)
+                {
+
+                    if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Monday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Tuesday
+                        || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Wednesday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Thursday)
+                    {
+                        repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1);
+                        if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                            repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                        {
+                            DateTime dup = repeaterVm.EndDate;
+                            duplicateDates.Add(dup);
+                        }
+
+                    }
+                    if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Friday)
+                    {
+                        repeaterVm.EndDate = repeaterVm.EndDate.AddDays(3);
+                        if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                             repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                        {
+                            DateTime dup = repeaterVm.EndDate;
+                            duplicateDates.Add(dup);
+                        }
+
+                        i++;
+                    }
+                }
+            }
+            if (repeaterVm.Repetation == "weeks")
+            {
+                repeaterVm.EndDate = startDate.AddDays((((int)repeaterVm.Appearance * 7) - 1) * repeaterVm.Interval);
+                if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                {
+                    DateTime dup = repeaterVm.EndDate;
+                    duplicateDates.Add(dup);
+                }
+
+            }
+            if (repeaterVm.Repetation == "months")
+            {
+                repeaterVm.EndDate = startDate.AddMonths(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
+                if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                {
+                    DateTime dup = repeaterVm.EndDate;
+                    duplicateDates.Add(dup);
+                }
+            }
+            if (repeaterVm.Repetation == "years")
+            {
+                repeaterVm.EndDate = startDate.AddYears(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
+                if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                {
+                    DateTime dup = repeaterVm.EndDate;
+                    duplicateDates.Add(dup);
+                }
+            }
+
+            #endregion
+
+
+
+            if (duplicateDates.Count > 0)
+            {
+                var duplicates = _mapper.Map<List<DateTime>>(duplicateDates);
+                this.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return this.Json(_mapper.Map<List<DateTime>>(duplicates));
+            }
+            else
+            {
+                return Ok();
+            }
+
+
+        }
+
+
 
 
         #endregion

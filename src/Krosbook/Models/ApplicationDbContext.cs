@@ -68,8 +68,9 @@ namespace Krosbook.Models
         public DbSet<RoomReservationRepeater> RoomReservationRepeater { get; set; }
 
         public DbSet<RoomReservationChanges> RoomReservationChanges { get; set; }
+ 
 
-      //  public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        //  public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
         #endregion
 

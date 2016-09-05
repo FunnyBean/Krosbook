@@ -26,6 +26,7 @@ var RoomReservationsComponent = (function () {
         this.carService = carService;
         this.officeService = officeService;
         this.userService = userService;
+        this.reservationType = 'rooms';
         this.times = JSON.parse('[]');
         this.loggedUser = new user_admin_model_1.User();
         this.usersList = [];
@@ -78,14 +79,7 @@ var RoomReservationsComponent = (function () {
             for (var i = 0; i < usersArray.length; i++)
                 _this.usersList[usersArray[i].id] = usersArray[i].name + ' ' + usersArray[i].surname;
         }, function (error) { return console.log(error); }, function () {
-            _this.route.params.subscribe(function (params) {
-                _this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
-                _this.name = (_this.reservationType == 'rooms') ? 'miestností' : 'áut';
-                if (_this.reservationType == 'rooms')
-                    _this.loadOfficesData();
-                else
-                    _this.loadCarsData();
-            });
+            _this.loadOfficesData();
         });
         this.userService.myProfile().subscribe(function (data) {
             _this.loggedUser = data.json();
@@ -100,12 +94,6 @@ var RoomReservationsComponent = (function () {
                 if (_this.officeTypes.indexOf(row.type) == -1)
                     _this.officeTypes.push(row.type);
             }
-        }, function (error) { return console.log(error); });
-    };
-    RoomReservationsComponent.prototype.loadCarsData = function () {
-        var _this = this;
-        this.carService.getCars().subscribe(function (data) {
-            _this.data = data.json();
         }, function (error) { return console.log(error); });
     };
     RoomReservationsComponent.prototype.updateTime = function () {
@@ -132,24 +120,8 @@ var RoomReservationsComponent = (function () {
         }
     };
     RoomReservationsComponent.prototype.filterReservation = function (element) {
-        if (this.reservationType == 'rooms')
-            this.loadFilteredOfficesData();
-        else
-            this.loadFilteredCarsData();
-    };
-    RoomReservationsComponent.prototype.loadFilteredOfficesData = function () {
         var _this = this;
         this.officeService.filterOffices(this.dateTime, this.length * 60, this.filterOfficeTypes).subscribe(function (data) {
-            _this.data = data.json();
-            _this.week = moment(_this.dateTime).week() - moment().week() + 52 * (moment(_this.dateTime).year() - moment().year());
-            if (moment(_this.dateTime).year() - moment().year() !== 0)
-                _this.week++;
-            _this.updateWeek();
-        }, function (error) { return console.log(error); });
-    };
-    RoomReservationsComponent.prototype.loadFilteredCarsData = function () {
-        var _this = this;
-        this.carService.filterCars(this.dateTime, this.length * 60).subscribe(function (data) {
             _this.data = data.json();
             _this.week = moment(_this.dateTime).week() - moment().week() + 52 * (moment(_this.dateTime).year() - moment().year());
             if (moment(_this.dateTime).year() - moment().year() !== 0)

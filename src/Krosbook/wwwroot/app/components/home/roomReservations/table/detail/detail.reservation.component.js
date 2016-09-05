@@ -33,6 +33,7 @@ var DetailReservationComponent = (function () {
         var _this = this;
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(function (data) {
             _this.data = data.json();
+            _this.originDateTime = _this.data.dateTime;
             _this.reservationDetailId[4] = moment(_this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(_this.data.dateTime).hours()).minute(moment(_this.data.dateTime).minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
             if (_this.data.roomReservationRepeaterId != null) {
                 _this.reservationService.getRepeatingReservation(_this.reservationType, _this.data.roomReservationRepeaterId).subscribe(function (data) {
@@ -82,7 +83,11 @@ var DetailReservationComponent = (function () {
             return false;
         }
         this.saving = true;
-        var elementId = (this.reservationType == "rooms") ? this.data.roomId : this.data.carId, dayData;
+        var elementId = this.data.roomId, dayData;
+        if (this.data.roomReservationRepeaterId)
+            this.data.dateTime = moment(this.data.dateTime).date(moment(this.originDateTime).date()).month(moment(this.originDateTime).month()).year(moment(this.originDateTime).year()).format("YYYY-MM-DDTHH:mm");
+        if (this.repeating)
+            this.checkRepetitionFree();
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(function (data) { dayData = data.json(); }, function (error) { return console.log(error); }, function () {
             for (var i = 0; i < dayData.length; i++) {
                 if (_this.data.id == dayData[i].id)
@@ -124,7 +129,7 @@ var DetailReservationComponent = (function () {
     };
     DetailReservationComponent.prototype.addNewReservationFromRepeating = function () {
         var _this = this;
-        this.reservationService.addReservation(this.reservationType, this.data.roomId, 1, 'Rezervácia', moment(this.data.dateTime).format("DD.MM.YYYY HH:mm"), this.data.length * 30).subscribe(function (data) {
+        this.reservationService.addReservation(this.reservationType, this.data.roomId, 1, 'Rezervácia', moment(this.data.dateTime).format("DD.MM.YYYY HH:mm"), this.data.length * 60).subscribe(function (data) {
             _this.reservationDetailId = [data.json().id, _this.reservationDetailId[1], _this.reservationDetailId[2], 0]; //okno na potvrdenie rezervacie      
         }, function (error) { alert(error); }, function () {
             _this.windowClose.emit(true);
@@ -137,8 +142,21 @@ var DetailReservationComponent = (function () {
             return false;
         }
         this.saving = true;
-        this.reservationService.editOneRepeatingReservation(this.data.id, this.reservationDetailId[4]).subscribe(function () {
-            _this.addNewReservationFromRepeating();
+        var elementId = this.data.roomId, dayData;
+        this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(function (data) { dayData = data.json(); }, function (error) { return console.log(error); }, function () {
+            for (var i = 0; i < dayData.length; i++) {
+                if (_this.data.id == dayData[i].id)
+                    continue;
+                var date = moment(dayData[i].dateTime), reservationTime = moment(_this.data.dateTime).format("HH:mm"), reservationTimeEnd = moment(_this.data.dateTime).add(_this.data.length * 60, 'minutes').format("HH:mm"), time = date.format("HH:mm"), endTime = date.add(dayData[i].length, 'minutes').format("HH:mm");
+                if ((reservationTime >= time && reservationTime < endTime) || (time >= reservationTime && time < reservationTimeEnd)) {
+                    _this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
+                    _this.saving = false;
+                    return false;
+                }
+            }
+            _this.reservationService.editOneRepeatingReservation(_this.data.id, _this.reservationDetailId[4]).subscribe(function () {
+                _this.addNewReservationFromRepeating();
+            });
         });
     };
     DetailReservationComponent.prototype.deleteOneRepatingReservaion = function () {
@@ -152,6 +170,8 @@ var DetailReservationComponent = (function () {
     };
     DetailReservationComponent.prototype.closeWindow = function () {
         this.windowClose.emit(false);
+    };
+    DetailReservationComponent.prototype.checkRepetitionFree = function () {
     };
     __decorate([
         core_1.Input(), 
