@@ -5,7 +5,7 @@
     <nav class="navbar navbar-nav ">
       <ul class="nav nav-pills">
         <li (click)="setActiveClass($event.target)" id="liNewReservation"><a [routerLink]="['newreservation']">Nová objednávka</a></li>
-        <li (click)="setActiveClass($event.target)" id="liCars"><a [routerLink]="['/home/reservations/cars']">Prehľad rezervácií</a></li>
+        <li (click)="setActiveClass($event.target)" id="liCars"><a [routerLink]="['/home/reservations/cars']">Prehľad objednávok</a></li>
         <li (click)="setActiveClass($event.target)" id="liMyreservation"><a [routerLink]="['myreservations']">Moje objednávky</a></li> 
         <li (click)="setActiveClass($event.target)" id="liOrders" *ngIf="prevadzkar"><a  [routerLink]="['orders']" >Manažér objednávok</a></li>
       </ul>

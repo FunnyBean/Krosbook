@@ -19,7 +19,7 @@
     <!--DATUM ZACIATKU-->
     <div class="form-group">
       <label for="beginOrder">Dátum a čas začiatku plánovanej cesty:</label>
-      <input type="datetime-local" name="beginOrder" id="beginOrder" [(ngModel)]="reservationData.dateTimeStart" (change)="isFree(reservationData.carId, reservationData.dateTimeStart, reservationData.dateTimeEnd); updateEndTime()" class="form-control" step="1800" aria-describedby="helpBlockDate" validateDate required>
+      <input type="datetime-local" name="beginOrder" id="beginOrder" [(ngModel)]="reservationData.dateTimeStart" (change)="updateEndTime(); isFree(reservationData.carId, reservationData.dateTimeStart, reservationData.dateTimeEnd);" class="form-control" step="1800" aria-describedby="helpBlockDate" validateDate required>
     </div>
     <!--DATUM KONIEC-->
     <div class="form-group">

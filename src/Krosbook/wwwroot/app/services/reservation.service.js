@@ -54,11 +54,6 @@ var ReservationService = (function () {
             return this.http.put('/api/reservations/' + type + '/' + id, JSON.stringify({ id: id, name: name, carId: carId, dateTime: dateTime, userId: userId, length: length }), { headers: headers });
         }
     };
-    ReservationService.prototype.editOneRepeatingReservation = function (roomReservationId, dateAndTime) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.post('/api/reservations/rooms/changes/', JSON.stringify({ roomReservationId: roomReservationId, dateAndTime: dateAndTime }), { headers: headers });
-    };
     ReservationService.prototype.deleteReservation = function (type, id) {
         return this.http.delete('/api/reservations/' + type + '/' + id);
     };
@@ -79,8 +74,18 @@ var ReservationService = (function () {
         endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
         return this.http.put('/api/reservations/' + type + '/repetition/' + id, JSON.stringify({ id: id, reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
     };
+    ReservationService.prototype.editOneRepeatingReservation = function (roomReservationId, dateAndTime) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.post('/api/reservations/rooms/changes/', JSON.stringify({ roomReservationId: roomReservationId, dateAndTime: dateAndTime }), { headers: headers });
+    };
     ReservationService.prototype.deleteRepeatingReservation = function (type, repetitionId) {
         return this.http.delete('/api/reservations/' + type + '/repetition/' + repetitionId);
+    };
+    ReservationService.prototype.checkDupliciteRepeatingReservations = function (reservationId, repetition, interval, appearance) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.post('/api/reservations/rooms/checkForDuplicity/', JSON.stringify({ reservationId: reservationId, repetition: repetition, interval: interval, appearance: appearance }), { headers: headers });
     };
     ReservationService = __decorate([
         core_1.Injectable(), 

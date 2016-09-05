@@ -7,6 +7,7 @@ import {TimeValidator, DateValidator} from '../../../../../validators/time.valid
 import {RepeatReservationComponent} from './repeat/repeat.reservation.component';
 import {Repetition} from '../../../../../models/repetition.model';
 import * as moment from 'moment';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'reservation-detail',
@@ -112,7 +113,8 @@ export class DetailReservationComponent implements OnInit {
             this.data.dateTime = moment(this.data.dateTime).date(moment(this.originDateTime).date()).month(moment(this.originDateTime).month()).year(moment(this.originDateTime).year()).format("YYYY-MM-DDTHH:mm");
         
         if(this.repeating)
-            this.checkRepetitionFree();
+            if(!this.checkRepetitionFree())
+                return false;
 
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(
             data => { dayData = data.json() },
@@ -237,6 +239,19 @@ export class DetailReservationComponent implements OnInit {
 
     checkRepetitionFree()
     {
-
+        return new Observable(observer => {
+            this.reservationService.checkDupliciteRepeatingReservations(this.data.id, this.repetitionData.repetation, this.repetitionData.interval, this.repetitionData.appearance).subscribe(
+                data => {
+                    observer.next(true);
+                    observer.complete();
+                },
+                error => {
+                    this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
+                    this.saving = false;
+                    observer.next(false);
+                    observer.complete();
+                }
+            );
+        });
     }
 }

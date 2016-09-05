@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var reservation_service_1 = require('../../../../../services/reservation.service');
 var holiday_service_1 = require('../../../../../services/holiday.service');
-var detail_reservation_component_1 = require('./detail/detail.reservation.component');
 var moment = require('moment');
 var TableReservationComponent = (function () {
     function TableReservationComponent(reservationService, holidayService) {
@@ -34,7 +33,7 @@ var TableReservationComponent = (function () {
         $(window).unbind("focus");
     };
     TableReservationComponent.prototype.fillTable = function () {
-        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0;
+        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg;
         for (var i = 0; i < this.times.length; i++) {
             table += '<tr>';
             table += '<td class="col-md-1">' + this.times[i].time + '</td>';
@@ -55,11 +54,15 @@ var TableReservationComponent = (function () {
                         table += '<td class="col-md-2 empty ' + filter + '"></td>';
                 }
                 else {
+                    if (cell.reservationState == 2)
+                        bg = "bg-primary";
+                    else
+                        bg = "bg-danger";
                     if (cell.reservationName == null) {
-                        table += '<td reservationId="' + cell.reservationId + '" class="col-md-2 bg-primary full"></td>';
+                        table += '<td reservationId="' + cell.reservationId + '" class="col-md-2 ' + bg + ' full"></td>';
                     }
                     else {
-                        table += '<td reservationId="' + cell.reservationId + '" class="col-md-2 bg-primary full text-center"><strong>' + cell.reservationName + '</strong> <small>' + cell.userName + '</small></td>';
+                        table += '<td reservationId="' + cell.reservationId + '" class="col-md-2 ' + bg + ' full text-center"><strong>' + cell.reservationName + '</strong> <small>' + cell.userName + '</small></td>';
                     }
                 }
             }
@@ -68,95 +71,7 @@ var TableReservationComponent = (function () {
         //replacing old data with new table data
         $(".records" + this.data.id + " > tr").remove();
         $(".records" + this.data.id).prepend(table);
-        /*$(".records"+this.data.id+" td.full").on("click", function(event){
-          setTimeout(() => thisDocument.detailReset = true, 0);
-          var element = $(this);
-          var id =  element.attr("reservationId");
-          if(thisDocument.reservationDetailId[0] == 0 || thisDocument.reservationDetailId[0] != id){
-            thisDocument.detailReset = false;
-            var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left  + element.width() - 294).toString() + 'px';
-            thisDocument.reservationDetailId = [id, horizontalPosition, (element.position().top + $("#content").scrollTop() + 25).toString() + 'px', 1];
-          }
-          else {
-            thisDocument.detailReset = false;
-            thisDocument.reservationDetailId = [0, 0, 0, 0];
-          }
-        });
-    
-        $(".records"+this.data.id+" td.empty").on("mouseenter", function (event) {
-          col = $(this).parent().children().index($(this));
-          row = $(this).parent().parent().children().index($(this).parent()) - 1;
-        });
-    
-        $(".records"+this.data.id+" td.empty")
-          .on("mousedown", function (event) {
-            if (event.which != 1 || thisDocument.reservationDetailId[0] != 0 || thisDocument.reservationInProgress) return false; //does not work for other than left button
-            var element = $(this);
-            isMouseDown = true;
-            $(this).addClass("selected");
-            fromRow = row;
-            fromCol = col;
-            beforeRow = row;
-            var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left  + element.width() - 294).toString() + 'px';
-            thisDocument.reservationDetailId = [0, horizontalPosition, (element.position().top + $("#content").scrollTop() + 25).toString() + 'px'];
-            return false;
-          })
-          .on("mouseover", function () {
-            if (isMouseDown && col == fromCol && (row - 1) == beforeRow && !($(this).hasClass("selected"))){
-              $(this).addClass("selected");
-              beforeRow = row;
-              length++;
-            }
-          });
-    
-        $(document).on("mouseup", function () {
-          if(isMouseDown) {
-            thisDocument.makeReservation(fromRow, fromCol, length);
-            isMouseDown = false;
-            length = 1;
-          }
-        });*/
     };
-    /*makeReservation(fromRow:number, fromCol:number, length:number) {
-      this.reservationInProgress = true;
-      var date, hours = 7, minutes = 0;
-      if(fromRow % 2 != 0){
-        fromRow -= 1;
-        minutes = 30;
-      }
-      for(var i = 0; i < fromRow / 2; i++)
-        hours++;
-      date = moment().add(this.week, 'weeks').weekday(fromCol).hour(hours).minute(minutes).format("DD.MM.YYYY HH:mm");
-      //checks, if selected time is not already reserved
-      var time = moment().hour(hours).minute(minutes).format("HH:mm"), endTime = moment(time, 'HH:mm').add(length*30, 'minutes').format("HH:mm");
-      while (time < endTime) {
-        if(this.tableData[time] && this.tableData[time][fromCol - 1]){
-          alert('Vaša rezervácia zasahuje do inej rezervácie. Zvoľte svoju rezerváciu inak.');
-          this.fillTable();
-          return false;
-        }
-        time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
-      }
-      //checks if selected reservation is not in the past
-      /*if(date < moment().format("DD.MM.YYYY HH:mm")){
-        alert('Zvolená rezervácia je v minulosti. Nie je možné ju vytroviť.');
-        this.fillTable();
-        return false;
-      }*/
-    //saves the data  
-    /*this.reservationService.addReservation(this.reservationType, this.data.id, 1, 'Rezervácia', date, length*30).subscribe(
-      data => {
-        this.detailReset = true;
-        this.reservationDetailId = [data.json().id, this.reservationDetailId[1],this.reservationDetailId[2], 0];  //okno na potvrdenie rezervacie
-      },
-      error => { alert(error); },
-      () => {
-        this.updateData();
-        this.reservationInProgress = false;
-        $(".filterSelected").removeClass("filterSelected");
-      }
-    );
-  }*/
     TableReservationComponent.prototype.updateData = function (weeks) {
         var _this = this;
         if (weeks === void 0) { weeks = this.week; }
@@ -178,10 +93,10 @@ var TableReservationComponent = (function () {
                     var day = startDay.weekday() - 1;
                     while (time < endTime && time <= '17:30') {
                         if (time >= '07:00') {
-                            if (time == startDay.format("HH:mm"))
-                                _this.tableData[time][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '"}');
+                            if (time == startDay.format("HH:mm") || time == '07:00')
+                                _this.tableData[time][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                             else
-                                _this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '"}');
+                                _this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                         }
                         time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
                     }
@@ -197,9 +112,9 @@ var TableReservationComponent = (function () {
                             while (time <= '17:30') {
                                 if (time >= '07:00') {
                                     if (time == moment(record.dateTimeStart, "YYYY-MM-DD HH:mm:ss").format("HH:mm"))
-                                        _this.tableData[time][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '"}');
+                                        _this.tableData[time][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                     else
-                                        _this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '"}');
+                                        _this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 }
                                 time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
                             }
@@ -208,9 +123,9 @@ var TableReservationComponent = (function () {
                             var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
                             while (tempTime <= endTime && tempTime <= '17:30') {
                                 if (tempTime == "07:00")
-                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '"}');
+                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 else
-                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '"}');
+                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 tempTime = moment(tempTime, 'HH:mm').add(30, 'minutes').format('HH:mm');
                             }
                         }
@@ -218,9 +133,9 @@ var TableReservationComponent = (function () {
                             var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
                             while (tempTime <= '17:30') {
                                 if (tempTime == "07:00")
-                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '"}');
+                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 else
-                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '"}');
+                                    _this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 tempTime = moment(tempTime, 'HH:mm').add(30, 'minutes').format('HH:mm');
                             }
                         }
@@ -271,7 +186,6 @@ var TableReservationComponent = (function () {
         core_1.Component({
             selector: 'tbody',
             templateUrl: 'app/components/home/carReservations/reservations/table/table.reservations.component.html',
-            directives: [detail_reservation_component_1.DetailReservationComponent],
             providers: [reservation_service_1.ReservationService, holiday_service_1.HolidayService]
         }), 
         __metadata('design:paramtypes', [reservation_service_1.ReservationService, holiday_service_1.HolidayService])

@@ -26,12 +26,10 @@ var ReservationsComponent = (function () {
         this.carService = carService;
         this.userService = userService;
         this.reservationType = "cars";
-        //public name:string;
         this.times = JSON.parse('[]');
         this.loggedUser = new user_admin_model_1.User();
         this.usersList = [];
         this.length = 0.5;
-        this.filterOfficeTypes = "";
         this.maxTime = 10.5;
         this.week = 0;
         this.now = moment();

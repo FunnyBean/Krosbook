@@ -36,12 +36,6 @@ var MyReservationsComponent = (function () {
         var _this = this;
         this.carReservationService.getUserOrders().subscribe(function (data) {
             _this.reservations = data.json();
-            /*sortovanie start*/
-            var pole = _this.reservations;
-            pole.sort(function (a, b) {
-                return new Date(a.dateTimeStart).getTime() - new Date(b.dateTimeStart).getTime();
-            });
-            /*sortovanie end */
         }, function (error) { return console.log(error); });
     };
     MyReservationsComponent.prototype.editReservation = function (id) {
