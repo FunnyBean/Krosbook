@@ -14,18 +14,21 @@ export class ReservationService {
     };
   }
 
-  public getReservation(type:string, id:number){
+  public getReservation(type:string, id:number)
+  {
     return this.http.get('/api/reservations/'+type+'/'+id);
   }
 
-  public getReservations(type:string, id:number, from:any, to:any){
+  public getReservations(type:string, id:number, from:any, to:any)
+  {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     var by = (type == "rooms") ? "byroom" : "bycar";
     return this.http.post('/api/reservations/'+type+'/'+by+'/'+id, JSON.stringify({from, to}), {headers});
   }
 
-  public addReservation(type:string, elementId: number, userId:number, name:string, date:string, length:number){
+  public addReservation(type:string, elementId: number, userId:number, name:string, date:string, length:number)
+  {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     if(type == "rooms"){
@@ -37,7 +40,8 @@ export class ReservationService {
     }
   }
 
-  public editReservation(type:string, id:number, name:string, elementId:number, userId:number, dateTime:any, length:number, roomReservationRepeaterId:number, emailInvitation:boolean, goToMeeting:boolean){
+  public editReservation(type:string, id:number, name:string, elementId:number, userId:number, dateTime:any, length:number, roomReservationRepeaterId:number, emailInvitation:boolean, goToMeeting:boolean)
+  {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     if(type == "rooms"){
@@ -47,13 +51,7 @@ export class ReservationService {
       var carId = elementId;
       return this.http.put('/api/reservations/'+type+'/'+id, JSON.stringify({id, name, carId, dateTime, userId, length}), {headers});
     }
-  }
-
-  public editOneRepeatingReservation(roomReservationId:number, dateAndTime:any){
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/reservations/rooms/changes/', JSON.stringify({roomReservationId, dateAndTime}), {headers});
-  }
+  } 
 
   public deleteReservation(type:string, id:number){
     return this.http.delete('/api/reservations/'+type+'/'+id);
@@ -64,7 +62,8 @@ export class ReservationService {
     return this.http.get('/api/reservations/'+type+'/repetition/'+repetitionId);
   }
 
-  public addRepeatingReservation(type:string, reservationId:number, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){
+  public addRepeatingReservation(type:string, reservationId:number, repetation:string, interval:number, endType:string, appearance:number, endingDate:any)
+  {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     appearance = (endType == 'appearance') ? appearance : null;
@@ -72,7 +71,8 @@ export class ReservationService {
     return this.http.post('/api/reservations/'+type+'/repetition', JSON.stringify({reservationId, repetation, interval, appearance, endingDate}), { headers });
   }
 
-  public editRepeatingReservation(type:string, id:number, reservationId:number, repetation:string, interval:number, endType:string, appearance:number, endingDate:any){
+  public editRepeatingReservation(type:string, id:number, reservationId:number, repetation:string, interval:number, endType:string, appearance:number, endingDate:any)
+  {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     appearance = (endType == 'appearance') ? appearance : null;
@@ -80,8 +80,24 @@ export class ReservationService {
     return this.http.put('/api/reservations/'+type+'/repetition/'+id, JSON.stringify({id, reservationId, repetation, interval, appearance, endingDate}), { headers });
   }
 
+  public editOneRepeatingReservation(roomReservationId:number, dateAndTime:any)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('/api/reservations/rooms/changes/', JSON.stringify({roomReservationId, dateAndTime}), {headers});
+  }
+
   public deleteRepeatingReservation(type:string, repetitionId:number)
   {
     return this.http.delete('/api/reservations/'+type+'/repetition/'+repetitionId);
+  }
+
+  public checkDupliciteRepeatingReservations(reservationId:number, repetition:string, interval:number, appearance:number, endType:string, endingDate:any)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    appearance = (endType == 'appearance') ? appearance : null;
+    endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
+    return this.http.post('/api/reservations/rooms/checkForDuplicity/', JSON.stringify({ reservationId, repetition, interval, appearance, endingDate }), {headers});
   }
 }

@@ -16,6 +16,7 @@ var time_validator_1 = require('../../../../../validators/time.validator');
 var repeat_reservation_component_1 = require('./repeat/repeat.reservation.component');
 var repetition_model_1 = require('../../../../../models/repetition.model');
 var moment = require('moment');
+var Observable_1 = require('rxjs/Observable');
 var DetailReservationComponent = (function () {
     function DetailReservationComponent(reservationService, userService) {
         this.reservationService = reservationService;
@@ -87,7 +88,8 @@ var DetailReservationComponent = (function () {
         if (this.data.roomReservationRepeaterId)
             this.data.dateTime = moment(this.data.dateTime).date(moment(this.originDateTime).date()).month(moment(this.originDateTime).month()).year(moment(this.originDateTime).year()).format("YYYY-MM-DDTHH:mm");
         if (this.repeating)
-            this.checkRepetitionFree();
+            if (!this.checkRepetitionFree())
+                return false;
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(function (data) { dayData = data.json(); }, function (error) { return console.log(error); }, function () {
             for (var i = 0; i < dayData.length; i++) {
                 if (_this.data.id == dayData[i].id)
@@ -172,6 +174,18 @@ var DetailReservationComponent = (function () {
         this.windowClose.emit(false);
     };
     DetailReservationComponent.prototype.checkRepetitionFree = function () {
+        var _this = this;
+        return new Observable_1.Observable(function (observer) {
+            _this.reservationService.checkDupliciteRepeatingReservations(_this.data.id, _this.repetitionData.repetation, _this.repetitionData.interval, _this.repetitionData.appearance).subscribe(function (data) {
+                observer.next(true);
+                observer.complete();
+            }, function (error) {
+                _this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
+                _this.saving = false;
+                observer.next(false);
+                observer.complete();
+            });
+        });
     };
     __decorate([
         core_1.Input(), 

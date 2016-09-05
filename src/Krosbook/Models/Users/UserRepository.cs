@@ -36,7 +36,13 @@ namespace Krosbook.Models.Users
             return this.GetSingle(x => x.Email == email);
         }
 
-        
+        public User GetSingleByToken(string token)
+        {
+            return this.GetSingle(x => x.ResetPasswordToken == token);
+        }
+
+
+
         public IEnumerable<Role> GetUserRoles(string username)
         {
             List<Role> _roles = null;

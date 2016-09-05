@@ -104,28 +104,43 @@ namespace Krosbook.Controllers.Api.v1
         [HttpPost]
         [Route("forgottenPassword")]
         //    [ValidateModelState, CheckArgumentsForNull]
-        public async Task<IActionResult> ForgottenPassword([FromBody] ForgotPasswordViewModel passwordVM)
+        public IActionResult ForgottenPassword([FromBody] ForgotPasswordViewModel passwordVM)
         {
             var user = _userRepository.GetSingleByEmail(passwordVM.Email);
             if (user != null)
             {
-                var AplicationUsr = new ApplicationUser { UserName = passwordVM.Email, Email = passwordVM.Email, Id= user.Id.ToString(), PasswordHash= user.PasswordHash };
-                var result = await _userManager.CreateAsync(AplicationUsr, user.PasswordHash);
+                var token = this.GenerateRandomToken();
 
-                var usr = await _userManager.FindByNameAsync(passwordVM.Email);
+                user.ResetPasswordToken = token;
+                _userRepository.Edit(user);
+                _userRepository.Save();
 
-                //    if (result.Result.Succeeded)
-                //  {
+                _emailService.SendPasswordReset(passwordVM.Email, token);
+                return Ok();
+            }
+            //nieco sa pokaslalo
+            return BadRequest();
+        }
 
-                /*if (user == null)
-                {// Don't reveal that the user does not exist
-                    return NotFound();
-                }*/
-                var code = await _userManager.GeneratePasswordResetTokenAsync(usr);
-                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = usr.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    _emailService.SendPasswordReset(passwordVM.Email, callbackUrl.ToString());
+        [HttpPut]
+        [Route("setForgottenPassword")]
+        //    [ValidateModelState, CheckArgumentsForNull]
+        public IActionResult SetForgottenPassword([FromBody] ForgotPasswordSetViewModel passwordVM)
+        {
+            var user = _userRepository.GetSingleByToken(passwordVM.token);
+            System.DateTime now = System.DateTime.Now;
+            if (user != null)
+            {
+                if (now >= user.ResetPasswordDateTime && now <= user.ResetPasswordDateTime.AddMinutes(30))
+                {
+                    user.Password = passwordVM.newPassword;
+                    _userRepository.Edit(user);
+                    _userRepository.Save();
+
                     return Ok();
-         //       }
+                }
+
+                else return BadRequest();
             }
             //nieco sa pokaslalo
             return BadRequest();
@@ -230,6 +245,20 @@ namespace Krosbook.Controllers.Api.v1
             int id;
             int.TryParse(userId, out id);
             return id;
+        }
+
+        private string GenerateRandomToken()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[20];
+            var random = new System.Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new System.String(stringChars);
         }
         #endregion
     }
