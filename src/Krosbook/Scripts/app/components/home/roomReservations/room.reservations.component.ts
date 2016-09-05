@@ -22,8 +22,7 @@ declare var $:any;
 })
 
 export class RoomReservationsComponent implements OnInit  {
-  public reservationType:string;
-  public name:string;
+  public reservationType:string = 'rooms';
   public times = JSON.parse('[]');
   public loggedUser:User = new User();
   public data;
@@ -95,13 +94,7 @@ export class RoomReservationsComponent implements OnInit  {
       },
       error => console.log(error),
       () => {
-        this.route.params.subscribe(params => {
-          this.reservationType = (params['type'] !== undefined) ? params['type'] : "rooms";
-          this.name = (this.reservationType == 'rooms') ? 'miestností' : 'áut';
-          if (this.reservationType == 'rooms')
-            this.loadOfficesData();
-          else this.loadCarsData();
-        });  
+        this.loadOfficesData();
       }
     );
     this.userService.myProfile().subscribe(
@@ -122,15 +115,6 @@ export class RoomReservationsComponent implements OnInit  {
           if(this.officeTypes.indexOf(row.type) == -1)
             this.officeTypes.push(row.type);
         }
-      },
-      error => console.log(error)
-    );
-  }
-
-  loadCarsData() {
-    this.carService.getCars().subscribe(
-      data => {
-        this.data = data.json();
       },
       error => console.log(error)
     );
@@ -164,33 +148,15 @@ export class RoomReservationsComponent implements OnInit  {
   }
 
   filterReservation(element) {
-    if (this.reservationType == 'rooms')
-      this.loadFilteredOfficesData();
-    else this.loadFilteredCarsData();   
-  }
-
-  loadFilteredOfficesData() {
-   this.officeService.filterOffices(this.dateTime, this.length * 60, this.filterOfficeTypes).subscribe(
-     data => { 
-       this.data = data.json();
-       this.week = moment(this.dateTime).week() - moment().week() + 52*(moment(this.dateTime).year() - moment().year());
-        if(moment(this.dateTime).year() - moment().year() !== 0) this.week++;
-       this.updateWeek();
-    },
-     error => console.log(error)
-     );
-  }
-
-  loadFilteredCarsData() {
-    this.carService.filterCars(this.dateTime, this.length * 60).subscribe(
-      data => {
+    this.officeService.filterOffices(this.dateTime, this.length * 60, this.filterOfficeTypes).subscribe(
+      data => { 
         this.data = data.json();
         this.week = moment(this.dateTime).week() - moment().week() + 52*(moment(this.dateTime).year() - moment().year());
         if(moment(this.dateTime).year() - moment().year() !== 0) this.week++;
         this.updateWeek();
       },
-      error => console.log(error)
-    );
+     error => console.log(error)
+     );
   }
 
   moveFor() {

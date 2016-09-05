@@ -52,7 +52,7 @@
 
       <repeater *ngIf="repeating" class="form-group" [repetitionData]="repetitionData"></repeater>
 
-      <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+      <div class="alert alert-danger col-md-12" *ngIf="error">{{ error }}</div>
 
         <div *ngIf="data.roomReservationRepeaterId">
             <div class="btn-group col-md-6 remove-padding">

@@ -39,7 +39,8 @@ export class DetailReservationComponent implements OnInit {
 
     constructor(private reservationService: ReservationService, private userService: UserService) { }
 
-    ngOnInit() {
+    ngOnInit()
+    {
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(
             data => {
                 this.data = data.json();
@@ -67,21 +68,25 @@ export class DetailReservationComponent implements OnInit {
         );
     }
 
-    updateMaxTime() {
+    updateMaxTime()
+    {
         this.maxTime = ((18 - moment(this.data.dateTime).hour()) * 60 - moment(this.data.dateTime).minute()) / 60;
     }
 
-    updateEndTime() {
+    updateEndTime()
+    {
         if (this.canEdit)
             this.endDateTime = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("YYYY-MM-DDTHH:mm");
         else this.endDateTime = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("DD.MM.YYYY HH:mm");
     }
 
-    updateLength() {
+    updateLength()
+    {
         this.data.length = (moment(this.endDateTime).unix() - moment(this.data.dateTime).unix()) / 3600;
     }
 
-    authorizeActions() {
+    authorizeActions()
+    {
         if (this.data.userId == this.loggedUser.id)
             this.canEdit = true;
         else {
@@ -94,15 +99,21 @@ export class DetailReservationComponent implements OnInit {
         }
     }
 
-    editReservation(form) {
+    editReservation(form)
+    {
         if(form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating && this.data.roomReservationRepeaterId == null){
             this.windowClose.emit(true);
             return false;
         }
         this.saving = true;
-        var elementId = (this.reservationType == "rooms") ? this.data.roomId : this.data.carId, dayData;
+        var elementId = this.data.roomId, dayData;
+        
         if(this.data.roomReservationRepeaterId)
             this.data.dateTime = moment(this.data.dateTime).date(moment(this.originDateTime).date()).month(moment(this.originDateTime).month()).year(moment(this.originDateTime).year()).format("YYYY-MM-DDTHH:mm");
+        
+        if(this.repeating)
+            this.checkRepetitionFree();
+
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(
             data => { dayData = data.json() },
             error => console.log(error),
@@ -159,7 +170,8 @@ export class DetailReservationComponent implements OnInit {
         );
     }
 
-    addNewReservationFromRepeating() {
+    addNewReservationFromRepeating()
+    {
         this.reservationService.addReservation(this.reservationType, this.data.roomId, 1, 'Rezervácia', moment(this.data.dateTime).format("DD.MM.YYYY HH:mm"), this.data.length * 60).subscribe(
             data => {          
                 this.reservationDetailId = [data.json().id, this.reservationDetailId[1],this.reservationDetailId[2], 0];  //okno na potvrdenie rezervacie      
@@ -178,9 +190,26 @@ export class DetailReservationComponent implements OnInit {
             return false;
         }
         this.saving = true;
-        this.reservationService.editOneRepeatingReservation(this.data.id, this.reservationDetailId[4]).subscribe(
+        var elementId = this.data.roomId, dayData;
+        this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(
+            data => { dayData = data.json() },
+            error => console.log(error),
             () => {
-                this.addNewReservationFromRepeating();    
+                for (var i = 0; i < dayData.length; i++) {
+                    if (this.data.id == dayData[i].id)
+                        continue;
+                    var date = moment(dayData[i].dateTime), reservationTime = moment(this.data.dateTime).format("HH:mm"), reservationTimeEnd = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("HH:mm"), time = date.format("HH:mm"), endTime = date.add(dayData[i].length, 'minutes').format("HH:mm");
+                    if ((reservationTime >= time && reservationTime < endTime) || (time >= reservationTime && time < reservationTimeEnd)){
+                        this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
+                        this.saving = false;
+                        return false;
+                    }
+                }
+                this.reservationService.editOneRepeatingReservation(this.data.id, this.reservationDetailId[4]).subscribe(
+                    () => {
+                        this.addNewReservationFromRepeating();
+                    }
+                );
             }
         );
     }
@@ -193,14 +222,21 @@ export class DetailReservationComponent implements OnInit {
         );
     }
 
-    deleteReservation() {
+    deleteReservation() 
+    {
         this.reservationService.deleteReservation(this.reservationType, this.data.id).subscribe(
             () => { this.windowClose.emit(true) },
             error => console.log(error)
         );
     }
 
-    closeWindow() {
+    closeWindow()
+    {
         this.windowClose.emit(false);
+    }
+
+    checkRepetitionFree()
+    {
+
     }
 }

@@ -210,10 +210,4 @@ export class TableReservationComponent implements OnInit {
     if ($event) 
         this.updateData();
   }  
-
-
-
-
-
-
 }
