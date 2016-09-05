@@ -142,7 +142,7 @@ export class OrderDetailComponent implements OnInit {
             this.free = true;
             return true;  
           }
-          var reservationTime = moment(from).format("HH:mm"), reservationTimeEnd = moment(to).format("HH:mm"), time = moment(result.dateTimeStart).format("HH:mm"), endTime = moment(result.dateTimeEnd).format("HH:mm");
+          var reservationTime = moment(from).format("YYYY-MM-DDTHH:mm"), reservationTimeEnd = moment(to).format("YYYY-MM-DDTHH:mm"), time = moment(result.dateTimeStart).format("YYYY-MM-DDTHH:mm"), endTime = moment(result.dateTimeEnd).format("YYYY-MM-DDTHH:mm");
           if ((reservationTime >= time && reservationTime < endTime) || (time >= reservationTime && time < reservationTimeEnd))
           {
             this.error = "Nájdený konflitk - "+result.destination + ": " + moment(result.dateTimeStart).format("DD.MM.YY HH:mm") + " - " + moment(result.dateTimeEnd).format("DD.MM.YY HH:mm");
