@@ -22,7 +22,7 @@ namespace Krosbook.Services.Email
             _carRepository = carRepository;
             Car car = _carRepository.GetItem(carReservation.CarId);
 
-            this.title = carReservation.Destination;
+            this.destination = carReservation.Destination;
             this.carName = car.Name + " : " + car.Plate;
             this.startDateTime = carReservation.DateTimeStart.ToString("dd.MM.yyyy HH:mm");
             this.endDateTime = carReservation.DateTimeEnd.ToString("dd.MM.yyyy HH:mm");
@@ -37,8 +37,8 @@ namespace Krosbook.Services.Email
         /// <summary>
         /// Link where user can reset his password.
         /// </summary>
-        [TemplateVariable("title")]
-        public string title { get; }
+        [TemplateVariable("destination")]
+        public string destination { get; }
 
         [TemplateVariable("carName")]
         public string carName { get; set; }
