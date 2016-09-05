@@ -24,14 +24,12 @@ declare var $:any;
 
 export class ReservationsComponent implements OnInit  {
   public reservationType:string = "cars";
-  //public name:string;
   public times = JSON.parse('[]');
   public loggedUser:User = new User();
   public data;
   public usersList = [];
   public isShowedFilterInput:boolean;
   public length = 0.5;
-  public filterOfficeTypes:string = "";
   public maxTime:number = 10.5;
   public dateTime;
   public week:number = 0;
@@ -41,7 +39,6 @@ export class ReservationsComponent implements OnInit  {
   public moveDate = this.now.format("YYYY-MM-DD");
   public tableWidth;
   public showOrderWindow:boolean=false;
-  //public officeTypes = new Array();
 
   @ViewChildren(TableReservationComponent) tableReservationComponent: QueryList<TableReservationComponent>;
 

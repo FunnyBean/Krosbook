@@ -35,6 +35,7 @@ export class DetailReservationComponent implements OnInit {
     public reserveGoToMeeting: boolean = false;
     public repeating:boolean = false;
     public repetitionData:Repetition = new Repetition();
+    public originDateTime:any;
 
     constructor(private reservationService: ReservationService, private userService: UserService) { }
 
@@ -42,6 +43,7 @@ export class DetailReservationComponent implements OnInit {
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(
             data => {
                 this.data = data.json();
+                this.originDateTime = this.data.dateTime;
                 this.reservationDetailId[4] = moment(this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(this.data.dateTime).hours()).minute(moment(this.data.dateTime).minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
                 if(this.data.roomReservationRepeaterId != null){
                     this.reservationService.getRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId).subscribe(
@@ -99,6 +101,8 @@ export class DetailReservationComponent implements OnInit {
         }
         this.saving = true;
         var elementId = (this.reservationType == "rooms") ? this.data.roomId : this.data.carId, dayData;
+        if(this.data.roomReservationRepeaterId)
+            this.data.dateTime = moment(this.data.dateTime).date(moment(this.originDateTime).date()).month(moment(this.originDateTime).month()).year(moment(this.originDateTime).year()).format("YYYY-MM-DDTHH:mm");
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(
             data => { dayData = data.json() },
             error => console.log(error),
@@ -156,7 +160,7 @@ export class DetailReservationComponent implements OnInit {
     }
 
     addNewReservationFromRepeating() {
-        this.reservationService.addReservation(this.reservationType, this.data.roomId, 1, 'Rezervácia', moment(this.data.dateTime).format("DD.MM.YYYY HH:mm"), this.data.length*30).subscribe(
+        this.reservationService.addReservation(this.reservationType, this.data.roomId, 1, 'Rezervácia', moment(this.data.dateTime).format("DD.MM.YYYY HH:mm"), this.data.length * 60).subscribe(
             data => {          
                 this.reservationDetailId = [data.json().id, this.reservationDetailId[1],this.reservationDetailId[2], 0];  //okno na potvrdenie rezervacie      
             },
