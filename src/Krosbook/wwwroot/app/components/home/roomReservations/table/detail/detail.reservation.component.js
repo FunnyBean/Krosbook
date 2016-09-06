@@ -36,18 +36,20 @@ var DetailReservationComponent = (function () {
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(function (data) {
             _this.data = data.json();
             _this.originDateTime = _this.data.dateTime;
-            _this.reservationDetailId[4] = moment(_this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(_this.data.dateTime).hours()).minute(moment(_this.data.dateTime).minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
+            _this.reservationDetailId[4] = moment(_this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(_this.data.dateTime, "YYYY-MM-DDTHH:mm").hours()).minute(moment(_this.data.dateTime, "YYYY-MM-DDTHH:mm").minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
             if (_this.data.roomReservationRepeaterId != null) {
                 _this.reservationService.getRepeatingReservation(_this.reservationType, _this.data.roomReservationRepeaterId).subscribe(function (data) {
                     _this.repetitionData = data.json();
-                    _this.repetitionData.endDate = moment(_this.repetitionData.endDate).format("YYYY-MM-DD");
+                    _this.repetitionData.endDate = moment(_this.repetitionData.endDate, "YYYY-MM-DDTHH:mm:ss").format("YYYY-MM-DD");
                     _this.repetitionData.end = (_this.repetitionData.appearance == null) ? "date" : "appearance";
                     _this.repeating = true;
-                    _this.data.dateTime = moment(_this.reservationDetailId[4], "DD.MM.YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss");
-                    _this.updateEndTime();
+                    if (_this.reservationDetailId[4] != "Invalid date") {
+                        _this.data.dateTime = moment(_this.reservationDetailId[4], "DD.MM.YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm");
+                        _this.updateEndTime();
+                    }
                 });
             }
-            _this.dateTime = moment(_this.data.dateTime).format("DD.MM.YYYY HH:mm");
+            _this.dateTime = moment(_this.data.dateTime, "YYYY-MM-DDTHH:mm").format("DD.MM.YYYY HH:mm");
             _this.data.length = _this.data.length / 60;
             _this.authorizeActions();
             _this.updateMaxTime();
@@ -55,16 +57,16 @@ var DetailReservationComponent = (function () {
         }, function (error) { return console.log(error); });
     };
     DetailReservationComponent.prototype.updateMaxTime = function () {
-        this.maxTime = ((18 - moment(this.data.dateTime).hour()) * 60 - moment(this.data.dateTime).minute()) / 60;
+        this.maxTime = ((18 - moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").hour()) * 60 - moment(this.data.dateTime).minute()) / 60;
     };
     DetailReservationComponent.prototype.updateEndTime = function () {
         if (this.canEdit)
-            this.endDateTime = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("YYYY-MM-DDTHH:mm");
+            this.endDateTime = moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").add(this.data.length * 60, 'minutes').format("YYYY-MM-DDTHH:mm");
         else
-            this.endDateTime = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("DD.MM.YYYY HH:mm");
+            this.endDateTime = moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").add(this.data.length * 60, 'minutes').format("DD.MM.YYYY HH:mm");
     };
     DetailReservationComponent.prototype.updateLength = function () {
-        this.data.length = (moment(this.endDateTime).unix() - moment(this.data.dateTime).unix()) / 3600;
+        this.data.length = (moment(this.endDateTime, "YYYY-MM-DDTHH:mm").unix() - moment(this.data.dateTime).unix()) / 3600;
     };
     DetailReservationComponent.prototype.authorizeActions = function () {
         if (this.data.userId == this.loggedUser.id)
@@ -144,8 +146,11 @@ var DetailReservationComponent = (function () {
                 }
                 if (closeWindow)
                     setTimeout(function () { return _this.windowClose.emit(true); }, 1000);
-                else
-                    setTimeout(function () { return _this.windowClose.emit(true); }, 5000);
+                else {
+                    _this.reservationDetailId[3] = 1;
+                    setTimeout(function () { return _this.updateData.emit(true); }, 1000);
+                    setTimeout(function () { return _this.ngOnInit(); }, 1000);
+                }
                 _this.saving = false;
             });
         });

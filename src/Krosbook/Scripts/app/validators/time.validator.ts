@@ -30,7 +30,7 @@ export class DateValidator{
   constructor(private holidayService:HolidayService){ }
 
   validate(c:FormControl){
-    var date = moment(c.value);
+    var date = moment(c.value, "YYYY-MM-DDTHH:mm");
     if(date.minute() % 30 == 0 && ((date.hour() >= 7 && date.hour() <= 18) || date.hour() == 0)  && date.day() != 6 && date.day() != 0 && !this.holidayService.isHoliday(date.format("DD/MM"), date.format("YYYY")))
       return null;
     else return {validateDate: true}

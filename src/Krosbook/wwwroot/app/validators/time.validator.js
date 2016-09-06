@@ -42,7 +42,7 @@ var DateValidator = (function () {
         this.holidayService = holidayService;
     }
     DateValidator.prototype.validate = function (c) {
-        var date = moment(c.value);
+        var date = moment(c.value, "YYYY-MM-DDTHH:mm");
         if (date.minute() % 30 == 0 && ((date.hour() >= 7 && date.hour() <= 18) || date.hour() == 0) && date.day() != 6 && date.day() != 0 && !this.holidayService.isHoliday(date.format("DD/MM"), date.format("YYYY")))
             return null;
         else

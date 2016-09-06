@@ -47,20 +47,22 @@ export class DetailReservationComponent implements OnInit {
             data => {
                 this.data = data.json();
                 this.originDateTime = this.data.dateTime;
-                this.reservationDetailId[4] = moment(this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(this.data.dateTime).hours()).minute(moment(this.data.dateTime).minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
-                if(this.data.roomReservationRepeaterId != null){
+                this.reservationDetailId[4] = moment(this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").hours()).minute(moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
+                if (this.data.roomReservationRepeaterId != null) {
                     this.reservationService.getRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId).subscribe(
                         data => { 
-                            this.repetitionData = data.json(); 
-                            this.repetitionData.endDate = moment(this.repetitionData.endDate).format("YYYY-MM-DD");
+                            this.repetitionData = data.json();                         
+                            this.repetitionData.endDate = moment(this.repetitionData.endDate, "YYYY-MM-DDTHH:mm:ss").format("YYYY-MM-DD");
                             this.repetitionData.end = (this.repetitionData.appearance == null) ? "date" : "appearance";
                             this.repeating = true;
-                            this.data.dateTime = moment(this.reservationDetailId[4], "DD.MM.YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss");
-                            this.updateEndTime();
+                            if (this.reservationDetailId[4] != "Invalid date") {
+                                this.data.dateTime = moment(this.reservationDetailId[4], "DD.MM.YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm");
+                                this.updateEndTime();
+                            }
                         }
                     )
                 }
-                this.dateTime = moment(this.data.dateTime).format("DD.MM.YYYY HH:mm");
+                this.dateTime = moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").format("DD.MM.YYYY HH:mm");
                 this.data.length = this.data.length / 60;
                 this.authorizeActions();
                 this.updateMaxTime();
@@ -72,19 +74,19 @@ export class DetailReservationComponent implements OnInit {
 
     updateMaxTime()
     {
-        this.maxTime = ((18 - moment(this.data.dateTime).hour()) * 60 - moment(this.data.dateTime).minute()) / 60;
+        this.maxTime = ((18 - moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").hour()) * 60 - moment(this.data.dateTime).minute()) / 60;
     }
 
     updateEndTime()
     {
         if (this.canEdit)
-            this.endDateTime = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("YYYY-MM-DDTHH:mm");
-        else this.endDateTime = moment(this.data.dateTime).add(this.data.length * 60, 'minutes').format("DD.MM.YYYY HH:mm");
+            this.endDateTime = moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").add(this.data.length * 60, 'minutes').format("YYYY-MM-DDTHH:mm");
+        else this.endDateTime = moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").add(this.data.length * 60, 'minutes').format("DD.MM.YYYY HH:mm");
     }
 
     updateLength()
     {
-        this.data.length = (moment(this.endDateTime).unix() - moment(this.data.dateTime).unix()) / 3600;
+        this.data.length = (moment(this.endDateTime, "YYYY-MM-DDTHH:mm").unix() - moment(this.data.dateTime).unix()) / 3600;
     }
 
     authorizeActions()
@@ -180,7 +182,11 @@ export class DetailReservationComponent implements OnInit {
                         }
                         if (closeWindow)
                             setTimeout(() => this.windowClose.emit(true), 1000);
-                        else setTimeout(() => this.windowClose.emit(true), 5000);
+                        else {
+                            this.reservationDetailId[3] = 1;
+                            setTimeout(() => this.updateData.emit(true), 1000);
+                            setTimeout(() => this.ngOnInit(), 1000);
+                        }
                         this.saving = false;
                     }
                 );
