@@ -92,12 +92,12 @@ export class ReservationService {
     return this.http.delete('/api/reservations/'+type+'/repetition/'+repetitionId);
   }
 
-  public checkDupliciteRepeatingReservations(reservationId:number, repetition:string, interval:number, appearance:number, endType:string, endingDate:any)
+  public checkDupliciteRepeatingReservations(reservationId:number, repetation:string, interval:number, appearance:number, endType:string, endingDate:any)
   {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     appearance = (endType == 'appearance') ? appearance : null;
     endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
-    return this.http.post('/api/reservations/rooms/checkForDuplicity/', JSON.stringify({ reservationId, repetition, interval, appearance, endingDate }), {headers});
+    return this.http.post('/api/reservations/rooms/checkForDuplicity/', JSON.stringify({ reservationId, repetation, interval, appearance, endingDate }), {headers});
   }
 }

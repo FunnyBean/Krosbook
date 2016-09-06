@@ -334,7 +334,7 @@ namespace Krosbook.Models.Reservation
 
 
         //overim ci mozno vytvorit opakovanie na dany datum
-        public bool CanMakeReservation(int roomId, DateTime from, int length)
+        public bool CanMakeReservation(int roomId, DateTime from, int length, int reservationId)
         {
             List<RoomReservation> reservations = GetReservationsByRoomInTimeInterval(roomId, from.Date, from.AddHours(23)).ToList();
             var ret = true;
@@ -342,7 +342,7 @@ namespace Krosbook.Models.Reservation
             foreach (var res in reservations)
             {
 
-                if ((from >= res.dateTime && from < res.dateTime.AddMinutes(res.length)) || (res.dateTime >= from && res.dateTime < from.AddMinutes(length)))
+                if (((from >= res.dateTime && from < res.dateTime.AddMinutes(res.length)) || (res.dateTime >= from && res.dateTime < from.AddMinutes(length))) && reservationId != res.Id)
                 {
                     ret = false;
                     break;

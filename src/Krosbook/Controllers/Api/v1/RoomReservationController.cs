@@ -359,7 +359,7 @@ namespace Krosbook.Controllers.Api.v1
                         {
                             repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1);
                         }
-                        if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Friday)
+                        if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Friday && i < (repeaterVm.Appearance - 1) * repeaterVm.Interval - 1)
                         {
                             repeaterVm.EndDate = repeaterVm.EndDate.AddDays(3);
                             i++;
@@ -486,7 +486,7 @@ namespace Krosbook.Controllers.Api.v1
 
 
 
-        [HttpPost("CheckForDuplicity")]
+        [HttpPost("checkForDuplicity")]
         [ValidateModelState, CheckArgumentsForNull]
         public IActionResult CheckForDuplicity([FromBody] RoomReservationRepeaterViewModel repeaterVm)
         {
@@ -507,13 +507,21 @@ namespace Krosbook.Controllers.Api.v1
                             || start.DayOfWeek == DayOfWeek.Wednesday || start.DayOfWeek == DayOfWeek.Thursday)
                         {
                             repeaterVm.Appearance++;
-                            start = start.AddDays(1);
+                            start = start.AddDays(1 * repeaterVm.Interval);
 
                         }
                         if (start.DayOfWeek == DayOfWeek.Friday)
                         {
                             repeaterVm.Appearance++;
                             start = start.AddDays(3);
+                        }
+                        if (start.DayOfWeek == DayOfWeek.Saturday)
+                        {
+                            start = start.AddDays(2);
+                        }
+                        if (start.DayOfWeek == DayOfWeek.Sunday)
+                        {
+                            start = start.AddDays(1);
                         }
                     }
                     if (repeaterVm.Repetation == "weeks")
@@ -547,9 +555,9 @@ namespace Krosbook.Controllers.Api.v1
                     if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Monday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Tuesday
                         || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Wednesday || repeaterVm.EndDate.DayOfWeek == DayOfWeek.Thursday)
                     {
-                        repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1);
+                        repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1 * repeaterVm.Interval);
                         if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                            repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                            repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
                         {
                             DateTime dup = repeaterVm.EndDate;
                             duplicateDates.Add(dup);
@@ -560,7 +568,7 @@ namespace Krosbook.Controllers.Api.v1
                     {
                         repeaterVm.EndDate = repeaterVm.EndDate.AddDays(3);
                         if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                             repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                             repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
                         {
                             DateTime dup = repeaterVm.EndDate;
                             duplicateDates.Add(dup);
@@ -568,13 +576,21 @@ namespace Krosbook.Controllers.Api.v1
 
                         i++;
                     }
+                    if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Saturday)
+                    {
+                        repeaterVm.EndDate = repeaterVm.EndDate.AddDays(2);
+                    }
+                    if (repeaterVm.EndDate.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        repeaterVm.EndDate = repeaterVm.EndDate.AddDays(1);
+                    }
                 }
             }
             if (repeaterVm.Repetation == "weeks")
             {
                 repeaterVm.EndDate = startDate.AddDays((((int)repeaterVm.Appearance * 7) - 1) * repeaterVm.Interval);
                 if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
                 {
                     DateTime dup = repeaterVm.EndDate;
                     duplicateDates.Add(dup);
@@ -585,7 +601,7 @@ namespace Krosbook.Controllers.Api.v1
             {
                 repeaterVm.EndDate = startDate.AddMonths(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
                 if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
                 {
                     DateTime dup = repeaterVm.EndDate;
                     duplicateDates.Add(dup);
@@ -595,7 +611,7 @@ namespace Krosbook.Controllers.Api.v1
             {
                 repeaterVm.EndDate = startDate.AddYears(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
                 if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length) == false)
+                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
                 {
                     DateTime dup = repeaterVm.EndDate;
                     duplicateDates.Add(dup);
@@ -608,6 +624,16 @@ namespace Krosbook.Controllers.Api.v1
 
             if (duplicateDates.Count > 0)
             {
+                foreach (var duplicateDate in duplicateDates)
+                {
+                    RoomReservationChanges changesVm = new RoomReservationChanges();
+                    changesVm.RoomReservationId = repeaterVm.ReservationId;
+                    changesVm.dateTime = duplicateDate;
+                    SaveData(() =>
+                    {
+                        _reservationChangesRepository.Add(changesVm);
+                    });
+                }
                 var duplicates = _mapper.Map<List<DateTime>>(duplicateDates);
                 this.Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return this.Json(_mapper.Map<List<DateTime>>(duplicates));

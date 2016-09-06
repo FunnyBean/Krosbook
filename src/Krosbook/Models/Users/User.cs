@@ -91,7 +91,7 @@ namespace Krosbook.Models.Users
 
         public string ResetPasswordToken { get; set; }
 
-        public DateTime ResetPasswordDateTime { get; set; } = DateTime.Now;
+        public DateTime ResetPasswordDateTime { get; set; }
 
         /// <summary>
         /// Gets or sets the roles.

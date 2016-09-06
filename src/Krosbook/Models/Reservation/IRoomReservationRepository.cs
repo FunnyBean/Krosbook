@@ -15,6 +15,6 @@ namespace Krosbook.Models.Reservation
 
         IQueryable<RoomReservation> GetReservationsByRoomInTimeInterval(int roomId, DateTime from, DateTime to);
 
-        bool CanMakeReservation(int roomId, DateTime from, int length);
+        bool CanMakeReservation(int roomId, DateTime from, int length, int reservationId);
     }
 }

@@ -86,7 +86,7 @@ export class UserService {
   public sendPasswordResetEmail(email:string){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('/api/authentification/forgottenPassword', JSON.stringify(email), {headers});
+    return this.http.post('/api/authentification/forgottenPassword', JSON.stringify({ email }), {headers});
   }
 
   public savePasswordReset(token:string, newPassword:string){

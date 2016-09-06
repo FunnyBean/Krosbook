@@ -22,6 +22,7 @@ var DetailReservationComponent = (function () {
         this.reservationService = reservationService;
         this.userService = userService;
         this.windowClose = new core_1.EventEmitter();
+        this.updateData = new core_1.EventEmitter();
         this.saving = false;
         this.data = new reservation_model_1.Reservation();
         this.canEdit = false;
@@ -84,12 +85,29 @@ var DetailReservationComponent = (function () {
             return false;
         }
         this.saving = true;
-        var elementId = this.data.roomId, dayData;
         if (this.data.roomReservationRepeaterId)
             this.data.dateTime = moment(this.data.dateTime).date(moment(this.originDateTime).date()).month(moment(this.originDateTime).month()).year(moment(this.originDateTime).year()).format("YYYY-MM-DDTHH:mm");
-        if (this.repeating)
-            if (!this.checkRepetitionFree())
-                return false;
+        if (this.repeating) {
+            this.checkRepetitionFree().subscribe(function (data) {
+                if (!data)
+                    _this.saveData(true);
+                else {
+                    var errors = data.json();
+                    _this.error = "Na tieto dátumy nemožno vytvoriť rezerváciu: ";
+                    for (var _i = 0, errors_1 = errors; _i < errors_1.length; _i++) {
+                        var error = errors_1[_i];
+                        _this.error += moment(error).format("DD.MM.YY HH:mm") + ", ";
+                    }
+                    _this.saveData(false);
+                }
+            });
+        }
+        else
+            this.saveData(true);
+    };
+    DetailReservationComponent.prototype.saveData = function (closeWindow) {
+        var _this = this;
+        var elementId = this.data.roomId, dayData;
         this.reservationService.getReservations(this.reservationType, elementId, moment(this.data.dateTime).format("DD.MM.YYYY"), moment(this.data.dateTime).add(1, 'days').format("DD.MM.YYYY")).subscribe(function (data) { dayData = data.json(); }, function (error) { return console.log(error); }, function () {
             for (var i = 0; i < dayData.length; i++) {
                 if (_this.data.id == dayData[i].id)
@@ -124,7 +142,10 @@ var DetailReservationComponent = (function () {
                         _this.data.roomReservationRepeaterId = null;
                     }, function (error) { _this.saving = false; });
                 }
-                setTimeout(function () { return _this.windowClose.emit(true); }, 1000);
+                if (closeWindow)
+                    setTimeout(function () { return _this.windowClose.emit(true); }, 1000);
+                else
+                    setTimeout(function () { return _this.updateData.emit(true); }, 1000);
                 _this.saving = false;
             });
         });
@@ -175,14 +196,12 @@ var DetailReservationComponent = (function () {
     };
     DetailReservationComponent.prototype.checkRepetitionFree = function () {
         var _this = this;
-        return new Observable_1.Observable(function (observer) {
-            _this.reservationService.checkDupliciteRepeatingReservations(_this.data.id, _this.repetitionData.repetation, _this.repetitionData.interval, _this.repetitionData.appearance).subscribe(function (data) {
-                observer.next(true);
+        return Observable_1.Observable.create(function (observer) {
+            _this.reservationService.checkDupliciteRepeatingReservations(_this.data.id, _this.repetitionData.repetation, _this.repetitionData.interval, _this.repetitionData.appearance, _this.repetitionData.end, _this.repetitionData.endDate).subscribe(function (data) {
+                observer.next();
                 observer.complete();
             }, function (error) {
-                _this.error = "Zvolený čas zasahuje do rezervácie iného používateľa.";
-                _this.saving = false;
-                observer.next(false);
+                observer.next(error);
                 observer.complete();
             });
         });
@@ -207,6 +226,10 @@ var DetailReservationComponent = (function () {
         core_1.Output(), 
         __metadata('design:type', Object)
     ], DetailReservationComponent.prototype, "windowClose", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], DetailReservationComponent.prototype, "updateData", void 0);
     DetailReservationComponent = __decorate([
         core_1.Component({
             selector: 'reservation-detail',

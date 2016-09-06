@@ -24,12 +24,13 @@ export class PasswordSetComponent
 
     onSubmit()
     {
-        if(this.password[0] == this.password[1])
-        {
+        this.error = "";
+        if (this.password[0] == this.password[1]) {
             this.userService.savePasswordReset(this.token, this.password[0]).subscribe(
-                data => { this.success = "Heslo bolo úspešne zmenené." },
-                error => { this.error = "Heslo sa nepodarilo upraivť." }
+                data => { this.success = "Heslo bolo úspešne zmenené."; this.password = ['', '']; },
+                error => { this.error = "Heslo sa nepodarilo upraviť. Nepltaný overovací link." }
             )
         }
+        else this.error = "Heslá sa nezhodujú.";
     }
 }

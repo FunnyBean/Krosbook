@@ -140,8 +140,6 @@ namespace Krosbook.Models.Users
 
         public void EditWithoutRoles(User user)
         {
-            var userRoles = user.Roles;
-
             user.Roles = null;
             base.Edit(user);
         }

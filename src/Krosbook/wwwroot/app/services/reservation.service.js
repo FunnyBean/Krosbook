@@ -82,10 +82,12 @@ var ReservationService = (function () {
     ReservationService.prototype.deleteRepeatingReservation = function (type, repetitionId) {
         return this.http.delete('/api/reservations/' + type + '/repetition/' + repetitionId);
     };
-    ReservationService.prototype.checkDupliciteRepeatingReservations = function (reservationId, repetition, interval, appearance) {
+    ReservationService.prototype.checkDupliciteRepeatingReservations = function (reservationId, repetation, interval, appearance, endType, endingDate) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('/api/reservations/rooms/checkForDuplicity/', JSON.stringify({ reservationId: reservationId, repetition: repetition, interval: interval, appearance: appearance }), { headers: headers });
+        appearance = (endType == 'appearance') ? appearance : null;
+        endingDate = (endType == 'date') ? moment(endingDate).format("DD.MM.YYYY HH:mm:ss") : null;
+        return this.http.post('/api/reservations/rooms/checkForDuplicity/', JSON.stringify({ reservationId: reservationId, repetation: repetation, interval: interval, appearance: appearance, endingDate: endingDate }), { headers: headers });
     };
     ReservationService = __decorate([
         core_1.Injectable(), 

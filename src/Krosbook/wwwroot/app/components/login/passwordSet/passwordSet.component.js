@@ -24,9 +24,12 @@ var PasswordSetComponent = (function () {
     }
     PasswordSetComponent.prototype.onSubmit = function () {
         var _this = this;
+        this.error = "";
         if (this.password[0] == this.password[1]) {
-            this.userService.savePasswordReset(this.token, this.password[0]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; }, function (error) { _this.error = "Heslo sa nepodarilo upraivť."; });
+            this.userService.savePasswordReset(this.token, this.password[0]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; _this.password = ['', '']; }, function (error) { _this.error = "Heslo sa nepodarilo upraviť. Nepltaný overovací link."; });
         }
+        else
+            this.error = "Heslá sa nezhodujú.";
     };
     PasswordSetComponent = __decorate([
         core_1.Component({
