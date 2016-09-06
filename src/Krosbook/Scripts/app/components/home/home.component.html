@@ -22,11 +22,11 @@
     <div class="row row-eq-height col-md-12" id="contentWindow">
 
         <div class="col-md-2 col-xs-2 col-xs-center" id="left_menu">
-            <a class="col-md-12 col-xs-12 hvr-bounce-to-right">
+            <a class="col-md-12 col-xs-12 hvr-bounce-to-right" [ngStyle]="{'display': 'none'}">
                 <img src="../images/icon_news.png" class="menu_icon">
                 <span>Novinky</span>
             </a>
-            <a class="col-md-12 col-xs-12 hvr-bounce-to-right">
+            <a class="col-md-12 col-xs-12 hvr-bounce-to-right" [ngStyle]="{'display': 'none'}">
                 <img src="../images/icon_kalendar.png " class="menu_icon">
                 <span>Kalendár</span>
             </a>
@@ -34,7 +34,7 @@
               <img src="../images/icon_reservation.png" class="menu_icon">
               <span>Rezervácie</span>
             </a>-->
-            <a [routerLink]="['reservations', 'rooms']" class="col-md-12 col-xs-12 hvr-bounce-to-right">
+            <a [routerLink]="['reservations', 'rooms']" class="col-md-12 col-xs-12 hvr-bounce-to-right" >
                 <img src="../images/icon_reservation.png" class="menu_icon">
                 <span>Rezervácia miestností</span>
             </a>
@@ -42,11 +42,11 @@
                 <img src="../images/icon_reservation.png" class="menu_icon">
                 <span>Rezervácia áut</span>
             </a>
-            <a class="col-md-12 col-xs-12 hvr-bounce-to-right">
+            <a class="col-md-12 col-xs-12 hvr-bounce-to-right" [ngStyle]="{'display': 'none'}">
                 <img src="../images/icon_zabava.png" class="menu_icon">
                 <span>Zábava</span>
             </a>
-            <a class="col-md-12 col-xs-12 hvr-bounce-to-right">
+            <a class="col-md-12 col-xs-12 hvr-bounce-to-right" [ngStyle]="{'display': 'none'}">
                 <img src="../images/icon_kros.png" class="menu_icon">
                 <span>KROS</span>
             </a>

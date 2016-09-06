@@ -7,6 +7,8 @@ import {CarService} from '../../../../services/car.service';
 import {UserService} from '../../../../services/user.service';
 import {Car} from '../../../../models/car.model';
 import * as moment from 'moment';
+import {FormDataService} from '../../../../services/formData.service';
+
 
 declare var $:any;
 
@@ -28,10 +30,15 @@ export class OrderDetailComponent implements OnInit {
   private reservationId:number = undefined;
   private isOperator:boolean = false;
   private free:boolean = true;
- 
-  constructor(private route:ActivatedRoute, private router:Router, private carOrderService:CarOrderService, private carService:CarService, private userService:UserService) { }
+  public inputDate:any;
+  constructor(public formDataService:FormDataService, private route:ActivatedRoute, private router:Router, private carOrderService:CarOrderService, private carService:CarService, private userService:UserService) { }
 
-   ngOnInit(){
+  ngOnInit(){
+    this.inputDate = this.formDataService.loadData();
+    if(this.inputDate[0] !== undefined && this.reservationId === undefined){
+      this.reservationData.dateTimeStart = this.inputDate[0];
+      this.reservationData.dateTimeEnd = this.inputDate[1];
+    }
     this.route.params.subscribe(params => {
       this.reservationId = params['id'];
       this.carService.getCars().subscribe(
@@ -45,6 +52,7 @@ export class OrderDetailComponent implements OnInit {
         error => console.log(error)
       );
     });
+
     $("li.active").removeClass("active");
     $("#liNewReservation").addClass("active"); 
   }

@@ -11,17 +11,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var reservation_service_1 = require('../../../../../services/reservation.service');
 var holiday_service_1 = require('../../../../../services/holiday.service');
+var router_1 = require('@angular/router');
 var moment = require('moment');
+var formData_service_1 = require('../../../../../services/formData.service');
 var TableReservationComponent = (function () {
-    function TableReservationComponent(reservationService, holidayService) {
+    function TableReservationComponent(formDataService, router, reservationService, holidayService) {
+        this.formDataService = formDataService;
+        this.router = router;
         this.reservationService = reservationService;
         this.holidayService = holidayService;
         this.tableData = [];
-        this.detailReset = false;
-        this.reservationDetailId = [0, 0, 0, 0];
-        this.reservationInProgress = false;
     }
     TableReservationComponent.prototype.ngOnInit = function () {
+        this.formDataService.saveData(undefined, undefined);
         this.updateData();
         this.data.color = (this.data.color === undefined) ? '#337ab7' : this.data.color;
         var thisDocument = this;
@@ -71,6 +73,49 @@ var TableReservationComponent = (function () {
         //replacing old data with new table data
         $(".records" + this.data.id + " > tr").remove();
         $(".records" + this.data.id).prepend(table);
+        $(".records" + this.data.id + " td.empty").on("mouseenter", function (event) {
+            col = $(this).parent().children().index($(this));
+            row = $(this).parent().parent().children().index($(this).parent()) - 1;
+        });
+        $(".records" + this.data.id + " td.empty")
+            .on("mousedown", function (event) {
+            if (event.which != 1)
+                return false; //does not work for other than left button
+            var element = $(this);
+            isMouseDown = true;
+            $(this).addClass("selected");
+            fromRow = row;
+            fromCol = col;
+            beforeRow = row;
+            var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left + element.width() - 294).toString() + 'px';
+            return false;
+        })
+            .on("mouseover", function () {
+            if (isMouseDown && col == fromCol && (row - 1) == beforeRow && !($(this).hasClass("selected"))) {
+                $(this).addClass("selected");
+                beforeRow = row;
+                length++;
+            }
+        });
+        $(document).on("mouseup", function () {
+            if (isMouseDown) {
+                thisDocument.makeReservation(fromRow, fromCol, length);
+                isMouseDown = false;
+                length = 1;
+            }
+        });
+    };
+    TableReservationComponent.prototype.makeReservation = function (fromRow, fromCol, length) {
+        var date, hours = 7, minutes = 0;
+        if (fromRow % 2 != 0) {
+            fromRow -= 1;
+            minutes = 30;
+        }
+        for (var i = 0; i < fromRow / 2; i++)
+            hours++;
+        date = moment().add(this.week, 'weeks').weekday(fromCol).hour(hours).minute(minutes).format("YYYY-MM-DDTHH:mm");
+        this.formDataService.saveData(date, moment(date).add(length * 30, 'minutes').format("YYYY-MM-DDTHH:mm"));
+        this.router.navigate(['/home/reservations/cars/newreservation/']);
     };
     TableReservationComponent.prototype.updateData = function (weeks) {
         var _this = this;
@@ -188,7 +233,7 @@ var TableReservationComponent = (function () {
             templateUrl: 'app/components/home/carReservations/reservations/table/table.reservations.component.html',
             providers: [reservation_service_1.ReservationService, holiday_service_1.HolidayService]
         }), 
-        __metadata('design:paramtypes', [reservation_service_1.ReservationService, holiday_service_1.HolidayService])
+        __metadata('design:paramtypes', [formData_service_1.FormDataService, router_1.Router, reservation_service_1.ReservationService, holiday_service_1.HolidayService])
     ], TableReservationComponent);
     return TableReservationComponent;
 }());

@@ -51,7 +51,7 @@
         </tr>-->
       </thead>
       <div id="contentHolder" style="display: none"></div> <!--tbody stays on the same position when thead is changes to fixed -->
-      <tbody *ngIf="!data && isShowedFilterInput"><tr class="warning"><td colspan="6">Neboli nájdené žiadne {{ name }} vyhivujúce zadaniu filtra.</td></tr></tbody>
+      <tbody *ngIf="!data && isShowedFilterInput"><tr class="warning"><td colspan="6">Neboli nájdené žiadne {{ name }} vyhovujúce zadaniu filtra.</td></tr></tbody>
       <tbody *ngFor="let row of data" #TableReservationComponent class="records{{row.id}} reservation" [data]="row" [reservationType]="reservationType" [times]="times" [usersList]="usersList" [loggedUser]="loggedUser" [week]="week" [filterActive]="isShowedFilterInput" [filterDateTime]="dateTime" [filterTimeLength]="length">
       </tbody>
   </table>
