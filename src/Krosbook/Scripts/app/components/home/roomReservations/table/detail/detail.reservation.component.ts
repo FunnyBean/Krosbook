@@ -180,7 +180,7 @@ export class DetailReservationComponent implements OnInit {
                         }
                         if (closeWindow)
                             setTimeout(() => this.windowClose.emit(true), 1000);
-                        else setTimeout(() => this.updateData.emit(true), 1000);
+                        else setTimeout(() => this.windowClose.emit(true), 5000);
                         this.saving = false;
                     }
                 );

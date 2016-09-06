@@ -588,33 +588,41 @@ namespace Krosbook.Controllers.Api.v1
             }
             if (repeaterVm.Repetation == "weeks")
             {
-                repeaterVm.EndDate = startDate.AddDays((((int)repeaterVm.Appearance * 7) - 1) * repeaterVm.Interval);
-                if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
+                for (int i = 1; i < (repeaterVm.Appearance - 1) * repeaterVm.Interval; i++)
                 {
-                    DateTime dup = repeaterVm.EndDate;
-                    duplicateDates.Add(dup);
+                    repeaterVm.EndDate = startDate.AddDays((i * 7) * repeaterVm.Interval);
+                    if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                        repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
+                    {
+                        DateTime dup = repeaterVm.EndDate;
+                        duplicateDates.Add(dup);
+                    }
                 }
-
             }
             if (repeaterVm.Repetation == "months")
             {
-                repeaterVm.EndDate = startDate.AddMonths(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
-                if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
+                for (int i = 1; i < (repeaterVm.Appearance - 1) * repeaterVm.Interval; i++)
                 {
-                    DateTime dup = repeaterVm.EndDate;
-                    duplicateDates.Add(dup);
+                    repeaterVm.EndDate = startDate.AddMonths(i * repeaterVm.Interval);
+                    if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                        repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
+                    {
+                        DateTime dup = repeaterVm.EndDate;
+                        duplicateDates.Add(dup);
+                    }
                 }
             }
             if (repeaterVm.Repetation == "years")
             {
-                repeaterVm.EndDate = startDate.AddYears(((int)repeaterVm.Appearance - 1) * repeaterVm.Interval);
-                if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
-                    repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
+                for (int i = 1; i < (repeaterVm.Appearance - 1) * repeaterVm.Interval; i++)
                 {
-                    DateTime dup = repeaterVm.EndDate;
-                    duplicateDates.Add(dup);
+                    repeaterVm.EndDate = startDate.AddYears(i * repeaterVm.Interval);
+                    if (_reservationRepository.CanMakeReservation(_reservationRepository.GetItem(repeaterVm.ReservationId).RoomId,
+                        repeaterVm.EndDate, _reservationRepository.GetItem(repeaterVm.ReservationId).length, repeaterVm.ReservationId) == false)
+                    {
+                        DateTime dup = repeaterVm.EndDate;
+                        duplicateDates.Add(dup);
+                    }
                 }
             }
 
@@ -626,13 +634,18 @@ namespace Krosbook.Controllers.Api.v1
             {
                 foreach (var duplicateDate in duplicateDates)
                 {
-                    RoomReservationChanges changesVm = new RoomReservationChanges();
-                    changesVm.RoomReservationId = repeaterVm.ReservationId;
-                    changesVm.dateTime = duplicateDate;
-                    SaveData(() =>
+                    var test = _reservationChangesRepository.GetChangesByReservationAndDate(repeaterVm.ReservationId, duplicateDate);
+                    if (test == null)
                     {
-                        _reservationChangesRepository.Add(changesVm);
-                    });
+                        RoomReservationChanges changesVm = new RoomReservationChanges();
+                        changesVm.RoomReservationId = repeaterVm.ReservationId;
+                        changesVm.dateTime = duplicateDate;
+                        SaveData(() =>
+                        {
+                            _reservationChangesRepository.Add(changesVm);
+                        });
+                    }
+                    else continue;
                 }
                 var duplicates = _mapper.Map<List<DateTime>>(duplicateDates);
                 this.Response.StatusCode = (int)HttpStatusCode.Conflict;

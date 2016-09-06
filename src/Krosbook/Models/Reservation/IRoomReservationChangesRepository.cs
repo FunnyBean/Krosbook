@@ -9,5 +9,7 @@ namespace Krosbook.Models.Reservation
     public interface IRoomReservationChangesRepository : IRepository<RoomReservationChanges>
     {
         IQueryable<RoomReservationChanges> GetChangesByReservation(int reservationId);
+
+        RoomReservationChanges GetChangesByReservationAndDate(int reservationId, DateTime date);
     }
 }

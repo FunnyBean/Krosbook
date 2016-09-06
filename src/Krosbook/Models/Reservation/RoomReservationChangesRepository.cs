@@ -16,5 +16,10 @@ namespace Krosbook.Models.Reservation
         {
             return this.Get(x=>x.RoomReservationId==reservationId);
         }
+
+        public RoomReservationChanges GetChangesByReservationAndDate(int reservationId, DateTime date)
+        {
+            return this.GetSingle(x => x.RoomReservationId == reservationId && x.dateTime == date);
+        }
     }
 }

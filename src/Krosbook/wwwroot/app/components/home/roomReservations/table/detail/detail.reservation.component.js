@@ -145,7 +145,7 @@ var DetailReservationComponent = (function () {
                 if (closeWindow)
                     setTimeout(function () { return _this.windowClose.emit(true); }, 1000);
                 else
-                    setTimeout(function () { return _this.updateData.emit(true); }, 1000);
+                    setTimeout(function () { return _this.windowClose.emit(true); }, 5000);
                 _this.saving = false;
             });
         });
