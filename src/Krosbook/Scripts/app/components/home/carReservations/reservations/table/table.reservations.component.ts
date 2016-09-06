@@ -1,8 +1,10 @@
 import {Component, Input, OnInit, ViewChild, Inject} from '@angular/core';
 import {ReservationService} from '../../../../../services/reservation.service';
 import {HolidayService} from '../../../../../services/holiday.service';
+import {ROUTER_DIRECTIVES, Router} from '@angular/router';
 import * as moment from 'moment';
 
+import {FormDataService} from '../../../../../services/formData.service';
 declare var $:any;
 
 
@@ -25,14 +27,11 @@ export class TableReservationComponent implements OnInit {
   
   public tableData = [];
   public reservationsData;
-  public detailReset:boolean = false;
-  public reservationDetailId:Array<any> = [0, 0, 0, 0];
 
-  private reservationInProgress:boolean = false;
-
-  constructor(private reservationService:ReservationService, private holidayService:HolidayService) { }
+  constructor(private formDataService:FormDataService, private router:Router,private reservationService:ReservationService, private holidayService:HolidayService) { }
 
   ngOnInit() {  
+    this.formDataService.saveData(undefined, undefined);
     this.updateData();
     this.data.color = (this.data.color === undefined) ? '#337ab7' : this.data.color;
     var thisDocument = this;
@@ -80,7 +79,54 @@ export class TableReservationComponent implements OnInit {
     //replacing old data with new table data
     $(".records"+this.data.id+" > tr").remove();
     $(".records"+this.data.id).prepend(table);
+
+    $(".records"+this.data.id+" td.empty").on("mouseenter", function (event) {
+      col = $(this).parent().children().index($(this));
+      row = $(this).parent().parent().children().index($(this).parent()) - 1;
+    });
+
+    $(".records"+this.data.id+" td.empty")
+      .on("mousedown", function (event) {
+        if (event.which != 1) return false; //does not work for other than left button
+        var element = $(this);
+        isMouseDown = true;
+        $(this).addClass("selected");
+        fromRow = row;
+        fromCol = col;
+        beforeRow = row;    
+        var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left  + element.width() - 294).toString() + 'px';         
+        return false;
+      })
+      .on("mouseover", function () {
+        if (isMouseDown && col == fromCol && (row - 1) == beforeRow && !($(this).hasClass("selected"))){
+          $(this).addClass("selected");
+          beforeRow = row;
+          length++;
+        }
+      });
+
+    $(document).on("mouseup", function () {
+      if(isMouseDown) {                 
+        thisDocument.makeReservation(fromRow, fromCol, length);         
+        isMouseDown = false;
+        length = 1;
+      }
+    });
   }
+
+   makeReservation(fromRow:number, fromCol:number, length:number) {
+    var date, hours = 7, minutes = 0;
+    if(fromRow % 2 != 0){
+      fromRow -= 1;
+      minutes = 30;
+    }
+    for(var i = 0; i < fromRow / 2; i++)
+      hours++;
+    date = moment().add(this.week, 'weeks').weekday(fromCol).hour(hours).minute(minutes).format("YYYY-MM-DDTHH:mm");
+    this.formDataService.saveData(date, moment(date).add(length * 30, 'minutes').format("YYYY-MM-DDTHH:mm"));
+    this.router.navigate(['/home/reservations/cars/newreservation/']);
+  }
+
 
   updateData(weeks = this.week) {
     this.reservationService.getReservations(this.reservationType, this.data.id, moment().add(weeks, 'weeks').weekday(1).format("DD.MM.YYYY"), moment().add(weeks, 'weeks').weekday(6).format("DD.MM.YYYY")).subscribe(

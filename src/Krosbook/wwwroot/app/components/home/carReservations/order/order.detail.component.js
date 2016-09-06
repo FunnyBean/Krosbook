@@ -16,8 +16,10 @@ var carReservation_service_1 = require('../../../../services/carReservation.serv
 var car_service_1 = require('../../../../services/car.service');
 var user_service_1 = require('../../../../services/user.service');
 var moment = require('moment');
+var formData_service_1 = require('../../../../services/formData.service');
 var OrderDetailComponent = (function () {
-    function OrderDetailComponent(route, router, carOrderService, carService, userService) {
+    function OrderDetailComponent(formDataService, route, router, carOrderService, carService, userService) {
+        this.formDataService = formDataService;
         this.route = route;
         this.router = router;
         this.carOrderService = carOrderService;
@@ -32,6 +34,11 @@ var OrderDetailComponent = (function () {
     }
     OrderDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.inputDate = this.formDataService.loadData();
+        if (this.inputDate[0] !== undefined && this.reservationId === undefined) {
+            this.reservationData.dateTimeStart = this.inputDate[0];
+            this.reservationData.dateTimeEnd = this.inputDate[1];
+        }
         this.route.params.subscribe(function (params) {
             _this.reservationId = params['id'];
             _this.carService.getCars().subscribe(function (data) {
@@ -143,7 +150,7 @@ var OrderDetailComponent = (function () {
             providers: [carReservation_service_1.CarOrderService],
             directives: [carTime_validator_1.DateValidator, carTime_validator_1.DatesValidator]
         }), 
-        __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, carReservation_service_1.CarOrderService, car_service_1.CarService, user_service_1.UserService])
+        __metadata('design:paramtypes', [formData_service_1.FormDataService, router_1.ActivatedRoute, router_1.Router, carReservation_service_1.CarOrderService, car_service_1.CarService, user_service_1.UserService])
     ], OrderDetailComponent);
     return OrderDetailComponent;
 }());
