@@ -12,12 +12,13 @@ var core_1 = require('@angular/core');
 var FormDataService = (function () {
     function FormDataService() {
     }
-    FormDataService.prototype.saveData = function (startTime, endTime) {
+    FormDataService.prototype.saveData = function (startTime, endTime, carId) {
         this.startTime = startTime;
         this.endTime = endTime;
+        this.carId = carId;
     };
     FormDataService.prototype.loadData = function () {
-        return [this.startTime, this.endTime];
+        return [this.startTime, this.endTime, this.carId];
     };
     FormDataService = __decorate([
         core_1.Injectable(), 

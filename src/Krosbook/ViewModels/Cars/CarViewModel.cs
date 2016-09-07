@@ -21,6 +21,9 @@ namespace Krosbook.ViewModels.Cars
         [MaxLength(100)]
         public string Name { get; set; }
 
+        [MaxLength(7)]
+        public string Color { get; set; } 
+
 
         public override string ToString()
         {

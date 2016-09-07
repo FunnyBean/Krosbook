@@ -4,10 +4,12 @@ import {CarService} from '../../../../services/car.service';
 import {CarReservation} from '../../../../models/carReservation.model';
 import {Router} from '@angular/router';
 import * as moment from 'moment';
-declare var $:any;
+
+declare var $: any;
+
 @Component({
     templateUrl: 'app/components/home/carReservations/myReservations/myReservations.component.html',
-    providers: [CarOrderService]
+    providers: [CarOrderService],
 })
 
 export class MyReservationsComponent
@@ -26,13 +28,11 @@ export class MyReservationsComponent
             error => console.log(error),
             () => { this.updateReservationsData() }
         )
-        
     }
 
     ngOnInit(){  
-    $("li.active").removeClass("active");
-    $("#liMyreservation").addClass("active");   
-    
+        $("li.active").removeClass("active");
+        $("#liMyreservation").addClass("active");      
     }
 
     updateReservationsData()
@@ -46,8 +46,7 @@ export class MyReservationsComponent
     }
 
     editReservation(id)
-    {
-        
+    {      
         this.router.navigate(['/home/reservations/cars/editreservation/', id]);
     }
 

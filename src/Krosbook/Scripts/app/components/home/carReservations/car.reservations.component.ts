@@ -1,25 +1,27 @@
-/**
- * Created by Ondrej on 25.07.2016.
- */
 import {Component, OnInit, AfterViewInit, ViewChildren, QueryList} from '@angular/core';
 import {ActivatedRoute,ROUTER_DIRECTIVES,Router} from '@angular/router';
 
 import {User} from '../../../models/user.admin.model';
 import {UserService} from '../../../services/user.service';
 
+import {MyReservationsComponent} from './myReservations/myReservations.component';
+import {OrderDetailComponent} from './order/order.detail.component';
+import {OrdersManagerComponent} from './orders/orders.manager.component';
+import {ReservationsComponent} from './reservations/reservations.component';
+
 declare var $:any;
 
 @Component({
-  templateUrl: 'app/components/home/carReservations/car.reservations.component.html',
-  directives: [ROUTER_DIRECTIVES],   
-  styles: ['.table-arrow {top: 0px;} #filter{background-color: #f2f2f2; padding: 10px;}']
-
+    templateUrl: 'app/components/home/carReservations/car.reservations.component.html',
+    styles: ['.table-arrow {top: 0px;} #filter{background-color: #f2f2f2; padding: 10px;}'],
+    directives: [ROUTER_DIRECTIVES],   
+    precompile: [OrderDetailComponent, OrdersManagerComponent, ReservationsComponent, MyReservationsComponent]
 })
 
 export class CarsReservationsComponent  {
 
-  public prevadzkar:boolean=false;
-  public userData:User=new User();
+  private prevadzkar:boolean = false;
+  private userData:User = new User();
 
   constructor(private router:Router, private userService:UserService) {}
 
@@ -34,7 +36,8 @@ export class CarsReservationsComponent  {
         }
       },
       error =>{console.log(error)}
-    )      
+    )  
+        
     $("li.active").removeClass("active");
     $("#liOrders").addClass("active");  
 

@@ -38,9 +38,12 @@ namespace Krosbook.Models.Cars
         /// <value>
         /// The name.
         /// </value>
-        [MaxLength(20)]
+        [MaxLength(100)]
         [Required()]
         public string Name { get; set; }
+
+        [MaxLength(7)]
+        public string Color { get; set; }
 
         /// <summary>
         /// Gets or sets the Users.

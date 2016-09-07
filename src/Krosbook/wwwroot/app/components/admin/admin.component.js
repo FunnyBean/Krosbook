@@ -10,6 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
+var cars_admin_component_1 = require('./cars/cars.admin.component');
+var equipment_admin_component_1 = require('./equipment/equipment.admin.component');
+var offices_admin_component_1 = require('./offices/offices.admin.component');
+var roles_admin_component_1 = require('./roles/roles.admin.component');
+var users_admin_component_1 = require('./users/users.admin.component');
 var AdminComponent = (function () {
     function AdminComponent() {
         this.contentHeight = (window.innerHeight - 78).toString() + 'px';
@@ -32,7 +37,8 @@ var AdminComponent = (function () {
             selector: 'admin',
             templateUrl: 'app/components/admin/admin.component.html',
             styleUrls: ['app/components/admin/admin.component.css'],
-            directives: [router_1.ROUTER_DIRECTIVES]
+            directives: [router_1.ROUTER_DIRECTIVES],
+            precompile: [cars_admin_component_1.CarsAdminComponent, equipment_admin_component_1.EquipmentAdminComponent, offices_admin_component_1.OfficesAdminComponent, roles_admin_component_1.RolesAdminComponent, users_admin_component_1.UsersAdminComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], AdminComponent);

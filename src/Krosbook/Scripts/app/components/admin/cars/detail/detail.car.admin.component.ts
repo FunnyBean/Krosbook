@@ -39,7 +39,8 @@ export class DetailCarAdminComponent {
     this.saving = true;
     let plate = this.carData.plate.toUpperCase();
     let name = this.carData.name;
-    this.carService.addCar(JSON.stringify({plate, name})).subscribe(
+    let color = this.carData.color;
+    this.carService.addCar(JSON.stringify({plate, name, color})).subscribe(
       data => {
       },
       error => {
@@ -62,8 +63,8 @@ export class DetailCarAdminComponent {
     let id = this.carData.id
     let plate = this.carData.plate.toUpperCase();
     let name = this.carData.name;
-
-    this.carService.editCar(id, JSON.stringify({id, name, plate})).subscribe(
+    let color = this.carData.color;
+    this.carService.editCar(id, JSON.stringify({id, name, plate, color})).subscribe(
       data => {
       },
       error => {

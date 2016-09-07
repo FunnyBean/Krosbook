@@ -4,18 +4,20 @@ import { Subject }    from 'rxjs/Subject';
 
 @Injectable()
 export class FormDataService { 
-  public startTime:any;  
-  public endTime:any;
+  private startTime:any;  
+  private endTime: any;
+  private carId: number;
   
   constructor() { }  
 
-  public saveData(startTime:any,endTime:any){
+  public saveData(startTime:any,endTime:any, carId:number){
     this.startTime = startTime;
     this.endTime = endTime;
+    this.carId = carId;
   }
 
-  public loadData(){
-    return [this.startTime,this.endTime];
+  public loadData() {
+      return [this.startTime, this.endTime, this.carId];
   }
 
 }

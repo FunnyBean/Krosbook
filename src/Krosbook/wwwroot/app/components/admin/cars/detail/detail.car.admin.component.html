@@ -34,6 +34,14 @@
       <div *ngIf="plate.dirty && !plate.valid && plate.errors.required" class="alert alert-danger"><strong>ŠPZ-ka auta je povinná položka.</strong></div>
     </div>
 
+      <!-- FARBA VOZIDLA -->
+      <div class="form-group">
+          <label for="color">Farba (v zozname):</label>
+          <input type="text" id="color" class="form-control" name="color" #color="ngModel" [(ngModel)]="carData.color" placeholder="#FF00FF" maxlength="7" minlength="7" required>
+          <div *ngIf="color.dirty && !color.valid && color.errors.required" class="alert alert-danger"><strong>Farba miestnosti je povinná položka.</strong></div>
+          <div *ngIf="color.dirty && !color.valid && color.errors.minLength" class="alert alert-danger"><strong># a 6 znakov hexadecimálneho kódu.</strong></div>
+      </div>
+
 
     <!--SUBMIT BUTTON-->
     <div *ngIf="!carData.id">

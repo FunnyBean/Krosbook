@@ -23,9 +23,9 @@ var TableReservationComponent = (function () {
         this.tableData = [];
     }
     TableReservationComponent.prototype.ngOnInit = function () {
-        this.formDataService.saveData(undefined, undefined);
+        this.formDataService.saveData(undefined, undefined, 0);
         this.updateData();
-        this.data.color = (this.data.color === undefined) ? '#337ab7' : this.data.color;
+        this.data.color = (this.data.color == null) ? '#337ab7' : this.data.color;
         var thisDocument = this;
         $(window).on("focus", function () {
             thisDocument.updateData();
@@ -35,7 +35,7 @@ var TableReservationComponent = (function () {
         $(window).unbind("focus");
     };
     TableReservationComponent.prototype.fillTable = function () {
-        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg;
+        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, carId, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg;
         for (var i = 0; i < this.times.length; i++) {
             table += '<tr>';
             table += '<td class="col-md-1">' + this.times[i].time + '</td>';
@@ -86,6 +86,7 @@ var TableReservationComponent = (function () {
             $(this).addClass("selected");
             fromRow = row;
             fromCol = col;
+            carId = $(this).parent().parent().attr("id");
             beforeRow = row;
             var horizontalPosition = (element.index() !== 5) ? (element.position().left).toString() + 'px' : (element.position().left + element.width() - 294).toString() + 'px';
             return false;
@@ -99,13 +100,13 @@ var TableReservationComponent = (function () {
         });
         $(document).on("mouseup", function () {
             if (isMouseDown) {
-                thisDocument.makeReservation(fromRow, fromCol, length);
+                thisDocument.makeReservation(fromRow, fromCol, length, carId);
                 isMouseDown = false;
                 length = 1;
             }
         });
     };
-    TableReservationComponent.prototype.makeReservation = function (fromRow, fromCol, length) {
+    TableReservationComponent.prototype.makeReservation = function (fromRow, fromCol, length, carId) {
         var date, hours = 7, minutes = 0;
         if (fromRow % 2 != 0) {
             fromRow -= 1;
@@ -114,7 +115,7 @@ var TableReservationComponent = (function () {
         for (var i = 0; i < fromRow / 2; i++)
             hours++;
         date = moment().add(this.week, 'weeks').weekday(fromCol).hour(hours).minute(minutes).format("YYYY-MM-DDTHH:mm");
-        this.formDataService.saveData(date, moment(date).add(length * 30, 'minutes').format("YYYY-MM-DDTHH:mm"));
+        this.formDataService.saveData(date, moment(date).add(length * 30, 'minutes').format("YYYY-MM-DDTHH:mm"), carId);
         this.router.navigate(['/home/reservations/cars/newreservation/']);
     };
     TableReservationComponent.prototype.updateData = function (weeks) {

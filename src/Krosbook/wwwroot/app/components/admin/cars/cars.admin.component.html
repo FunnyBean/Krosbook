@@ -6,12 +6,14 @@
   <tr>
     <th>Značka a typ</th>
     <th>ŠPZ</th>
+    <th>Farba</th>
     <th class="buttonsRight">Akcie</th>
   </tr>
   </thead>
   <tr *ngFor="let car of cars">
     <td><strong>{{car.name}}</strong></td>
     <td>{{car.plate}}</td>
+    <td [style.background-color]="car.color">&nbsp;</td>
     <td class="buttonsRight">
       <div class="btn-group" role="group" aria-label="...">
         <button type="button" class="btn btn-warning glyphicon glyphicon-edit" (click)="editCar(car.id)"></button>

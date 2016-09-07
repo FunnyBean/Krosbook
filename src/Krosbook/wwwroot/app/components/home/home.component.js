@@ -11,8 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var user_service_1 = require('../../services/user.service');
 var router_1 = require('@angular/router');
-var userInfo_component_1 = require('./userInfo/userInfo.component');
 var user_admin_model_1 = require('../../models/user.admin.model');
+var car_reservations_component_1 = require('./carReservations/car.reservations.component');
+var profile_component_1 = require('./profile/profile.component');
+var room_reservations_component_1 = require('./roomReservations/room.reservations.component');
+var userInfo_component_1 = require('./userInfo/userInfo.component');
 var HomeComponent = (function () {
     function HomeComponent(userService) {
         this.userService = userService;
@@ -56,7 +59,8 @@ var HomeComponent = (function () {
             selector: 'home',
             templateUrl: 'app/components/home/home.component.html',
             styleUrls: ['app/components/home/home.component.css'],
-            directives: [router_1.ROUTER_DIRECTIVES, userInfo_component_1.UserInfoComponent]
+            directives: [router_1.ROUTER_DIRECTIVES, userInfo_component_1.UserInfoComponent],
+            precompile: [car_reservations_component_1.CarsReservationsComponent, profile_component_1.ProfileComponent, room_reservations_component_1.RoomReservationsComponent, userInfo_component_1.UserInfoComponent]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])
     ], HomeComponent);

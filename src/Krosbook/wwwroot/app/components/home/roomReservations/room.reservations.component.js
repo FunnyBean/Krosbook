@@ -69,6 +69,13 @@ var RoomReservationsComponent = (function () {
         });
         $("#left_menu a:nth-child(3)").addClass("active");
     };
+    RoomReservationsComponent.prototype.ngOnDestroy = function () {
+        $(window).unbind("resize");
+        $(window).on("resize", function () {
+            this.height = window.innerHeight - document.getElementById("header").clientHeight;
+            $("#content").css({ "height": this.height });
+        });
+    };
     RoomReservationsComponent.prototype.updateMaxTime = function () {
         this.maxTime = ((18 - moment(this.dateTime).hour()) * 60 - moment(this.dateTime).minute()) / 60;
     };

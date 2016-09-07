@@ -81,6 +81,14 @@ export class RoomReservationsComponent implements OnInit  {
     $("#left_menu a:nth-child(3)").addClass("active");
   }
 
+  ngOnDestroy() {
+      $(window).unbind("resize");
+      $(window).on("resize", function () {
+          this.height = window.innerHeight - document.getElementById("header").clientHeight;
+          $("#content").css({ "height": this.height });
+      });
+  }
+
   updateMaxTime() {
     this.maxTime = ((18 - moment(this.dateTime).hour())*60 - moment(this.dateTime).minute())/60;
   }

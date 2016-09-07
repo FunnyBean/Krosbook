@@ -34,10 +34,11 @@ var OrderDetailComponent = (function () {
     }
     OrderDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.inputDate = this.formDataService.loadData();
-        if (this.inputDate[0] !== undefined && this.reservationId === undefined) {
-            this.reservationData.dateTimeStart = this.inputDate[0];
-            this.reservationData.dateTimeEnd = this.inputDate[1];
+        var inputData = this.formDataService.loadData();
+        if (inputData[0] !== undefined && this.reservationId === undefined) {
+            this.reservationData.dateTimeStart = inputData[0];
+            this.reservationData.dateTimeEnd = inputData[1];
+            this.reservationData.carId = inputData[2];
         }
         this.route.params.subscribe(function (params) {
             _this.reservationId = params['id'];
@@ -148,7 +149,7 @@ var OrderDetailComponent = (function () {
             templateUrl: 'app/components/home/carReservations/order/order.detail.component.html',
             styleUrls: ['lib/css/modalWindow.css'],
             providers: [carReservation_service_1.CarOrderService],
-            directives: [carTime_validator_1.DateValidator, carTime_validator_1.DatesValidator]
+            directives: [carTime_validator_1.DateValidator, carTime_validator_1.DatesValidator],
         }), 
         __metadata('design:paramtypes', [formData_service_1.FormDataService, router_1.ActivatedRoute, router_1.Router, carReservation_service_1.CarOrderService, car_service_1.CarService, user_service_1.UserService])
     ], OrderDetailComponent);

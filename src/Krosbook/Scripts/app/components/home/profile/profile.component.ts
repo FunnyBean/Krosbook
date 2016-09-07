@@ -1,15 +1,16 @@
-/**
- * Created by krosaci on 25.7.2016.
- */
 import {Component, AfterContentInit} from '@angular/core';
 import {ROUTER_DIRECTIVES} from '@angular/router';
+
+import {AvatarComponent} from './avatar/avatar.component';
+import {PasswordComponent} from './password/password.component';
 
 declare var $:any;
 
 @Component({
   selector: 'profile',
   templateUrl: 'app/components/home/profile/profile.component.html',
-  directives: [ROUTER_DIRECTIVES]
+  directives: [ROUTER_DIRECTIVES],
+  precompile: [AvatarComponent, PasswordComponent]
 })
 
 export class ProfileComponent implements AfterContentInit{

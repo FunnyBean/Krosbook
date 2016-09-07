@@ -1,8 +1,12 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {ROUTER_DIRECTIVES} from '@angular/router';
-import {UserInfoComponent} from './userInfo/userInfo.component';
 import {User} from '../../models/user.admin.model';
+
+import {CarsReservationsComponent} from './carReservations/car.reservations.component';
+import {ProfileComponent} from './profile/profile.component';
+import {RoomReservationsComponent} from './roomReservations/room.reservations.component';
+import {UserInfoComponent} from './userInfo/userInfo.component';
 
 declare var $:any;
 
@@ -10,7 +14,8 @@ declare var $:any;
   selector: 'home',
   templateUrl: 'app/components/home/home.component.html',
   styleUrls: ['app/components/home/home.component.css'],
-  directives: [ROUTER_DIRECTIVES, UserInfoComponent]
+  directives: [ROUTER_DIRECTIVES, UserInfoComponent],
+  precompile: [CarsReservationsComponent, ProfileComponent, RoomReservationsComponent, UserInfoComponent]
 })
 
 export class HomeComponent implements OnInit{

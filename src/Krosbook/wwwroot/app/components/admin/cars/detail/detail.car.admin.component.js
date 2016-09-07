@@ -34,7 +34,8 @@ var DetailCarAdminComponent = (function () {
         this.saving = true;
         var plate = this.carData.plate.toUpperCase();
         var name = this.carData.name;
-        this.carService.addCar(JSON.stringify({ plate: plate, name: name })).subscribe(function (data) {
+        var color = this.carData.color;
+        this.carService.addCar(JSON.stringify({ plate: plate, name: name, color: color })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
             _this.saving = false;
@@ -53,7 +54,8 @@ var DetailCarAdminComponent = (function () {
         var id = this.carData.id;
         var plate = this.carData.plate.toUpperCase();
         var name = this.carData.name;
-        this.carService.editCar(id, JSON.stringify({ id: id, name: name, plate: plate })).subscribe(function (data) {
+        var color = this.carData.color;
+        this.carService.editCar(id, JSON.stringify({ id: id, name: name, plate: plate, color: color })).subscribe(function (data) {
         }, function (error) {
             _this.error = error;
             _this.saving = false;

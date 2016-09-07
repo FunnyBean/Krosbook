@@ -9,7 +9,6 @@ import {Car} from '../../../../models/car.model';
 import * as moment from 'moment';
 import {FormDataService} from '../../../../services/formData.service';
 
-
 declare var $:any;
 
 @Component({
@@ -17,7 +16,7 @@ declare var $:any;
   templateUrl: 'app/components/home/carReservations/order/order.detail.component.html',              
   styleUrls: ['lib/css/modalWindow.css'],  
   providers:[CarOrderService],
-  directives: [DateValidator, DatesValidator]
+  directives: [DateValidator, DatesValidator],
 })
 
 export class OrderDetailComponent implements OnInit {
@@ -30,14 +29,15 @@ export class OrderDetailComponent implements OnInit {
   private reservationId:number = undefined;
   private isOperator:boolean = false;
   private free:boolean = true;
-  public inputDate:any;
+
   constructor(public formDataService:FormDataService, private route:ActivatedRoute, private router:Router, private carOrderService:CarOrderService, private carService:CarService, private userService:UserService) { }
 
   ngOnInit(){
-    this.inputDate = this.formDataService.loadData();
-    if(this.inputDate[0] !== undefined && this.reservationId === undefined){
-      this.reservationData.dateTimeStart = this.inputDate[0];
-      this.reservationData.dateTimeEnd = this.inputDate[1];
+    var inputData = this.formDataService.loadData();
+    if (inputData[0] !== undefined && this.reservationId === undefined){
+        this.reservationData.dateTimeStart = inputData[0];
+        this.reservationData.dateTimeEnd = inputData[1];
+        this.reservationData.carId = inputData[2];
     }
     this.route.params.subscribe(params => {
       this.reservationId = params['id'];

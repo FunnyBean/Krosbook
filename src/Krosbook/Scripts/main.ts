@@ -7,5 +7,5 @@ import { disableDeprecatedForms, provideForms } from '@angular/forms';
 import { FormDataService} from './app/services/formData.service';
 
 enableProdMode();
-bootstrap(AppComponent, [disableDeprecatedForms(), provideForms(), APP_ROUTER_PROVIDERS, HTTP_PROVIDERS]);
+bootstrap(AppComponent, [disableDeprecatedForms(), provideForms(), APP_ROUTER_PROVIDERS, HTTP_PROVIDERS, FormDataService]);
 

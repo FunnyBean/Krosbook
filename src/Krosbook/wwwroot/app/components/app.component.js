@@ -15,6 +15,9 @@ var office_service_1 = require('../services/office.service');
 var car_service_1 = require('../services/car.service');
 var equipment_service_1 = require('../services/equipment.service');
 var roles_service_1 = require('../services/roles.service');
+var home_component_1 = require('./home/home.component');
+var admin_component_1 = require('./admin/admin.component');
+var login_component_1 = require('./login/login.component');
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -25,7 +28,8 @@ var AppComponent = (function () {
             directives: [router_1.ROUTER_DIRECTIVES],
             providers: [
                 user_service_1.UserService, office_service_1.OfficeService, car_service_1.CarService, equipment_service_1.EquipmentService, roles_service_1.RolesService
-            ]
+            ],
+            precompile: [home_component_1.HomeComponent, admin_component_1.AdminComponent, login_component_1.LoginComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);

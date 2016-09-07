@@ -8,13 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/**
- * Created by Ondrej on 25.07.2016.
- */
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var user_admin_model_1 = require('../../../models/user.admin.model');
 var user_service_1 = require('../../../services/user.service');
+var myReservations_component_1 = require('./myReservations/myReservations.component');
+var order_detail_component_1 = require('./order/order.detail.component');
+var orders_manager_component_1 = require('./orders/orders.manager.component');
+var reservations_component_1 = require('./reservations/reservations.component');
 var CarsReservationsComponent = (function () {
     function CarsReservationsComponent(router, userService) {
         this.router = router;
@@ -42,8 +43,9 @@ var CarsReservationsComponent = (function () {
     CarsReservationsComponent = __decorate([
         core_1.Component({
             templateUrl: 'app/components/home/carReservations/car.reservations.component.html',
+            styles: ['.table-arrow {top: 0px;} #filter{background-color: #f2f2f2; padding: 10px;}'],
             directives: [router_1.ROUTER_DIRECTIVES],
-            styles: ['.table-arrow {top: 0px;} #filter{background-color: #f2f2f2; padding: 10px;}']
+            precompile: [order_detail_component_1.OrderDetailComponent, orders_manager_component_1.OrdersManagerComponent, reservations_component_1.ReservationsComponent, myReservations_component_1.MyReservationsComponent]
         }), 
         __metadata('design:paramtypes', [router_1.Router, user_service_1.UserService])
     ], CarsReservationsComponent);

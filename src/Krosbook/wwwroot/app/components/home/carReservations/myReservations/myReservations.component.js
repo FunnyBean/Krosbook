@@ -59,7 +59,7 @@ var MyReservationsComponent = (function () {
     MyReservationsComponent = __decorate([
         core_1.Component({
             templateUrl: 'app/components/home/carReservations/myReservations/myReservations.component.html',
-            providers: [carReservation_service_1.CarOrderService]
+            providers: [carReservation_service_1.CarOrderService],
         }), 
         __metadata('design:paramtypes', [carReservation_service_1.CarOrderService, car_service_1.CarService, router_1.Router])
     ], MyReservationsComponent);
