@@ -251,7 +251,6 @@ namespace Krosbook.Migrations
                         .HasAnnotation("MaxLength", 100);
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasAnnotation("MaxLength", 100);
 
                     b.Property<byte[]>("Photo");

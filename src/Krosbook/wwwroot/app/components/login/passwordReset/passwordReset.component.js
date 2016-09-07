@@ -14,10 +14,12 @@ var user_service_1 = require('../../../services/user.service');
 var PasswordResetComponent = (function () {
     function PasswordResetComponent(userService) {
         this.userService = userService;
+        this.saving = false;
     }
     PasswordResetComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.userService.sendPasswordResetEmail(this.email).subscribe(function (data) { _this.success = "Obnovovací email bol odoslaný."; }, function (error) { _this.error = "Akcia sa nepodarila. Užívateľ možno neexistuje."; });
+        this.saving = true;
+        this.userService.sendPasswordResetEmail(this.email).subscribe(function (data) { _this.success = "Obnovovací email bol odoslaný."; _this.saving = false; }, function (error) { _this.error = "Akcia sa nepodarila. Užívateľ možno neexistuje."; _this.saving = false; });
     };
     PasswordResetComponent = __decorate([
         core_1.Component({

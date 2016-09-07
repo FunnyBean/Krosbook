@@ -15,9 +15,10 @@
     <td><img alt="Embedded Image" [src]="'data:image/png;base64,'+user.photoBase64" width="50" height="50"></td>
     <td>{{user.name}}</td>
     <td>{{user.surname}}</td>
-    <td>{{user.email}}</td>
+    <td>{{user.email}} </td>
     <td class="buttonsRight">
       <div class="btn-group" role="group" aria-label="...">
+        <button type="button" *ngIf="user.resetPasswordDateTime == '1/1/0001 12:00:00 AM'" class="btn btn-default glyphicon glyphicon-envelope" (click)="sendInvitation(user.id)"></button>
         <button type="button" class="btn btn-warning glyphicon glyphicon-edit" (click)="editUser(user.id)"></button>
         <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removeUser(user.id)"></button>
       </div>

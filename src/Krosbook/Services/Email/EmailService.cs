@@ -173,10 +173,17 @@ namespace Krosbook.Services.Email
             data.From = EmailFrom;
             data.To.Add(this._userRepository.GetItem(rvm.UserId).Email);
             var msg = _creator.CreateEmail(data);
-            //var builder = new BodyBuilder();
-            //Car car = this._carRepository.GetItem(rvm.CarId);
-            //builder.HtmlBody = string.Format("<table><tr><th>Auto<//th><td>"+car.Name+" "+car.Plate+"</td></tr>");
-            //msg.Body = builder.ToMessageBody();
+
+            _sender.SendEmail(msg);
+        }
+
+        public void SendNewAccountEmail(string email, string name, string surname, string token, DateTime deadline)
+        {
+            var data = new NewAccount(name, surname, token, deadline);
+            data.From = EmailFrom;
+            data.To.Add(email);
+            var msg = _creator.CreateEmail(data);
+
             _sender.SendEmail(msg);
         }
 

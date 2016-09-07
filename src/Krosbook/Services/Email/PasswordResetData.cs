@@ -14,7 +14,7 @@ namespace Krosbook.Services.Email
         /// Initializes data with link for password reset <paramref name="passwordResetLink" />.
         /// </summary>
         /// <param name="passwordResetLink">Link where user can reset his password.</param>
-        public PasswordResetData(string passwordResetLink): base("CreatePassword")
+        public PasswordResetData(string passwordResetLink): base("PasswordReset")
         {
             this.PasswordResetLink = "http://funnybean.cloudapp.net/passwordReset/" + passwordResetLink;
         }

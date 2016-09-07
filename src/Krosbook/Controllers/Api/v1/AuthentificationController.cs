@@ -112,7 +112,7 @@ namespace Krosbook.Controllers.Api.v1
                 var token = this.GenerateRandomToken();
 
                 user.ResetPasswordToken = token;
-                user.ResetPasswordDateTime = System.DateTime.Now;
+                user.ResetPasswordDateTime = System.DateTime.Now.AddMinutes(30);
                 _userRepository.EditWithoutRoles(user);
                 _userRepository.Save();
 
@@ -132,7 +132,7 @@ namespace Krosbook.Controllers.Api.v1
             System.DateTime now = System.DateTime.Now;
             if (user != null)
             {
-                if (now >= user.ResetPasswordDateTime && now <= user.ResetPasswordDateTime.AddMinutes(30))
+                if (now <= user.ResetPasswordDateTime)
                 {
                     user.Password = passwordVM.newPassword;
                     user.ResetPasswordToken = null;

@@ -18,6 +18,7 @@ var PasswordSetComponent = (function () {
         this.route = route;
         this.token = "";
         this.password = ['', ''];
+        this.saving = false;
         this.route.params.subscribe(function (params) {
             _this.token = params['token'];
         });
@@ -26,7 +27,8 @@ var PasswordSetComponent = (function () {
         var _this = this;
         this.error = "";
         if (this.password[0] == this.password[1]) {
-            this.userService.savePasswordReset(this.token, this.password[0]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; _this.password = ['', '']; }, function (error) { _this.error = "Heslo sa nepodarilo upraviť. Nepltaný overovací link."; });
+            this.saving = true;
+            this.userService.savePasswordReset(this.token, this.password[0]).subscribe(function (data) { _this.success = "Heslo bolo úspešne zmenené."; _this.password = ['', '']; _this.saving = false; }, function (error) { _this.error = "Heslo sa nepodarilo upraviť. Nepltaný overovací link."; _this.saving = false; });
         }
         else
             this.error = "Heslá sa nezhodujú.";

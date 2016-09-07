@@ -88,6 +88,11 @@ var UserService = (function () {
         headers.append('Content-Type', 'application/json');
         return this.http.put('/api/authentification/setForgottenPassword', JSON.stringify({ newPassword: newPassword, token: token }), { headers: headers });
     };
+    UserService.prototype.sendInvitation = function (id) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.put('/api/users/sendInvitation/' + id, { headers: headers });
+    };
     UserService.prototype.generateRandomString = function () {
         var randString = '';
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

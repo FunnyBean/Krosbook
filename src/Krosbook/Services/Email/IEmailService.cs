@@ -23,6 +23,7 @@ namespace Krosbook.Services.Email
         void SendCarReservation(CarReservation rvm);
         void CreateEmailCalendarEvent(RoomReservationViewModel rvm);
         void CreateEmailCalendarEvent(RoomReservationViewModel rvm, string joinUrlG2M);
+        void SendNewAccountEmail(string email, string name, string surname, string token, System.DateTime deadline);
 
     }
 }

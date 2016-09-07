@@ -32,7 +32,7 @@ namespace Krosbook.Controllers.Api.v1
         private IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private SendEmailService _emailService;
+        private IEmailService _emailService;
         private IRememberMeRepository _rememberMeRepository;
 
         #endregion
@@ -53,7 +53,7 @@ namespace Krosbook.Controllers.Api.v1
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailService = new SendEmailService(emailService, creator, sender);
+            _emailService = emailService;
             _rememberMeRepository = rememberMeRepository;
         }
         #endregion
@@ -202,7 +202,7 @@ namespace Krosbook.Controllers.Api.v1
             return NotFound();            
         }
 
-
+        
         [HttpPut("changeimage")]
         public IActionResult ChangeImage([FromBody] ChangeImageViewModel chgiVM)
         {
@@ -213,6 +213,24 @@ namespace Krosbook.Controllers.Api.v1
                 return Ok();              
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("sendInvitation/{userId}")]
+        public IActionResult SendInvitations(int userId)
+        {
+            User user = _userRepository.GetItem(u => u.Id == userId);
+            if (user != null && user.PasswordHash == null)
+            {
+                var token = this.GenerateRandomToken();
+                user.ResetPasswordToken = token;
+                user.ResetPasswordDateTime = DateTime.Now.AddDays(30);
+
+                _userRepository.EditWithoutRoles(user);
+                _userRepository.Save();
+
+                _emailService.SendNewAccountEmail(user.Email, user.Name, user.Surname, token, user.ResetPasswordDateTime);
+            }
+            return Ok();
+        }
 
 
         #endregion
@@ -235,8 +253,10 @@ namespace Krosbook.Controllers.Api.v1
                 {
                     user.Photo = DbInitializer.GetDefaultAvatar();
                 }
-                var pass = this.GenerateRandomPasswords(8);
-                user.Password = pass;
+
+                var token = this.GenerateRandomToken();
+                user.ResetPasswordToken = token;
+                user.ResetPasswordDateTime = DateTime.Now.AddDays(30);
 
                 return SaveData(() =>
                 {
@@ -245,8 +265,7 @@ namespace Krosbook.Controllers.Api.v1
                 },
                 () =>
                 {
-                    _emailService.SendEmail(EmailType.Welcome, user.Email, pass);
-                    _emailService.SendEmail(EmailType.PasswordReset, user.Email, pass);
+                    _emailService.SendNewAccountEmail(user.Email, user.Name, user.Surname, token, user.ResetPasswordDateTime);
                     this.Response.StatusCode = (int)HttpStatusCode.Created;
 
                     return this.Json(new JsonResult(this.Json(_mapper.Map<UserViewModel>(user)))
@@ -305,15 +324,18 @@ namespace Krosbook.Controllers.Api.v1
             return id;
         }
 
-
-        public string GenerateRandomPasswords(int length)
+        private string GenerateRandomToken()
         {
-            RNGCryptoServiceProvider cryptRNG = new RNGCryptoServiceProvider();
-            byte[] tokenBuffer = new byte[length];
-            cryptRNG.GetBytes(tokenBuffer);
-            string str = Convert.ToBase64String(tokenBuffer);
-            str = str.Substring(0, str.Length - 1);
-            return str;
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[20];
+            var random = new System.Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new System.String(stringChars);
         }
 
 

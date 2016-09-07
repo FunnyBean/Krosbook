@@ -8,8 +8,8 @@ using Krosbook.Models;
 namespace Krosbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160905162233_ondrejoveZmeny")]
-    partial class ondrejoveZmeny
+    [Migration("20160907122221_ahoj")]
+    partial class ahoj
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,9 +22,12 @@ namespace Krosbook.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Color")
+                        .HasAnnotation("MaxLength", 7);
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 20);
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<string>("Plate")
                         .IsRequired()
@@ -249,7 +252,6 @@ namespace Krosbook.Migrations
                         .HasAnnotation("MaxLength", 100);
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasAnnotation("MaxLength", 100);
 
                     b.Property<byte[]>("Photo");

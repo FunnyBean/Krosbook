@@ -95,6 +95,12 @@ export class UserService {
     return this.http.put('/api/authentification/setForgottenPassword', JSON.stringify({newPassword, token}), {headers});
   }
 
+  public sendInvitation(id: number) {
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      return this.http.put('/api/users/sendInvitation/' + id, { headers });
+  }
+
   private generateRandomString() {
     var randString:string = '';
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

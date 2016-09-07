@@ -24,6 +24,8 @@ namespace Krosbook.ViewModels.Users
         [MaxLength(100)]
         public string Surname { get; set; }
 
+        public string ResetPasswordDateTime { get; set; }
+
         [JsonIgnore]
         public byte[] Photo { get; set; }
 

@@ -27,7 +27,7 @@ export class UsersAdminComponent implements OnInit {
     this.userService.getUsers()
       .subscribe(
         data => {
-          this.users = data.json()
+            this.users = data.json();
         },
         error => console.error(error)
       );
@@ -62,6 +62,15 @@ export class UsersAdminComponent implements OnInit {
         }
       )
     }
+  }
+
+  sendInvitation(id: number) {
+      this.userService.sendInvitation(id).subscribe(
+          data => {
+              this.GetUsers();
+          },
+          error => { console.log(error) }
+      );
   }
 
   //opens detail.office.admin.component window

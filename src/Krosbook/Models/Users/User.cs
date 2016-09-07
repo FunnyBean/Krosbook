@@ -76,7 +76,6 @@ namespace Krosbook.Models.Users
         /// <value>
         /// The hashed password.
         /// </value>
-        [Required]
         [MaxLength(PasswordHashMaxLength)]
         public string PasswordHash { get; set; }
 
@@ -111,6 +110,7 @@ namespace Krosbook.Models.Users
         /// The cars.
         /// </value>
         public ICollection<RoomReservation> Rooms { get; set; }
+
         /// <summary>
         /// Gets or sets the cars.
         /// </summary>
@@ -118,6 +118,7 @@ namespace Krosbook.Models.Users
         /// The cars.
         /// </value>
         public ICollection<CarReservation> Cars { get; set; } = new List<CarReservation>();
+
         public static object Claims { get; internal set; }
 
         public ICollection<RememberMe> rememberMe { get; set; }

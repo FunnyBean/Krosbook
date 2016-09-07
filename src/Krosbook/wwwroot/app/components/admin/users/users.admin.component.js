@@ -54,6 +54,12 @@ var UsersAdminComponent = (function () {
             });
         }
     };
+    UsersAdminComponent.prototype.sendInvitation = function (id) {
+        var _this = this;
+        this.userService.sendInvitation(id).subscribe(function (data) {
+            _this.GetUsers();
+        }, function (error) { console.log(error); });
+    };
     //opens detail.office.admin.component window
     UsersAdminComponent.prototype.windowOpen = function () {
         this.showOfficeWindow = true;

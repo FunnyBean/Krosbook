@@ -15,6 +15,7 @@ var core_1 = require('@angular/core');
 var user_service_1 = require('../../../../services/user.service');
 var user_admin_model_1 = require("../../../../models/user.admin.model");
 var email_validator_1 = require('../../../../validators/email.validator');
+var emailName_validator_1 = require('../../../../validators/emailName.validator');
 var DetailUserAdminComponent = (function () {
     function DetailUserAdminComponent(userService) {
         this.userService = userService;
@@ -124,7 +125,7 @@ var DetailUserAdminComponent = (function () {
             selector: 'user',
             templateUrl: 'app/components/admin/users/detail/detail.user.admin.component.html',
             styleUrls: ['lib/css/modalWindow.css'],
-            directives: [email_validator_1.EmailValidator]
+            directives: [email_validator_1.EmailValidator, emailName_validator_1.EmailNameValidator]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])
     ], DetailUserAdminComponent);

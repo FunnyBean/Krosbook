@@ -95,6 +95,7 @@ namespace Krosbook.Models.Users
         public override IQueryable<User> GetAll()
         {
             return _dbContext.Set<User>().
+                OrderBy(u => u.Surname).
                 Include(r => r.Roles).
                 AsNoTracking();
         }

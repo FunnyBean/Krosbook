@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Krosbook.Migrations
 {
-    public partial class RemovedDateTime : Migration
+    public partial class RollBack : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

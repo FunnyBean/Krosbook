@@ -7,7 +7,7 @@
   <h3 *ngIf="userData.id">Editovanie existujúceho používateľa</h3>
 
   <div *ngIf="error" class="alert alert-danger col-md-12">
-    <strong>{{ error }}</strong>
+    <strong>Oops...niečo sa pokazilo :( </strong>
   </div>
 
   <div *ngIf="success" class="alert alert-success col-md-12">
@@ -18,23 +18,24 @@
     <!--MENO-->
     <div class="form-group">
       <label for="name">Meno:</label>
-      <input type="text"  class="form-control" id="name" name="name" #name="ngModel" [(ngModel)]="userData.name" required>
+      <input type="text"  class="form-control" id="name" name="name" #name="ngModel" [(ngModel)]="userData.name" maxlength="40" required>
       <div *ngIf="name.dirty && !name.valid && name.errors.required" class="alert alert-danger"><strong>Meno je povinná položka.</strong></div>
     </div>
 
     <!--PRIEZVISKO-->
     <div class="form-group">
       <label for="surname">Priezvisko:</label>
-      <input type="text" class="form-control" id="surname"  name="surname" #surname="ngModel" [(ngModel)]="userData.surname" required>
+      <input type="text" class="form-control" id="surname"  name="surname" #surname="ngModel" [(ngModel)]="userData.surname"  maxlength="40" required>
       <div *ngIf="surname.dirty && !surname.valid && surname.errors.required" class="alert alert-danger"><strong>Priezvisko je povinná položka.</strong></div>
     </div>
 
     <!--EMAIL-->
     <div class="form-group">
       <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" name="email" #email="ngModel" [(ngModel)]="userData.email" required validateEmail>
+      <input type="email" class="form-control" id="email" name="email" #email="ngModel" [(ngModel)]="userData.email" required validateEmail validateEmailName>
       <div *ngIf="email.dirty && !email.valid && email.errors.required" class="alert alert-danger"><strong>Email je povinná položka.</strong></div>
       <div *ngIf="email.dirty && !email.valid && email.errors.validateEmail" class="alert alert-danger"><strong>Toto nie je správny tvar emailu.</strong></div>
+      <div *ngIf="email.dirty && !email.valid && email.errors.validateEmailName" class="alert alert-danger"><strong>Užívateľ so zadaným emailom už existuje.</strong></div>
     </div>
 
     <!--FOTKA-->
