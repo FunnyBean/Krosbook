@@ -6,12 +6,13 @@ import {UserService} from '../../../../services/user.service';
 import {User} from "../../../../models/user.admin.model";
 import {EmailValidator} from '../../../../validators/email.validator';
 import {Role} from "../../../../models/role.admin.model";
+import {EmailNameValidator} from '../../../../validators/emailName.validator';
 
 @Component({
   selector: 'user',
   templateUrl: 'app/components/admin/users/detail/detail.user.admin.component.html',
   styleUrls: ['lib/css/modalWindow.css'],
-  directives: [EmailValidator]
+  directives: [EmailValidator,EmailNameValidator]
 })
 
 export class DetailUserAdminComponent implements OnInit {

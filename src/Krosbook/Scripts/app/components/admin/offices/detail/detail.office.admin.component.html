@@ -20,7 +20,7 @@
     <!--NAZOV MIESTNOSTI-->
     <div class="form-group">
       <label>Názov:</label>
-      <input type="text"  class="form-control" name="name" #name="ngModel" [(ngModel)]="officeData.name" maxlength="50" autocomplete="off" required validateOfficeName>
+      <input type="text"  class="form-control" name="name" #name="ngModel" [(ngModel)]="officeData.name" maxlength="100" autocomplete="off" required validateOfficeName>
       <div *ngIf="name.dirty && !name.valid && name.errors.validateOfficeName" class="alert alert-danger"><strong>Miestnosť s týmto názvom už existuje.</strong> Zvoľte iný názov.</div>
       <div *ngIf="name.dirty && !name.valid && name.errors.required" class="alert alert-danger"><strong>Názov miestnosti je povinná položka.</strong></div>
     </div>
