@@ -232,7 +232,6 @@ namespace Krosbook.Controllers.Api.v1
             return Ok();
         }
 
-
         #endregion
 
         #region Helpers

@@ -40,7 +40,8 @@ System.config({
         'rxjs': 'lib/rxjs',
         'main': 'main.js',
         'ng2-cookies': 'lib/js/ng2-cookies',
-        'moment': 'lib/js/moment/moment.js'
+        'moment': 'lib/js/moment/moment.js',
+        'ng2-pagination': 'lib/ng2-pagination/dist/ng2-pagination'
     },
     packages: cliSystemConfigPackages
 });

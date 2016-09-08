@@ -3,7 +3,7 @@
 
 var gulp = require("gulp"),
     rimraf = require("gulp-rimraf"),
-    concat = require("gulp-concat"),
+    concat = require("gulp-concat-util"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify"),
     sass = require("gulp-sass"),
@@ -22,51 +22,89 @@ var libs = [
     paths.npm + "systemjs/**/*.js"
 ];
 
+
+
+gulp.task("All-JS-ToOneFile", function () {
+    return gulp.src([
+        paths.npm + "rxjs/**/*.js",
+        paths.npm + "rxjs/**/*.js.map",
+        paths.npm + "@angular/**/*.js",
+        paths.npm + "@angular/**/*.js.map",
+        paths.npm + "systemjs/**/*.js",
+        paths.npm + "core-js/**/*.js",
+        paths.npm + "reflect-metadata/**/*.js",
+        paths.npm + "reflect-metadata/**/*.js.map",
+        paths.npm + "zone.js/**/*.js",
+        paths.npm + "ng2-pagination/**/*.js"     
+    ])
+ .pipe(concat.scripts('allJS.js'))
+    .pipe(gulp.dest(paths.lib)
+        );
+});
+
+
+
 gulp.task("rxjs", function () {
     return gulp.src(paths.npm + "rxjs/**/*.js")
-        .pipe(gulp.dest(paths.lib + "rxjs/"));
+    .pipe(gulp.dest(paths.lib + "rxjs/")
+ 
+        );
 });
 
 gulp.task("rxjsMap", function () {
     return gulp.src(paths.npm + "rxjs/**/*.js.map")
-        .pipe(gulp.dest(paths.lib + "rxjs/"));
+.pipe(gulp.dest(paths.lib + "rxjs/")
+    );
 });
 
 gulp.task("anuglar", function () {
     return gulp.src(paths.npm + "@angular/**/*.js")
-        .pipe(gulp.dest(paths.lib + "@angular/"));
+.pipe(gulp.dest(paths.lib + "@angular/")
+        );
 });
 gulp.task("anuglarMap", function () {
     return gulp.src(paths.npm + "@angular/**/*.js.map")
-        .pipe(gulp.dest(paths.lib + "@angular/"));
+.pipe(gulp.dest(paths.lib + "@angular/")
+        );
 });
 
 gulp.task("systemjs", function () {
     return gulp.src(paths.npm + "systemjs/**/*.js")
-        .pipe(gulp.dest(paths.lib + "systemjs/"));
+.pipe(gulp.dest(paths.lib + "systemjs/")
+        );
 });
 
 gulp.task("core-js", function () {
     return gulp.src(paths.npm + "core-js/**/*.js")
-        .pipe(gulp.dest(paths.lib + "core-js/"));
+.pipe(gulp.dest(paths.lib + "core-js/")
+        );
 });
 
 gulp.task("reflect-metadata", function () {
     return gulp.src(paths.npm + "reflect-metadata/**/*.js")
-        .pipe(gulp.dest(paths.lib + "reflect-metadata/"));
+.pipe(gulp.dest(paths.lib + "reflect-metadata/")
+    );
 });
 
 gulp.task("reflect-metadataMap", function () {
     return gulp.src(paths.npm + "reflect-metadata/**/*.js.map")
-        .pipe(gulp.dest(paths.lib + "reflect-metadata/"));
+.pipe(gulp.dest(paths.lib + "reflect-metadata/")
+    );
 });
 
 gulp.task("zone.js", function () {
     return gulp.src(paths.npm + "zone.js/**/*.js")
-        .pipe(gulp.dest(paths.lib + "zone.js/"));
+.pipe(gulp.dest(paths.lib + "zone.js/")
+    );
 });
 
-gulp.task("libs", ["rxjs", "rxjsMap", "anuglar", "anuglarMap", "systemjs", "core-js", "reflect-metadata", "reflect-metadataMap", "zone.js"]);
+gulp.task("ng2-pagination", function () {
+    return gulp.src(paths.npm + "ng2-pagination/**")
+.pipe(gulp.dest(paths.lib + "ng2-pagination/")
+    );
+});
+
+gulp.task("libs", ["rxjs", "rxjsMap", "anuglar", "anuglarMap", "systemjs", "core-js", "reflect-metadata", "reflect-metadataMap", "zone.js", "ng2-pagination"]);
 
 gulp.task("clean", function () {
     return gulp.src(paths.app + "**/*.*", { read: false })
@@ -81,14 +119,14 @@ gulp.task("html", function () {
 gulp.task("js", function () {
     return gulp.src(paths.scripts + "**/*.ts")
         .pipe(typescript({
-                "noImplicitAny": false,
-                "noEmitOnError": true,
-                "removeComments": false,
-                "sourceMap": false,
-                "target": "es5",
-                "module": "commonjs",
-                "experimentalDecorators": true,
-                "emitDecoratorMetadata": true
+            "noImplicitAny": false,
+            "noEmitOnError": true,
+            "removeComments": false,
+            "sourceMap": false,
+            "target": "es5",
+            "module": "commonjs",
+            "experimentalDecorators": true,
+            "emitDecoratorMetadata": true
         }))
         .pipe(gulp.dest(paths.app));
 });

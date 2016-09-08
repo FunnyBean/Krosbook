@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var user_service_1 = require('../../../services/user.service');
 var detail_user_admin_component_1 = require('./detail/detail.user.admin.component');
+var ng2_pagination_1 = require('ng2-pagination');
 var UsersAdminComponent = (function () {
     function UsersAdminComponent(router, userService) {
         this.router = router;
@@ -71,7 +72,9 @@ var UsersAdminComponent = (function () {
     UsersAdminComponent = __decorate([
         core_1.Component({
             templateUrl: 'app/components/admin/users/users.admin.component.html',
-            directives: [detail_user_admin_component_1.DetailUserAdminComponent]
+            directives: [detail_user_admin_component_1.DetailUserAdminComponent, ng2_pagination_1.PaginationControlsCmp],
+            pipes: [ng2_pagination_1.PaginatePipe],
+            providers: [ng2_pagination_1.PaginationService]
         }), 
         __metadata('design:paramtypes', [router_1.Router, user_service_1.UserService])
     ], UsersAdminComponent);
