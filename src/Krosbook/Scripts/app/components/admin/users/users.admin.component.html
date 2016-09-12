@@ -1,17 +1,24 @@
 <h2>Používatelia</h2>
 <button type="button" class="btn btn-success" (click)="newUser()"><span class="glyphicon glyphicon-plus"></span>  Nový používateľ</button>
 <user *ngIf="showOfficeWindow" (windowClose)="windowClose($event)" (updateList)="GetUsers()" [userId]="userId"></user>
+<div class="col-md-12 text-center" style="margin-top: 10px; margin-bottom: 15px;">
+    <span *ngFor="let char of alphabet" class="btn btn-default" (click)="filter(char)">{{ char }}</span>
+    <span class="btn btn-default" (click)="removeFilter()">Všetci</span>
+</div>
 <table class="table table-hover col-md-12">
     <thead>
         <tr>
-            <th>Obrázok</th>
-            <th>Meno</th>
-            <th>Priezvisko</th>
-            <th>Email</th>
-            <th class="buttonsRight">Akcie</th>
+            <th class="col-md-1">Obrázok</th>
+            <th class="col-md-2">Meno</th>
+            <th class="col-md-3">Priezvisko</th>
+            <th class="col-md-4">Email</th>
+            <th class="buttonsRight col-md-2">Akcie</th>
         </tr>
     </thead>
-    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p }">
+    <tr *ngIf="!users">
+        <td colspan="5" class="text-center col-md-12"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; margin: 5px"></i> Načítavam dáta</td>
+    </tr>
+    <tr *ngFor="let user of users">
         <td><img alt="Embedded Image" [src]="'data:image/png;base64,'+user.photoBase64" width="50" height="50"></td>
         <td>{{user.name}}</td>
         <td>{{user.surname}}</td>
@@ -24,11 +31,5 @@
             </div>
         </td>
     </tr>
-    <tr>
-        <td>
-        <pagination-controls (pageChange)="p = $event"></pagination-controls>
-            </td>
-        </tr>
-      
 </table>
 

@@ -12,12 +12,13 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var user_service_1 = require('../../services/user.service');
 var ng2_cookies_1 = require('ng2-cookies/ng2-cookies');
+var moment = require('moment');
 var LoginComponent = (function () {
     function LoginComponent(router, userService) {
         var _this = this;
         this.router = router;
         this.userService = userService;
-        this.year = '2016';
+        this.year = moment().format("YYYY");
         this.rememberActive = false;
         this.saving = false;
         if (ng2_cookies_1.Cookie.get("RememberMe") != null) {
@@ -30,7 +31,6 @@ var LoginComponent = (function () {
                 _this.saving = false;
                 ng2_cookies_1.Cookie.delete('RememberMe');
                 _this.error = 'Nesprávne údaje na automatické prihlásenie';
-                console.log(error.text());
             });
         }
     }
@@ -43,11 +43,7 @@ var LoginComponent = (function () {
         }, function (error) {
             _this.saving = false;
             _this.error = 'Nesprávny email/heslo';
-            console.log(error.text());
         });
-    };
-    LoginComponent.prototype.PasswordRecovery = function () {
-        alert("zmena hesla ");
     };
     LoginComponent = __decorate([
         core_1.Component({

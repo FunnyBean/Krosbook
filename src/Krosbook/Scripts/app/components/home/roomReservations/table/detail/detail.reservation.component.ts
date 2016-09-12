@@ -105,7 +105,7 @@ export class DetailReservationComponent implements OnInit {
 
     editReservation(form)
     {
-        if(form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating && this.data.roomReservationRepeaterId == null){
+        if(form.invalid || (form.pristine && !this.emailInvitation && !this.reserveGoToMeeting && !this.repeating && this.data.roomReservationRepeaterId == null)){
             this.windowClose.emit(true);
             return false;
         }

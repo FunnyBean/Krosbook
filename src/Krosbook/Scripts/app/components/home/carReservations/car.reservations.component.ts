@@ -1,10 +1,10 @@
 import {Component, OnInit, AfterViewInit, ViewChildren, QueryList} from '@angular/core';
-import {ActivatedRoute,ROUTER_DIRECTIVES,Router} from '@angular/router';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {User} from '../../../models/user.admin.model';
 import {UserService} from '../../../services/user.service';
 
-import {MyReservationsComponent} from './myReservations/myReservations.component';
+import {MyReservationsComponent} from './my/my.reservations.component';
 import {OrderDetailComponent} from './order/order.detail.component';
 import {OrdersManagerComponent} from './orders/orders.manager.component';
 import {ReservationsComponent} from './reservations/reservations.component';
@@ -23,7 +23,7 @@ export class CarsReservationsComponent  {
   private prevadzkar:boolean = false;
   private userData:User = new User();
 
-  constructor(private router:Router, private userService:UserService) {}
+  constructor(private userService:UserService) {}
 
   ngOnInit(){
     this.userService.myProfile().subscribe(

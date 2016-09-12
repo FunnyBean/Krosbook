@@ -26,7 +26,9 @@ export class AdminComponent implements OnInit{
     this.contentHeight = (window.innerHeight - 78).toString()+'px';
   }
 
-  ngOnInit(){
+  ngOnInit() {
+      $(window).unbind("resize");
+
     window.addEventListener("resize", function(){
       this.contentHeight = (window.innerHeight - 78).toString()+'px';
       document.getElementById("content").style.minHeight = this.contentHeight;

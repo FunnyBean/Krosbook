@@ -1,0 +1,33 @@
+<div id="myReservations">
+    <h4>Moje objednávky</h4>
+
+    <table class="table table-hover col-md-12">
+        <thead>
+            <tr>
+                <th class="col-md-2">Destinácia</th>
+                <th class="col-md-2">Auto</th>
+                <th class="col-md-2">Dátum a čas začiatku</th>
+                <th class="col-md-2">Dátum a čas konca</th>
+                <th class="col-md-2">Stav vybavenia</th>
+                <th class="text-right col-md-2">Akcie</th>
+            </tr>
+        </thead>
+        <tr *ngIf="!reservations">
+            <td colspan="6" class="text-center col-md-12"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; margin: 5px"></i> Načítavam dáta</td>
+        </tr>
+        <tr *ngFor="let res of reservations">
+            <td>{{ res.destination }}</td>
+            <td>{{ cars[res.carId] }}</td>
+            <td>{{ formatDateTime(res.dateTimeStart) }}</td>
+            <td>{{ formatDateTime(res.dateTimeEnd) }}</td>
+            <td>{{ states[res.reservationState - 1] }}</td>
+            <td class="text-right">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" [disabled]="res.reservationState != 1" class="btn btn-warning glyphicon glyphicon-edit" (click)="editReservation(res.id)"></button>
+                    <button type="button" *ngIf="res.reservationState == 1" class="btn btn-danger glyphicon glyphicon-trash" (click)="deleteReservation(res.id)"></button>
+                    <button type="button" *ngIf="res.reservationState == 2" class="btn btn-danger glyphicon glyphicon-trash" (click)="askForDeleteReservation(res.id)"></button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

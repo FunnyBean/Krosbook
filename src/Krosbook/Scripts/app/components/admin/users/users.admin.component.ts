@@ -3,23 +3,26 @@ import {ROUTER_DIRECTIVES, Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
 import {DetailUserAdminComponent} from './detail/detail.user.admin.component';
 import {User} from '../../../models/user.admin.model';
-import {PaginatePipe, PaginationControlsCmp, PaginationService} from 'ng2-pagination';
 
 
 @Component({
   templateUrl: 'app/components/admin/users/users.admin.component.html',
-  directives: [DetailUserAdminComponent, PaginationControlsCmp],
-  pipes: [PaginatePipe],
-  providers: [PaginationService]
+  directives: [DetailUserAdminComponent]
 })
 
 export class UsersAdminComponent implements OnInit {
   public users:Array<User>;
-  public userId:number;
+  public userId: number;
+  public alphabet: Array<string> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+  private slovakAlphabet: Array<string> = ['Á', 'Č', 'Ď', 'É', 'Í', 'Ĺ', 'Ľ', 'Ň', 'Ó', 'Š', 'Ť', 'Ú', 'Ž'];
+  private englishAlphabet: Array<string> = ['A', 'C', 'D', 'E', 'I', 'L', 'L', 'N', 'O', 'S', 'T', 'U', 'Z'];
+  private filterChar: string = '';
   private showOfficeWindow: boolean = false;
+  private allUsers: Array<User>;
   
-  constructor(private router:Router, private userService:UserService) {
-    this.GetUsers;
+  constructor(private router: Router, private userService: UserService) {
+      this.GetUsers();
   }
 
   ngOnInit() {
@@ -30,10 +33,38 @@ export class UsersAdminComponent implements OnInit {
     this.userService.getUsers()
       .subscribe(
         data => {
-            this.users = data.json();
+            this.allUsers = data.json();
+            if (this.filterChar == '')
+                this.users = this.allUsers;
+            else this.filter();
         },
         error => console.error(error)
       );
+  }
+
+  filter(char = this.filterChar) {
+      this.filterChar = char;
+      this.users = [];
+      for (var i = 0; i < this.allUsers.length; i++)
+      {
+          if (this.allUsers[i].surname[0] == char) {
+              this.users.push(this.allUsers[i]);
+          }
+      }
+      var enAIndex = this.englishAlphabet.indexOf(char);
+      if (enAIndex != -1 && this.slovakAlphabet[enAIndex]) {
+          var newChar = this.slovakAlphabet[enAIndex];
+          for (var i = 0; i < this.allUsers.length; i++) {
+              if (this.allUsers[i].surname[0] == newChar) {
+                  this.users.push(this.allUsers[i]);
+              }
+          }
+      }
+  }
+
+  removeFilter() {
+      this.filterChar = '';
+      this.users = this.allUsers;
   }
 
   newUser(){

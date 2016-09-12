@@ -84,8 +84,8 @@ export class RoomReservationsComponent implements OnInit  {
   ngOnDestroy() {
       $(window).unbind("resize");
       $(window).on("resize", function () {
-          this.height = window.innerHeight - document.getElementById("header").clientHeight;
-          $("#content").css({ "height": this.height });
+          var height = window.innerHeight - document.getElementById("header").clientHeight;
+          $("#content").css({ "height": height });
       });
   }
 

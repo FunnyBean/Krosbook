@@ -20,6 +20,7 @@ var AdminComponent = (function () {
         this.contentHeight = (window.innerHeight - 78).toString() + 'px';
     }
     AdminComponent.prototype.ngOnInit = function () {
+        $(window).unbind("resize");
         window.addEventListener("resize", function () {
             this.contentHeight = (window.innerHeight - 78).toString() + 'px';
             document.getElementById("content").style.minHeight = this.contentHeight;

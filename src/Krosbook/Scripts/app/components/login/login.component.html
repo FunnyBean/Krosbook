@@ -13,7 +13,7 @@
             </div>
 
             <div class="form-group">
-                <input type="password" id="password" class="" placeholder="heslo" name="password" (keyup)="password = $event.target.value">
+                <input type="password" id="password" class="" placeholder="heslo" name="password" [(ngModel)]="password">
             </div>
 
             <div class="form-group checkbox">
@@ -21,9 +21,10 @@
                     <input type="checkbox" id="remember" name="remember" (change)="rememberActive = $event.target.checked"> Zapamätať prihlásenie
                 </label>
             </div>
-            
+
             <div class="form-group">
-                <button type="submit" id="login_button" class="ui button" >Prihlásiť 
+                <button type="submit" id="login_button" class="ui button">
+                    Prihlásiť
                     <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:25px; margin-left: 5px"></i>
                 </button>
 
@@ -31,11 +32,11 @@
                     Zabudli ste heslo?
                 </a>
 
-                              
+
             </div>
-            
-             
-        
+
+
+
         </form>
 
     </div>

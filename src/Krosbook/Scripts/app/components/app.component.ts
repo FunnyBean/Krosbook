@@ -10,6 +10,9 @@ import {RolesService} from '../services/roles.service';
 import {HomeComponent} from './home/home.component';
 import {AdminComponent} from './admin/admin.component';
 import {LoginComponent} from './login/login.component';
+import {PasswordSetComponent} from './login/passwordSet/passwordSet.component';
+import {PasswordResetComponent} from './login/passwordReset/passwordReset.component';
+import {MyReservationsComponent} from './home/carReservations/my/my.reservations.component';
 
 @Component({
     selector: 'app-root',
@@ -18,6 +21,6 @@ import {LoginComponent} from './login/login.component';
     providers: [
         UserService, OfficeService, CarService, EquipmentService, RolesService
     ],
-    precompile: [HomeComponent, AdminComponent, LoginComponent]
+    precompile: [HomeComponent, AdminComponent, LoginComponent, PasswordSetComponent, PasswordResetComponent, MyReservationsComponent]
 })
 export class AppComponent { }

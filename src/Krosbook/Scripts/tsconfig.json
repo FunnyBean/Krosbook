@@ -1,23 +1,19 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "mapRoot": "/",
     "module": "commonjs",
-    "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": false,
-    "outDir": "../dist/",
-    "rootDir": ".",
+    "outDir": "../wwwroot/app/", // where transpiled file will be placed.
+    "removeComments": false,
     "sourceMap": true,
     "target": "es5",
-    "inlineSources": true
+    "moduleResolution": "node"
   },
-
-  "files": [
-    "main.ts",
-    "typings.d.ts"
+  "exclude": [
+    "node_modules",
+    "typings/main",
+    "typings/main.d.ts"
   ]
 }

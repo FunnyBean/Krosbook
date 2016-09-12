@@ -7,13 +7,13 @@
 /** Map relative paths to URLs. */
 var map = {};
 /** User packages configuration. */
-var packages = {};
+var packages = {
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
  * Everything underneath this line is managed by the CLI.
  **********************************************************************************************/
 var barrels = [
-    // Angular specific barrels.
     '@angular/core',
     '@angular/common',
     '@angular/compiler',
@@ -22,16 +22,17 @@ var barrels = [
     '@angular/router',
     '@angular/platform-browser',
     '@angular/platform-browser-dynamic',
-    // Thirdparty barrels.
     'rxjs',
-    // App specific barrels.
     'app',
     'app/shared'
 ];
-var cliSystemConfigPackages = {};
+
+var cliSystemConfigPackages = { };
+
 barrels.forEach(function (barrelName) {
     cliSystemConfigPackages[barrelName] = { main: 'index' };
 });
+
 // Apply the CLI SystemJS configuration.
 System.config({
     defaultJSExtensions: true,
@@ -41,9 +42,9 @@ System.config({
         'main': 'main.js',
         'ng2-cookies': 'lib/js/ng2-cookies',
         'moment': 'lib/js/moment/moment.js',
-        'ng2-pagination': 'lib/ng2-pagination/dist/ng2-pagination'
     },
     packages: cliSystemConfigPackages
 });
+
 // Apply the user's configuration.
 System.config({ map: map, packages: packages });

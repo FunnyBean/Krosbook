@@ -81,11 +81,10 @@
             </div>
         </div>
 
-      <button (click)="editReservation(reservationForm)" *ngIf="!data.roomReservationRepeaterId" class="text-right btn btn-success" [disabled]="!reservationForm.valid">Uložiť zmeny
+      <button type="submit" (click)="editReservation(reservationForm)" *ngIf="!data.roomReservationRepeaterId" class="text-right btn btn-success" [disabled]="!reservationForm.valid">Uložiť zmeny
         <i *ngIf="saving" class="fa fa-circle-o-notch fa-spin" style="font-size:15px; margin-left: 5px"></i>
       </button>
-
-      <button (click)="deleteReservation()" *ngIf="!data.roomReservationRepeaterId" class="btn btn-danger" style="float: right">Odstrániť</button>
+      <button type="button" (click)="deleteReservation()" *ngIf="!data.roomReservationRepeaterId" class="btn btn-danger" style="float: right">Odstrániť</button>
     </form>
   </div>
 </div>

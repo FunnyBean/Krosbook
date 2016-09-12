@@ -1,74 +1,75 @@
 <!-- MANAZER OBJEDNAVOK-->
-<h4>Objednávky</h4>
+<h4>Manažér objednávok</h4>
 
- <button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
- <div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
-    <div class="form-group col-xs-3" > 
-      <label class="col-md-12 remove-padding">
-        <input type="radio"  name="orders" class="orderType" id="allOrders"  value="0" (click)="filterReservation()" checked>Všetky objednávky
-      </label>
-      <label class="col-md-12 remove-padding">
-        <input type="radio"  name="orders" class="orderType" id="approvedOrders"  value="2" (click)="filterReservation()">Schválené objednávky
-      </label>
-      <label class="col-md-12 remove-padding">
-        <input type="radio" name="orders" class="orderType" id="notApprovedOrders"  value="1" (click)="filterReservation()">Nespracované objednávky
-      </label>
-      <label class="col-md-12 remove-padding">
-        <input type="radio" name="orders" class="orderType" id="toDelete"  value="3" (click)="filterReservation()">Požiadavky na zmazanie
-      </label>
+<button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
+<div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
+    <div class="form-group col-xs-3">
+        <label class="col-md-12 remove-padding">
+            <input type="radio" name="orders" class="orderType" id="allOrders" value="0" (click)="filterReservation()" checked>Všetky objednávky
+        </label>
+        <label class="col-md-12 remove-padding">
+            <input type="radio" name="orders" class="orderType" id="approvedOrders" value="2" (click)="filterReservation()">Schválené objednávky
+        </label>
+        <label class="col-md-12 remove-padding">
+            <input type="radio" name="orders" class="orderType" id="notApprovedOrders" value="1" (click)="filterReservation()">Nespracované objednávky
+        </label>
+        <label class="col-md-12 remove-padding">
+            <input type="radio" name="orders" class="orderType" id="toDelete" value="3" (click)="filterReservation()">Na zrušenie
+        </label>
     </div>
 
     <div class="form-group col-xs-3">
-      <label> Zobraziť len nasledujúce auto:</label>
-      <select name="filterCar" id="filterCar" class="form-control" (change)="filterReservation()">  
-        <option  selected value="all" >všetky</option>
-        <option *ngFor="let car of carsData" class="form-control" [value]="car.id">{{ car.name }} : {{car.plate}}  </option>
-      </select>
+        <label> Zobraziť len nasledujúce auto:</label>
+        <select name="filterCar" id="filterCar" class="form-control" (change)="filterReservation()">
+            <option selected value="all">všetky</option>
+            <option *ngFor="let car of carsData" class="form-control" [value]="car.id">{{ car.name }} : {{car.plate}}  </option>
+        </select>
     </div>
 
     <div class="form-group col-xs-3">
-      <label>Zobraziť len nasledujúceho užívatela:</label>
-      <select name="filterUser" id="filterUser" class="form-control" (change)="filterReservation()">
-        <option  selected value='all'>všetky</option>
-        <option *ngFor="let user of usersData"  class="form-control"  [value]="user.id">{{ user.name }} {{user.surname}}</option>
-      </select>
+        <label>Zobraziť len nasledujúceho užívatela:</label>
+        <select name="filterUser" id="filterUser" class="form-control" (change)="filterReservation()">
+            <option selected value='all'>všetky</option>
+            <option *ngFor="let user of usersData" class="form-control" [value]="user.id">{{user.surname}} {{ user.name }}</option>
+        </select>
     </div>
 
     <div class="form-group col-xs-3">
-      <label>Počet výsledkov vyhľadávania:</label>
-      <p>{{ orders.length }}</p>
+        <label>Počet výsledkov vyhľadávania:</label>
+        <p>{{ orders.length }}</p>
     </div>
 </div>
 <table class="table table-hover col-md-12">
-  <thead> 
-  <tr>    
-    <th>Ciel</th>
-    <th>Osoba</th>
-    <th>Auto</th>
-    <th>Dátum a čas začiatku</th> 
-    <th>Dátum a čas konca</th>  
-    <th>Status</th>
-    <th class="buttonsRight">Akcie</th>
-  </tr>
-  </thead>
-  <h4 *ngIf="isEmpty">Nebola nájdená žiadna zhoda</h4>
+    <thead>
+        <tr>
+            <th class="col-md-2">Destinácia</th>
+            <th class="col-md-1">Osoba</th>
+            <th class="col-md-2">Auto</th>
+            <th class="col-md-2">Dátum a čas začiatku</th>
+            <th class="col-md-2">Dátum a čas konca</th>
+            <th class="col-md-1">Status</th>
+            <th class="buttonsRight col-md-2">Akcie</th>
+        </tr>
+    </thead>
+    <tr *ngIf="!orders">
+        <td colspan="7" class="text-center col-md-12"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; margin: 5px"></i> Načítavam dáta</td>
+    </tr>
+    <h4 *ngIf="isEmpty">Nebola nájdená žiadna zhoda</h4>
+    <tr *ngFor="let order of orders">
+        <td>{{order.destination}}</td>
+        <td>{{users[order.userId]}}</td>
+        <td>{{cars[order.carId]}}</td>
+        <td>{{formatDateTime(order.dateTimeStart)}}</td>
+        <td>{{formatDateTime(order.dateTimeEnd)}}</td>
+        <td [class]="order.reservationState == 2 ? 'success text-center' : order.reservationState == 1 ? 'warning text-center' : 'danger text-center'">{{states[order.reservationState - 1]}}
 
-  <tr *ngFor="let order of orders">
-    
-    <td>{{order.destination}}</td>
-    <td>{{users[order.userId]}}</td>
-    <td>{{cars[order.carId]}}</td>
-    <td>{{formatDateTime(order.dateTimeStart)}}</td>
-    <td>{{formatDateTime(order.dateTimeEnd)}}</td>
-    <td [class]="order.reservationState == 2 ? 'success text-center' : order.reservationState == 1 ? 'warning text-center' : 'danger text-center'">{{states[order.reservationState - 1]}}
-    
-    <td class="buttonsRight">
-      <div class="btn-group" role="group" aria-label="...">
-        <button type="button" *ngIf="order.reservationState == 1" class="btn btn-success glyphicon glyphicon-ok" (click)="approveOrder(order.carId, order.id, order.dateTimeStart, order.dateTimeEnd)"></button>
-        <button type="button" *ngIf="order.reservationState != 3" class="btn btn-warning glyphicon glyphicon-edit" (click)="editOrder(order.id)"></button>
-        <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removeOrder(order.id)"></button>
-      </div>
-    </td>
-  </tr>
+        <td class="buttonsRight">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" *ngIf="order.reservationState == 1" class="btn btn-success glyphicon glyphicon-ok" (click)="approveOrder(order.carId, order.id, order.dateTimeStart, order.dateTimeEnd)"></button>
+                <button type="button" *ngIf="order.reservationState != 3" class="btn btn-warning glyphicon glyphicon-edit" (click)="editOrder(order.id)"></button>
+                <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removeOrder(order.id)"></button>
+            </div>
+        </td>
+    </tr>
 </table>
 

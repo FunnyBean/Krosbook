@@ -3,11 +3,12 @@
 
 var gulp = require("gulp"),
     rimraf = require("gulp-rimraf"),
-    concat = require("gulp-concat-util"),
+    concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify"),
     sass = require("gulp-sass"),
-    typescript = require("gulp-typescript");
+    typescript = require("gulp-typescript"),
+    angular2 = require('gulp-angular2');
 
 var paths = {
     webroot: "./wwwroot/",
@@ -26,20 +27,19 @@ var libs = [
 
 gulp.task("All-JS-ToOneFile", function () {
     return gulp.src([
-        paths.npm + "rxjs/**/*.js",
-        paths.npm + "rxjs/**/*.js.map",
-        paths.npm + "@angular/**/*.js",
-        paths.npm + "@angular/**/*.js.map",
-        paths.npm + "systemjs/**/*.js",
-        paths.npm + "core-js/**/*.js",
-        paths.npm + "reflect-metadata/**/*.js",
-        paths.npm + "reflect-metadata/**/*.js.map",
-        paths.npm + "zone.js/**/*.js",
-        paths.npm + "ng2-pagination/**/*.js"     
+        paths.npm + 'core-js/client/shim.js',
+        paths.npm + 'zone.js/dist/zone.js',
+        paths.npm + 'reflect-metadata/Reflect.js',       
+        paths.npm + 'systemjs/dist/system.src.js',
     ])
- .pipe(concat.scripts('allJS.js'))
-    .pipe(gulp.dest(paths.lib)
-        );
+    .pipe(concat('allJS.js'))
+    .pipe(gulp.dest(paths.lib));
+});
+
+gulp.task("APP", function () {
+    return gulp.src(paths.webroot + "main.js")
+    .pipe(angular2())
+    .pipe(gulp.dest(paths.app))
 });
 
 

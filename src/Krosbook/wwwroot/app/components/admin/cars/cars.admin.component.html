@@ -2,24 +2,27 @@
 <button type="button" class="btn btn-success" (click)="newCar()"><span class="glyphicon glyphicon-plus"></span>  Nové vozidlo</button>
 <car *ngIf="showCarWindow" (windowClose)="windowClose($event)" (updateList)="getCars()" [carId]="carId"></car>
 <table class="table table-hover col-md-12">
-  <thead>
-  <tr>
-    <th>Značka a typ</th>
-    <th>ŠPZ</th>
-    <th>Farba</th>
-    <th class="buttonsRight">Akcie</th>
-  </tr>
-  </thead>
-  <tr *ngFor="let car of cars">
-    <td><strong>{{car.name}}</strong></td>
-    <td>{{car.plate}}</td>
-    <td [style.background-color]="car.color">&nbsp;</td>
-    <td class="buttonsRight">
-      <div class="btn-group" role="group" aria-label="...">
-        <button type="button" class="btn btn-warning glyphicon glyphicon-edit" (click)="editCar(car.id)"></button>
-        <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="deleteCar(car.id)"></button>
-      </div>
-    </td>
-  </tr>
+    <thead>
+        <tr>
+            <th class="col-md-4">Značka a typ</th>
+            <th class="col-md-4">ŠPZ</th>
+            <th class="col-md-2">Farba</th>
+            <th class="buttonsRight col-md-2">Akcie</th>
+        </tr>
+    </thead>
+    <tr *ngIf="!cars">
+        <td colspan="4" class="text-center col-md-12"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; margin: 5px"></i> Načítavam dáta</td>
+    </tr>
+    <tr *ngFor="let car of cars">
+        <td><strong>{{car.name}}</strong></td>
+        <td>{{car.plate}}</td>
+        <td [style.background-color]="car.color">&nbsp;</td>
+        <td class="buttonsRight">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-warning glyphicon glyphicon-edit" (click)="editCar(car.id)"></button>
+                <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="deleteCar(car.id)"></button>
+            </div>
+        </td>
+    </tr>
 </table>
 

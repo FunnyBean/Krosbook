@@ -8,7 +8,7 @@ import * as moment from 'moment';
 declare var $: any;
 
 @Component({
-    templateUrl: 'app/components/home/carReservations/myReservations/myReservations.component.html',
+    templateUrl: 'app/components/home/carReservations/my/my.reservations.component.html',
     providers: [CarOrderService],
 })
 

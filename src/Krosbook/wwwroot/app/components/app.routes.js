@@ -17,7 +17,7 @@ var equipment_admin_component_1 = require("./admin/equipment/equipment.admin.com
 var roles_admin_component_1 = require('./admin/roles/roles.admin.component');
 var orders_manager_component_1 = require('./home/carReservations/orders/orders.manager.component');
 var reservations_component_1 = require('./home/carReservations/reservations/reservations.component');
-var myReservations_component_1 = require('./home/carReservations/myreservations/myReservations.component');
+var my_reservations_component_1 = require('./home/carReservations/my/my.reservations.component');
 var order_detail_component_1 = require('./home/carReservations/order/order.detail.component');
 var room_reservations_component_1 = require('./home/roomReservations/room.reservations.component');
 var car_reservations_component_1 = require('./home/carReservations/car.reservations.component');
@@ -60,7 +60,7 @@ var routes = [
                         path: 'editreservation/:id', component: order_detail_component_1.OrderDetailComponent
                     },
                     {
-                        path: 'myreservations', component: myReservations_component_1.MyReservationsComponent,
+                        path: 'myreservations', component: my_reservations_component_1.MyReservationsComponent,
                     },
                     {
                         path: 'orders', component: orders_manager_component_1.OrdersManagerComponent, canActivate: [OperatorGuard_1.OperatorGuard]

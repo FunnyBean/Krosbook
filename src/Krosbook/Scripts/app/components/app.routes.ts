@@ -18,7 +18,7 @@ import {RolesAdminComponent} from './admin/roles/roles.admin.component';
 
 import {OrdersManagerComponent} from './home/carReservations/orders/orders.manager.component';
 import {ReservationsComponent} from './home/carReservations/reservations/reservations.component';
-import {MyReservationsComponent} from './home/carReservations/myreservations/myReservations.component';
+import {MyReservationsComponent} from './home/carReservations/my/my.reservations.component';
 import {OrderDetailComponent } from './home/carReservations/order/order.detail.component';
 import {RoomReservationsComponent} from './home/roomReservations/room.reservations.component';
 import {CarsReservationsComponent} from './home/carReservations/car.reservations.component';

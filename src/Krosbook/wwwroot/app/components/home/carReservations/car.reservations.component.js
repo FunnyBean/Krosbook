@@ -12,13 +12,12 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var user_admin_model_1 = require('../../../models/user.admin.model');
 var user_service_1 = require('../../../services/user.service');
-var myReservations_component_1 = require('./myReservations/myReservations.component');
+var my_reservations_component_1 = require('./my/my.reservations.component');
 var order_detail_component_1 = require('./order/order.detail.component');
 var orders_manager_component_1 = require('./orders/orders.manager.component');
 var reservations_component_1 = require('./reservations/reservations.component');
 var CarsReservationsComponent = (function () {
-    function CarsReservationsComponent(router, userService) {
-        this.router = router;
+    function CarsReservationsComponent(userService) {
         this.userService = userService;
         this.prevadzkar = false;
         this.userData = new user_admin_model_1.User();
@@ -45,9 +44,9 @@ var CarsReservationsComponent = (function () {
             templateUrl: 'app/components/home/carReservations/car.reservations.component.html',
             styles: ['.table-arrow {top: 0px;} #filter{background-color: #f2f2f2; padding: 10px;}'],
             directives: [router_1.ROUTER_DIRECTIVES],
-            precompile: [order_detail_component_1.OrderDetailComponent, orders_manager_component_1.OrdersManagerComponent, reservations_component_1.ReservationsComponent, myReservations_component_1.MyReservationsComponent]
+            precompile: [order_detail_component_1.OrderDetailComponent, orders_manager_component_1.OrdersManagerComponent, reservations_component_1.ReservationsComponent, my_reservations_component_1.MyReservationsComponent]
         }), 
-        __metadata('design:paramtypes', [router_1.Router, user_service_1.UserService])
+        __metadata('design:paramtypes', [user_service_1.UserService])
     ], CarsReservationsComponent);
     return CarsReservationsComponent;
 }());

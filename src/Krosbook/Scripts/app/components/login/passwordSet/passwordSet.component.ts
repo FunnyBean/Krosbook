@@ -30,7 +30,7 @@ export class PasswordSetComponent
             this.saving = true;
             this.userService.savePasswordReset(this.token, this.password[0]).subscribe(
                 data => { this.success = "Heslo bolo úspešne zmenené."; this.password = ['', '']; this.saving = false; },
-                error => { this.error = "Heslo sa nepodarilo upraviť. Nepltaný overovací link."; this.saving = false; }
+                error => { this.error = "Heslo sa nepodarilo upraviť. Neplatný overovací link."; this.saving = false; }
             )
         }
         else this.error = "Heslá sa nezhodujú.";

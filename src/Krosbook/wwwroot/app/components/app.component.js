@@ -18,6 +18,9 @@ var roles_service_1 = require('../services/roles.service');
 var home_component_1 = require('./home/home.component');
 var admin_component_1 = require('./admin/admin.component');
 var login_component_1 = require('./login/login.component');
+var passwordSet_component_1 = require('./login/passwordSet/passwordSet.component');
+var passwordReset_component_1 = require('./login/passwordReset/passwordReset.component');
+var my_reservations_component_1 = require('./home/carReservations/my/my.reservations.component');
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -29,7 +32,7 @@ var AppComponent = (function () {
             providers: [
                 user_service_1.UserService, office_service_1.OfficeService, car_service_1.CarService, equipment_service_1.EquipmentService, roles_service_1.RolesService
             ],
-            precompile: [home_component_1.HomeComponent, admin_component_1.AdminComponent, login_component_1.LoginComponent]
+            precompile: [home_component_1.HomeComponent, admin_component_1.AdminComponent, login_component_1.LoginComponent, passwordSet_component_1.PasswordSetComponent, passwordReset_component_1.PasswordResetComponent, my_reservations_component_1.MyReservationsComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
