@@ -39,7 +39,12 @@ export class DetailReservationComponent implements OnInit {
     public repetitionData:Repetition = new Repetition();
     public originDateTime:any;
 
-    constructor(private reservationService: ReservationService, private userService: UserService) { }
+    constructor(private reservationService: ReservationService, private userService: UserService) {
+        
+     }
+
+
+
 
     ngOnInit()
     {
@@ -70,6 +75,14 @@ export class DetailReservationComponent implements OnInit {
             },
             error => console.log(error)
         );
+
+        /*  ESCAPE LISTENER NA ZATVARANIE DETAIL RESERVATION OKNA */     
+        document.getElementById("reservationDetail").addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {           
+            this.deleteReservation();         
+        }
+        }, false);         
+
     }
 
     updateMaxTime()

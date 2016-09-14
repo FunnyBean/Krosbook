@@ -42,22 +42,26 @@ export class RoomReservationsComponent implements OnInit  {
 
   @ViewChildren(TableReservationComponent) tableReservationComponent: QueryList<TableReservationComponent>;
 
-  constructor(private route:ActivatedRoute, private carService:CarService, private officeService:OfficeService, private userService:UserService) { }
+  constructor(private route:ActivatedRoute, private carService:CarService, private officeService:OfficeService, private userService:UserService) { 
+  }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.loadUsersData();
     this.updateTime();
-    this.updateWeek(); 
+    this.updateWeek();    
   }
 
   ngAfterViewInit(){
+    
     var tables = this.tableReservationComponent.toArray();
     for(var i = 0; i < tables.length; i++){
       tables[i].updateData(this.week);
     }
+  
   }
 
   ngAfterContentInit(){
+    
     this.tableWidth = document.getElementById("reservationTable").clientWidth;
     
     $(window).on("resize", function(){
@@ -165,6 +169,9 @@ export class RoomReservationsComponent implements OnInit  {
       },
      error => console.log(error)
      );
+
+      
+   
   }
 
   moveFor() {

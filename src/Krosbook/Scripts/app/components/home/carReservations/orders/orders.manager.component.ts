@@ -58,25 +58,47 @@ export class OrdersManagerComponent {
     var reservationState = $(".orderType:checked").val();//2=Nespracovaná;1=Spracovana
     var filtered:Array<CarReservation> = new Array<CarReservation>();
 
+    var approvedOrders=$('#approvedOrders').is(':checked')?2:0;
+    var notApprovedOrders=$('#notApprovedOrders').is(':checked')?1:0;
+    var toDelete=$('#toDelete').is(':checked')?3:0;
+
     if (choosenUser == 'all' && choosenCar == 'all') {
       for (let order of this.stableOrders) {
-        if (reservationState == 0 || order.reservationState == reservationState) {
+        if (order.reservationState == approvedOrders) {
           filtered.push(order);           
+        }
+        else if(order.reservationState == approvedOrders || order.reservationState == notApprovedOrders ){
+          filtered.push(order);
+        }
+         else if(order.reservationState == approvedOrders || order.reservationState == notApprovedOrders ||order.reservationState==toDelete ){
+          filtered.push(order);
         }
       }
     }
     
     else if (choosenCar == 'all') {    
       for (let order of this.stableOrders) {
-        if (order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
+        if (order.userId == choosenUser && (order.reservationState == approvedOrders)) {
           filtered.push(order);        
         }
+        else if(order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders )){
+          filtered.push(order);
+         }
+         else if(order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders || order.reservationState == toDelete)){
+          filtered.push(order);
+         }
       }
     }
     
     else if (choosenUser == 'all') {
       for (let order of this.stableOrders) {
-        if (order.carId == choosenCar && (reservationState == 0 || order.reservationState == reservationState)) {
+        if (order.carId == choosenCar && ( order.reservationState == approvedOrders)) {
+          filtered.push(order);          
+        }
+         else if (order.carId == choosenCar && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders)) {
+          filtered.push(order);          
+        }
+        else if (order.carId == choosenCar && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders || order.reservationState == toDelete)) {
           filtered.push(order);          
         }
       }
@@ -84,7 +106,13 @@ export class OrdersManagerComponent {
     
     else {
       for (let order of this.stableOrders) {
-        if (order.carId == choosenCar && order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
+        if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == approvedOrders)) {
+          filtered.push(order);       
+        }
+        else if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == approvedOrders ||  order.reservationState==notApprovedOrders )) {
+          filtered.push(order);       
+        }
+        else if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState==notApprovedOrders || order.reservationState==toDelete)) {
           filtered.push(order);       
         }
       }
