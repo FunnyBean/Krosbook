@@ -80,6 +80,9 @@ td {
   background-color: #5cb85c;
   border: none;
 }
+.reservation td.boldTime { /*spôsob zvýraznenia èasu v rezervaèných tabu¾kách*/
+    font-weight: bold;
+}
 #currentDate {
   color: #337ab7;
   border: 2px #337ab7 solid !important;

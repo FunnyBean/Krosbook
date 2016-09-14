@@ -35,10 +35,10 @@ var TableReservationComponent = (function () {
         $(window).unbind("focus");
     };
     TableReservationComponent.prototype.fillTable = function () {
-        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, carId, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg;
+        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, carId, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg, lastCell;
         for (var i = 0; i < this.times.length; i++) {
             table += '<tr>';
-            table += '<td class="col-md-1">' + this.times[i].time + '</td>';
+            table += '<td class="col-md-1 time">' + this.times[i].time + '</td>';
             for (var j = 0; j < this.tableData[this.times[i].time].length; j++) {
                 var cell = this.tableData[this.times[i].time][j];
                 var holiday = this.holidayService.isHoliday(moment().add(this.week, 'weeks').weekday(j + 1).format("DD/MM"), moment().add(this.week, 'weeks').format("YYYY"));
@@ -84,6 +84,7 @@ var TableReservationComponent = (function () {
             var element = $(this);
             isMouseDown = true;
             $(this).addClass("selected");
+            $(this).siblings(".time").addClass("boldTime");
             fromRow = row;
             fromCol = col;
             carId = $(this).parent().parent().attr("id");
@@ -93,9 +94,16 @@ var TableReservationComponent = (function () {
         })
             .on("mouseover", function () {
             if (isMouseDown && col == fromCol && (row - 1) == beforeRow && !($(this).hasClass("selected"))) {
-                $(this).addClass("selected");
+                lastCell = $(this);
+                lastCell.addClass("selected").siblings(".time").addClass("boldTime");
                 beforeRow = row;
                 length++;
+            }
+            else if (isMouseDown && col == fromCol && row == (beforeRow - 1) && $(this).hasClass("selected")) {
+                lastCell.removeClass("selected").siblings(".time").removeClass("boldTime");
+                beforeRow = row;
+                lastCell = $(this);
+                length--;
             }
         });
         $(document).on("mouseup", function () {

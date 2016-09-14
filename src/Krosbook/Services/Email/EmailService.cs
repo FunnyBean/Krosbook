@@ -177,6 +177,16 @@ namespace Krosbook.Services.Email
             _sender.SendEmail(msg);
         }
 
+        public void SendNewCarReservaion(CarReservation rvm)
+        {
+            var data = new EmailCarReservationNew(rvm);
+            data.From = EmailFrom;
+            data.To.Add("prevadzka@kros.sk");
+            var msg = _creator.CreateEmail(data);
+
+            _sender.SendEmail(msg);
+        }
+
         public void SendNewAccountEmail(string email, string name, string surname, string token, DateTime deadline)
         {
             var data = new NewAccount(name, surname, token, deadline);
@@ -186,7 +196,6 @@ namespace Krosbook.Services.Email
 
             _sender.SendEmail(msg);
         }
-
 
         #endregion
 

@@ -226,6 +226,8 @@ namespace Krosbook.Controllers.Api.v1
             },
             () =>
             {
+                //_emailService.SendNewCarReservaion(reservation);
+
                 this.Response.StatusCode = (int)HttpStatusCode.Created;
 
                 return this.Json(new JsonResult(this.Json(_mapper.Map<CarReservationViewModel>(reservation)))

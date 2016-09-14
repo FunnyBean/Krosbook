@@ -170,5 +170,12 @@ export class OrderDetailComponent implements OnInit {
     if(this.reservationData.dateTimeEnd <= this.reservationData.dateTimeStart)
       this.reservationData.dateTimeEnd = moment(this.reservationData.dateTimeStart).add(1, 'hour').format("YYYY-MM-DDTHH:mm");
   }
+
+  closeWindow()
+  {
+      if (this.reservationId)
+          this.router.navigate(['/home/reservations/cars/orders']);
+      else this.router.navigate(['/home/reservations/cars']);
+  }
 }
 

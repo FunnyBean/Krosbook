@@ -21,6 +21,7 @@ namespace Krosbook.Services.Email
         void SendRoomReservation(string title, string emailTo, string filename, string joinUrlG2M);
         void SendG2M(RoomReservationViewModel rvm, string joinUrlG2M);
         void SendCarReservation(CarReservation rvm);
+        void SendNewCarReservaion(CarReservation rvm);
         void CreateEmailCalendarEvent(RoomReservationViewModel rvm);
         void CreateEmailCalendarEvent(RoomReservationViewModel rvm, string joinUrlG2M);
         void SendNewAccountEmail(string email, string name, string surname, string token, System.DateTime deadline);

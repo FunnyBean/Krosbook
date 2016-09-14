@@ -38,8 +38,6 @@ var OrdersManagerComponent = (function () {
         var choosenUser = $("#filterUser").val();
         var reservationState = $(".orderType:checked").val(); //2=Nespracovaná;1=Spracovana
         var filtered = new Array();
-        //console.log(typeof choosenCar +' '+choosenCar);
-        //console.log(typeof choosenUser+' '+choosenUser);
         if (choosenUser == 'all' && choosenCar == 'all') {
             for (var _i = 0, _a = this.stableOrders; _i < _a.length; _i++) {
                 var order = _a[_i];
@@ -108,8 +106,7 @@ var OrdersManagerComponent = (function () {
         this.isFree(carId, id, from, to).subscribe(function (result) {
             if (result) {
                 if (confirm("Schvaľujete túto rezerváciu?")) {
-                    _this.carOrderService.approveOrder(id).subscribe(function (data) {
-                    }, function (error) {
+                    _this.carOrderService.approveOrder(id).subscribe(function (data) { }, function (error) {
                         alert(error);
                     }, function () {
                         _this.getOrders();
@@ -137,8 +134,11 @@ var OrdersManagerComponent = (function () {
         var _this = this;
         this.carOrderService.getOrders()
             .subscribe(function (data) {
-            _this.orders = data.json();
             _this.stableOrders = data.json();
+            if (_this.isShowedFilterInput)
+                _this.filterReservation();
+            else
+                _this.orders = data.json();
         }, function (error) { return console.error(error); });
     };
     OrdersManagerComponent.prototype.isFree = function (carId, reservationId, from, to) {

@@ -58,9 +58,6 @@ export class OrdersManagerComponent {
     var reservationState = $(".orderType:checked").val();//2=Nespracovaná;1=Spracovana
     var filtered:Array<CarReservation> = new Array<CarReservation>();
 
-    //console.log(typeof choosenCar +' '+choosenCar);
-    //console.log(typeof choosenUser+' '+choosenUser);
-
     if (choosenUser == 'all' && choosenCar == 'all') {
       for (let order of this.stableOrders) {
         if (reservationState == 0 || order.reservationState == reservationState) {
@@ -144,8 +141,7 @@ export class OrdersManagerComponent {
       if(result){
         if(confirm("Schvaľujete túto rezerváciu?")) {
           this.carOrderService.approveOrder(id).subscribe(
-            data => {
-            },
+            data => { },
             error => {
               alert(error)
             },
@@ -179,9 +175,11 @@ export class OrdersManagerComponent {
     this.carOrderService.getOrders()
       .subscribe(
         data => {
-          this.orders = data.json();
-          this.stableOrders = data.json();
-              
+            this.stableOrders = data.json();
+            if (this.isShowedFilterInput)
+                this.filterReservation();
+            else
+                this.orders = data.json();   
         },
         error => console.error(error)
       );

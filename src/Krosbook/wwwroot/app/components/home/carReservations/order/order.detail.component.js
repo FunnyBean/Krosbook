@@ -143,6 +143,12 @@ var OrderDetailComponent = (function () {
         if (this.reservationData.dateTimeEnd <= this.reservationData.dateTimeStart)
             this.reservationData.dateTimeEnd = moment(this.reservationData.dateTimeStart).add(1, 'hour').format("YYYY-MM-DDTHH:mm");
     };
+    OrderDetailComponent.prototype.closeWindow = function () {
+        if (this.reservationId)
+            this.router.navigate(['/home/reservations/cars/orders']);
+        else
+            this.router.navigate(['/home/reservations/cars']);
+    };
     OrderDetailComponent = __decorate([
         core_1.Component({
             selector: 'order',
