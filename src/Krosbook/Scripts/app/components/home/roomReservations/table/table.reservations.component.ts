@@ -35,7 +35,6 @@ export class TableReservationComponent implements OnInit {
     constructor(private reservationService: ReservationService, private holidayService: HolidayService) { }
 
     ngOnInit() {
-
         this.updateData();
         this.data.color = (this.data.color === undefined) ? '#337ab7' : this.data.color;
         var thisDocument = this;

@@ -31,7 +31,7 @@ export class DateValidator{
 
   validate(c:FormControl){
     var date = moment(c.value);
-    if(date.minute() % 30 == 0)
+    if(date.minute() == 0)
       return null;
     else return {validateDate: true}
   }

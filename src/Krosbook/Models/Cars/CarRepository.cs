@@ -23,18 +23,11 @@ namespace Krosbook.Models.Cars
             return this.GetSingle(x => x.Plate == plate);
         }
 
-
         public override Car GetItem(int carId)
         {
             return this.GetItem(x => x.Id == carId);
         }
 
-        /// <summary>
-        /// Gets all cars
-        /// </summary>
-        /// <returns>
-        /// Return all cars; otherwise null.
-        /// </returns>
         public override IQueryable<Car> GetAll()
         {
             return _dbContext.Set<Car>();

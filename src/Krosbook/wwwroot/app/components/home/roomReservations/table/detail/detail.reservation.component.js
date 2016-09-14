@@ -33,6 +33,7 @@ var DetailReservationComponent = (function () {
     }
     DetailReservationComponent.prototype.ngOnInit = function () {
         var _this = this;
+        var thisDocument = this;
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(function (data) {
             _this.data = data.json();
             _this.originDateTime = _this.data.dateTime;
@@ -55,6 +56,17 @@ var DetailReservationComponent = (function () {
             _this.updateMaxTime();
             _this.updateEndTime();
         }, function (error) { return console.log(error); });
+        $(document).on("keyup", function (e) {
+            if (e.which == 27) {
+                if (thisDocument.reservationDetailId[3])
+                    thisDocument.windowClose.emit(false);
+                else
+                    thisDocument.deleteReservation();
+            }
+        });
+    };
+    DetailReservationComponent.prototype.ngOnDestroy = function () {
+        $(document).unbind("keyup");
     };
     DetailReservationComponent.prototype.updateMaxTime = function () {
         this.maxTime = ((18 - moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").hour()) * 60 - moment(this.data.dateTime).minute()) / 60;

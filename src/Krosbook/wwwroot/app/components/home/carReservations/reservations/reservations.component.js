@@ -29,12 +29,13 @@ var ReservationsComponent = (function () {
         this.times = JSON.parse('[]');
         this.loggedUser = new user_admin_model_1.User();
         this.usersList = [];
-        this.length = 0.5;
+        this.length = 1;
         this.maxTime = 10.5;
         this.week = 0;
         this.now = moment();
         this.moveDate = this.now.format("YYYY-MM-DD");
         this.showOrderWindow = false;
+        this.cars = new Array();
     }
     ReservationsComponent.prototype.ngOnInit = function () {
         this.loadUsersData();
@@ -72,7 +73,7 @@ var ReservationsComponent = (function () {
         });
     };
     ReservationsComponent.prototype.updateMaxTime = function () {
-        this.maxTime = ((18 - moment(this.dateTime).hour()) * 60 - moment(this.dateTime).minute()) / 60;
+        this.maxTime = (18 - moment(this.dateTime).hour()) * 60;
     };
     ReservationsComponent.prototype.loadUsersData = function () {
         var _this = this;
@@ -89,40 +90,18 @@ var ReservationsComponent = (function () {
         var _this = this;
         this.carService.getCars().subscribe(function (data) {
             _this.data = data.json();
+            for (var i = 0; i < _this.data.length; i++) {
+                var row = _this.data[i];
+                if (_this.cars.indexOf(row.name) == -1)
+                    _this.cars.push(row.name);
+            }
         }, function (error) { return console.log(error); });
     };
     ReservationsComponent.prototype.updateTime = function () {
-        for (var i = 7; i < 18; i++) {
-            for (var j = 0; j < 2; j++) {
-                var time = moment().hour(i).minute(j * 30).format('HH:mm');
-                this.times.push({ 'time': time });
-            }
+        for (var i = 7; i < 19; i++) {
+            var time = moment().hour(i).minute(0).format('HH:mm');
+            this.times.push({ 'time': time });
         }
-    };
-    ReservationsComponent.prototype.showFilterInput = function () {
-        this.dateTime = moment().minute(0).second(0).format("YYYY-MM-DDTHH:mm:ss");
-        this.isShowedFilterInput = !this.isShowedFilterInput;
-        if (this.isShowedFilterInput == false) {
-            this.data = null;
-            this.times = JSON.parse('[]');
-            this.ngOnInit();
-        }
-        if (this.isShowedFilterInput) {
-            document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Skryť filter";
-        }
-        else {
-            document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Zobraziť filter";
-        }
-    };
-    ReservationsComponent.prototype.filterReservation = function (element) {
-        var _this = this;
-        this.carService.filterCars(this.dateTime, this.length * 60).subscribe(function (data) {
-            _this.data = data.json();
-            _this.week = moment(_this.dateTime).week() - moment().week() + 52 * (moment(_this.dateTime).year() - moment().year());
-            if (moment(_this.dateTime).year() - moment().year() !== 0)
-                _this.week++;
-            _this.updateWeek();
-        }, function (error) { return console.log(error); });
     };
     ReservationsComponent.prototype.moveFor = function () {
         this.week += 1;

@@ -43,7 +43,7 @@ var DateValidator = (function () {
     }
     DateValidator.prototype.validate = function (c) {
         var date = moment(c.value);
-        if (date.minute() % 30 == 0)
+        if (date.minute() == 0)
             return null;
         else
             return { validateDate: true };

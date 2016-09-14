@@ -21,7 +21,7 @@ var MyReservationsComponent = (function () {
         this.router = router;
         this.reservations = new Array();
         this.cars = new Array();
-        this.states = ['Nespracovaná', 'Schválená', 'Zaradená na vymazanie'];
+        this.states = ['Nespracovaná', 'Schválená', 'Zaradená na zrušenie'];
         this.carService.getCars().subscribe(function (data) {
             var cars = data.json();
             for (var i = 0; i < cars.length; i++)

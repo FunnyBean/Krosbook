@@ -128,22 +128,6 @@ namespace Krosbook.Controllers.Api.v1
             });
         }
 
-
-        /*[HttpPost("filter")]
-        public IEnumerable<CarViewModel> GetAllUnreservedCars([FromBody] CarReservationViewModel reservationVM)
-        {
-            IQueryable<Car> cars = _carRepository.GetAll();
-            var exp = new List<Car>();
-            foreach (var car in cars)
-            {
-                if (CheckUnreservedCar(car.Id, DateTime.Parse(reservationVM.date), reservationVM.length))
-                {
-                    exp.Add(car);
-                }
-            }
-            return _mapper.Map<IEnumerable<CarViewModel>>(exp);
-        }*/
-
         #endregion
 
 

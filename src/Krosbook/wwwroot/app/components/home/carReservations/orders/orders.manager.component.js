@@ -25,7 +25,8 @@ var OrdersManagerComponent = (function () {
         this.isShowedFilterInput = false;
         this.cars = new Array();
         this.users = new Array();
-        this.states = ['Nespracovaná', 'Schválená', 'Žiada o vymazanie'];
+        this.filterData = [false, true, true, 'all', 'all'];
+        this.states = ['Nespracovaná', 'Schválená', 'Žiada o zrušenie'];
         this.carService.getCars().subscribe(function (data) {
             var cars = data.json();
             _this.carsData = data.json();
@@ -34,14 +35,23 @@ var OrdersManagerComponent = (function () {
         }, function (error) { return console.log(error); }, function () { _this.getUsers(); });
     }
     OrdersManagerComponent.prototype.filterReservation = function () {
-        var choosenCar = $("#filterCar").val();
-        var choosenUser = $("#filterUser").val();
-        var reservationState = $(".orderType:checked").val(); //2=Nespracovaná;1=Spracovana
         var filtered = new Array();
+        console.log(this.filterData);
+        var approvedOrders = this.filterData[0] ? 2 : 0;
+        var notApprovedOrders = this.filterData[1] ? 1 : 0;
+        var toDelete = this.filterData[2] ? 3 : 0;
+        var choosenCar = this.filterData[3];
+        var choosenUser = this.filterData[4];
         if (choosenUser == 'all' && choosenCar == 'all') {
             for (var _i = 0, _a = this.stableOrders; _i < _a.length; _i++) {
                 var order = _a[_i];
-                if (reservationState == 0 || order.reservationState == reservationState) {
+                if (order.reservationState == approvedOrders) {
+                    filtered.push(order);
+                }
+                else if (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders) {
+                    filtered.push(order);
+                }
+                else if (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders || order.reservationState == toDelete) {
                     filtered.push(order);
                 }
             }
@@ -49,7 +59,13 @@ var OrdersManagerComponent = (function () {
         else if (choosenCar == 'all') {
             for (var _b = 0, _c = this.stableOrders; _b < _c.length; _b++) {
                 var order = _c[_b];
-                if (order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
+                if (order.userId == choosenUser && (order.reservationState == approvedOrders)) {
+                    filtered.push(order);
+                }
+                else if (order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders)) {
+                    filtered.push(order);
+                }
+                else if (order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders || order.reservationState == toDelete)) {
                     filtered.push(order);
                 }
             }
@@ -57,7 +73,13 @@ var OrdersManagerComponent = (function () {
         else if (choosenUser == 'all') {
             for (var _d = 0, _e = this.stableOrders; _d < _e.length; _d++) {
                 var order = _e[_d];
-                if (order.carId == choosenCar && (reservationState == 0 || order.reservationState == reservationState)) {
+                if (order.carId == choosenCar && (order.reservationState == approvedOrders)) {
+                    filtered.push(order);
+                }
+                else if (order.carId == choosenCar && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders)) {
+                    filtered.push(order);
+                }
+                else if (order.carId == choosenCar && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders || order.reservationState == toDelete)) {
                     filtered.push(order);
                 }
             }
@@ -65,7 +87,13 @@ var OrdersManagerComponent = (function () {
         else {
             for (var _f = 0, _g = this.stableOrders; _f < _g.length; _f++) {
                 var order = _g[_f];
-                if (order.carId == choosenCar && order.userId == choosenUser && (reservationState == 0 || order.reservationState == reservationState)) {
+                if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == approvedOrders)) {
+                    filtered.push(order);
+                }
+                else if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders)) {
+                    filtered.push(order);
+                }
+                else if (order.carId == choosenCar && order.userId == choosenUser && (order.reservationState == approvedOrders || order.reservationState == notApprovedOrders || order.reservationState == toDelete)) {
                     filtered.push(order);
                 }
             }
@@ -121,6 +149,7 @@ var OrdersManagerComponent = (function () {
         this.isShowedFilterInput = !this.isShowedFilterInput;
         if (this.isShowedFilterInput) {
             document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Skryť filter";
+            this.filterReservation();
         }
         else {
             document.getElementById("filterButton").innerHTML = "<span class='glyphicon glyphicon-filter'></span> Zobraziť filter";

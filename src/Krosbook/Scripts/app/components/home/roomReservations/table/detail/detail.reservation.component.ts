@@ -9,6 +9,8 @@ import {Repetition} from '../../../../../models/repetition.model';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 
+declare var $: any;
+
 @Component({
     selector: 'reservation-detail',
     templateUrl: 'app/components/home/roomReservations/table/detail/detail.reservation.component.html',
@@ -39,15 +41,12 @@ export class DetailReservationComponent implements OnInit {
     public repetitionData:Repetition = new Repetition();
     public originDateTime:any;
 
-    constructor(private reservationService: ReservationService, private userService: UserService) {
-        
+    constructor(private reservationService: ReservationService, private userService: UserService) {   
      }
-
-
-
 
     ngOnInit()
     {
+        var thisDocument = this;
         this.reservationService.getReservation(this.reservationType, this.reservationDetailId[0]).subscribe(
             data => {
                 this.data = data.json();
@@ -55,8 +54,8 @@ export class DetailReservationComponent implements OnInit {
                 this.reservationDetailId[4] = moment(this.reservationDetailId[4], "DD.MM.YYYY").hour(moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").hours()).minute(moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").minutes()).seconds(0).format("DD.MM.YYYY HH:mm:ss");
                 if (this.data.roomReservationRepeaterId != null) {
                     this.reservationService.getRepeatingReservation(this.reservationType, this.data.roomReservationRepeaterId).subscribe(
-                        data => { 
-                            this.repetitionData = data.json();                         
+                        data => {
+                            this.repetitionData = data.json();
                             this.repetitionData.endDate = moment(this.repetitionData.endDate, "YYYY-MM-DDTHH:mm:ss").format("YYYY-MM-DD");
                             this.repetitionData.end = (this.repetitionData.appearance == null) ? "date" : "appearance";
                             this.repeating = true;
@@ -66,7 +65,7 @@ export class DetailReservationComponent implements OnInit {
                             }
                         }
                     )
-                }
+                }   
                 this.dateTime = moment(this.data.dateTime, "YYYY-MM-DDTHH:mm").format("DD.MM.YYYY HH:mm");
                 this.data.length = this.data.length / 60;
                 this.authorizeActions();
@@ -75,14 +74,17 @@ export class DetailReservationComponent implements OnInit {
             },
             error => console.log(error)
         );
+        $(document).on("keyup", function (e) {
+            if (e.which == 27) {
+                if (thisDocument.reservationDetailId[3])
+                    thisDocument.windowClose.emit(false);
+                else thisDocument.deleteReservation();
+            }
+        });  
+    }
 
-        /*  ESCAPE LISTENER NA ZATVARANIE DETAIL RESERVATION OKNA */     
-        document.getElementById("reservationDetail").addEventListener('keyup', (event) => {
-        if (event.key === 'Escape') {           
-            this.deleteReservation();         
-        }
-        }, false);         
-
+    ngOnDestroy() {
+        $(document).unbind("keyup");
     }
 
     updateMaxTime()

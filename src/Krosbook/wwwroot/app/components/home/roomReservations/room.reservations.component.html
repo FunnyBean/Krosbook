@@ -46,10 +46,11 @@
               <button type="button" class="btn btn-default glyphicon glyphicon-refresh" (click)="ngAfterViewInit()" id="refreshButton" style="margin-left:10px"></button>
             </div>
             <div class="input-group col-md-2" style="float: right;">
-              <input type="date" class="form-control" #dateToMoveOn="ngModel" name="dateToMoveOn" [(ngModel)]="moveDate" validateDate>
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" (click)="moveToDate()" [disabled]="!dateToMoveOn.valid">Choď!</button>       
-              </span>      
+             
+             <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar"></span></span>
+              
+              <input id='inputDate' type="date" class="form-control" #dateToMoveOn="ngModel"  name="dateToMoveOn" [(ngModel)]="moveDate"  (change)="moveToDate()" validateDate>
+                   
             </div>
           </td>
         </tr>

@@ -21,12 +21,12 @@
         <!--DATUM ZACIATKU-->
         <div class="form-group">
             <label for="beginOrder">Dátum a čas začiatku plánovanej cesty:</label>
-            <input type="datetime-local" name="beginOrder" id="beginOrder" [(ngModel)]="reservationData.dateTimeStart" (change)="updateEndTime(); isFree(reservationData.carId, reservationData.dateTimeStart, reservationData.dateTimeEnd);" class="form-control" step="1800" aria-describedby="helpBlockDate" validateDate required>
+            <input type="datetime-local" name="beginOrder" id="beginOrder" [(ngModel)]="reservationData.dateTimeStart" (change)="updateEndTime(); isFree(reservationData.carId, reservationData.dateTimeStart, reservationData.dateTimeEnd);" class="form-control" step="3600" aria-describedby="helpBlockDate" validateDate required>
         </div>
         <!--DATUM KONIEC-->
         <div class="form-group">
             <label for="endOrder">Dátum a čas ukončenia plánovanej cesty:</label>
-            <input type="datetime-local" name="endOrder" id="endOrder" [(ngModel)]="reservationData.dateTimeEnd" (change)="isFree(reservationData.carId, reservationData.dateTimeStart, reservationData.dateTimeEnd)" class="form-control" step="1800" aria-describedby="helpBlockDate" validateDates="beginOrder" required>
+            <input type="datetime-local" name="endOrder" id="endOrder" [(ngModel)]="reservationData.dateTimeEnd" (change)="isFree(reservationData.carId, reservationData.dateTimeStart, reservationData.dateTimeEnd)" class="form-control" step="3600" aria-describedby="helpBlockDate" validateDates="beginOrder" required>
         </div>
         <!--NAZOV DESTINACIE-->
         <div class="form-group">

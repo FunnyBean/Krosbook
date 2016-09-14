@@ -43,9 +43,6 @@ var TableReservationComponent = (function () {
                 var cell = this.tableData[this.times[i].time][j];
                 var holiday = this.holidayService.isHoliday(moment().add(this.week, 'weeks').weekday(j + 1).format("DD/MM"), moment().add(this.week, 'weeks').format("YYYY"));
                 if (cell.long == null) {
-                    var filter = '';
-                    if (this.filterActive && moment(this.filterDateTime).format("DD.MM.YYYY") == moment().add(this.week, 'weeks').weekday(j + 1).format("DD.MM.YYYY") && moment(this.filterDateTime).format("HH:mm") <= this.times[i].time && this.times[i].time < moment(this.filterDateTime).add(this.filterTimeLength * 60, 'minutes').format("HH:mm"))
-                        filter = 'filterSelected';
                     if (holiday) {
                         if (i == 0)
                             table += '<td class="col-md-2 holiday">' + holiday + '</td>';
@@ -53,7 +50,7 @@ var TableReservationComponent = (function () {
                             table += '<td class="col-md-2 holiday"></td>';
                     }
                     else
-                        table += '<td class="col-md-2 empty ' + filter + '"></td>';
+                        table += '<td class="col-md-2 empty"></td>';
                 }
                 else {
                     if (cell.reservationState == 2)
@@ -115,15 +112,11 @@ var TableReservationComponent = (function () {
         });
     };
     TableReservationComponent.prototype.makeReservation = function (fromRow, fromCol, length, carId) {
-        var date, hours = 7, minutes = 0;
-        if (fromRow % 2 != 0) {
-            fromRow -= 1;
-            minutes = 30;
-        }
-        for (var i = 0; i < fromRow / 2; i++)
+        var date, hours = 7;
+        for (var i = 0; i < fromRow; i++)
             hours++;
-        date = moment().add(this.week, 'weeks').weekday(fromCol).hour(hours).minute(minutes).format("YYYY-MM-DDTHH:mm");
-        this.formDataService.saveData(date, moment(date).add(length * 30, 'minutes').format("YYYY-MM-DDTHH:mm"), carId);
+        date = moment().add(this.week, 'weeks').weekday(fromCol).hour(hours).minute(0).format("YYYY-MM-DDTHH:mm");
+        this.formDataService.saveData(date, moment(date).add(length, 'hours').format("YYYY-MM-DDTHH:mm"), carId);
         this.router.navigate(['/home/reservations/cars/newreservation/']);
     };
     TableReservationComponent.prototype.updateData = function (weeks) {
@@ -145,14 +138,14 @@ var TableReservationComponent = (function () {
                 var startDay = moment(record.dateTimeStart, "YYYY-MM-DDTHH:mm:ss"), endDay = moment(record.dateTimeEnd, "YYYY-MM-DDTHH:mm:ss"), currentDay = moment(record.dateTimeStart, "YYYY-MM-DDTHH:mm:ss"), time = startDay.format("HH:mm"), endTime = endDay.format('HH:mm');
                 if (startDay.format("YYYY-MM-DD") == endDay.format("YYYY-MM-DD")) {
                     var day = startDay.weekday() - 1;
-                    while (time < endTime && time <= '17:30') {
+                    while (time < endTime && time <= '18:00') {
                         if (time >= '07:00') {
                             if (time == startDay.format("HH:mm") || time == '07:00')
                                 _this.tableData[time][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                             else
                                 _this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                         }
-                        time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                        time = moment(time, 'HH:mm').add(1, 'hour').format('HH:mm');
                     }
                 }
                 else {
@@ -163,34 +156,34 @@ var TableReservationComponent = (function () {
                             continue;
                         }
                         if (startDay.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD")) {
-                            while (time <= '17:30') {
+                            while (time <= '18:00') {
                                 if (time >= '07:00') {
                                     if (time == moment(record.dateTimeStart, "YYYY-MM-DD HH:mm:ss").format("HH:mm"))
                                         _this.tableData[time][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                     else
                                         _this.tableData[time][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 }
-                                time = moment(time, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                                time = moment(time, 'HH:mm').add(1, 'hour').format('HH:mm');
                             }
                         }
                         else if (endDay.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD")) {
                             var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
-                            while (tempTime <= endTime && tempTime <= '17:30') {
+                            while (tempTime <= endTime && tempTime <= '18:00') {
                                 if (tempTime == "07:00")
                                     _this.tableData[tempTime][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 else
                                     _this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
-                                tempTime = moment(tempTime, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                                tempTime = moment(tempTime, 'HH:mm').add(1, 'hour').format('HH:mm');
                             }
                         }
                         else {
                             var tempTime = moment('07:00', 'HH:mm').format("HH:mm");
-                            while (tempTime <= '17:30') {
+                            while (tempTime <= '18:00') {
                                 if (tempTime == "07:00")
                                     _this.tableData[tempTime][day] = JSON.parse('{"userName": "' + _this.usersList[record.userId] + '", "long": 0, "reservationName":"' + record.destination + '", "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
                                 else
                                     _this.tableData[tempTime][day] = JSON.parse('{"userName": "", "long": 1, "reservationId": "' + record.id + '", "reservationState": "' + record.reservationState + '"}');
-                                tempTime = moment(tempTime, 'HH:mm').add(30, 'minutes').format('HH:mm');
+                                tempTime = moment(tempTime, 'HH:mm').add(1, 'hour').format('HH:mm');
                             }
                         }
                         currentDay.add(1, 'days');
@@ -224,18 +217,6 @@ var TableReservationComponent = (function () {
         core_1.Input(), 
         __metadata('design:type', Object)
     ], TableReservationComponent.prototype, "week", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], TableReservationComponent.prototype, "filterActive", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], TableReservationComponent.prototype, "filterDateTime", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], TableReservationComponent.prototype, "filterTimeLength", void 0);
     TableReservationComponent = __decorate([
         core_1.Component({
             selector: 'tbody',
