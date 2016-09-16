@@ -51,6 +51,12 @@ namespace Krosbook.Controllers.Api.v1
             return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetAll());
         }
 
+        [HttpGet("interval/{interval}")]
+        public IEnumerable<CarReservationViewModel> GetCarReservationsInInterval(string interval)
+        {
+            return _mapper.Map<IEnumerable<CarReservationViewModel>>(_reservationRepository.GetAllInInterval(interval));
+        }
+
         [HttpGet("byState/{reservationState}")]
         public IEnumerable<CarReservationViewModel> GetAllCarReservationsByState(int reservationState)
         {

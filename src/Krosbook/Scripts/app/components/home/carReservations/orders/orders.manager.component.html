@@ -1,7 +1,22 @@
 <!-- MANAZER OBJEDNAVOK-->
 <h4>Manažér objednávok</h4>
 
-<button type="button" class="btn btn-default" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
+<div class="col-md-12 remove-padding">
+    <button type="button" class="btn btn-default col-md-1 remove-padding" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
+    <div class="input-group col-md-3" style="padding-left: 15px; float: left;">
+        <span class="input-group-addon" style="background: none; border: none;">Zobratiť rezervácie: </span>
+        <select class="form-control" name="reservationsInterval" (change)="reservationsInterval = $event.target.value; getOrders();">
+            <option value="week" selected>za posledný týždeň</option>
+            <option value="month">za posledný mesiac</option>
+            <option value="year">za posledný rok</option>
+            <option value="all">všetky</option>
+        </select>
+    </div>
+    <div style="float: right;">
+        <button type="button" class="btn btn-default glyphicon glyphicon-refresh" (click)="getOrders()" id="refreshButton" style="margin-left:10px"></button>
+    </div>
+</div>
+
 <div *ngIf="isShowedFilterInput" id="filter" class="col-md-12 remove-padding">
     <div class="form-group col-xs-3">       
         <label class="col-md-12 remove-padding">
@@ -36,6 +51,7 @@
         <p>{{ orders.length }}</p>
     </div>
 </div>
+
 <table class="table table-hover col-md-12">
     <thead>
         <tr>
@@ -51,7 +67,9 @@
     <tr *ngIf="!orders">
         <td colspan="7" class="text-center col-md-12"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; margin: 5px"></i> Načítavam dáta</td>
     </tr>
-    <h4 *ngIf="isEmpty">Nebola nájdená žiadna zhoda</h4>
+    <tr *ngIf="isEmpty">
+        <td colspan="7" class="text-center col-md-12"><h5>Nebola nájdená žiadna zhoda.</h5></td>
+    </tr>
     <tr *ngFor="let order of orders">
         <td>{{order.destination}}</td>
         <td>{{users[order.userId]}}</td>

@@ -1,40 +1,38 @@
 import {Component, OnInit} from  '@angular/core';
 import {ROUTER_DIRECTIVES, Router} from '@angular/router';
-import {CarReservation} from '../../../../models/carReservation.model';
+import {Observable} from 'rxjs/observable';
+
 import {CarOrderService} from '../../../../services/carReservation.service';
 import {CarService} from '../../../../services/car.service';
 import {UserService} from '../../../../services/user.service';
 
 import {Car} from '../../../../models/car.model';
 import {User} from '../../../../models/user.admin.model';
+import {CarReservation} from '../../../../models/carReservation.model';
 
 import * as moment from 'moment';
-import {Observable} from 'rxjs/observable';
 declare var $: any;
 
 @Component({
     templateUrl: 'app/components/home/carReservations/orders/orders.manager.component.html',
     providers: [CarOrderService],
     styles: [' #filter{background-color: #f2f2f2; padding: 10px} input[type=radio]{margin-right: 5px}']
-
-
 })
 
 export class OrdersManagerComponent {
     public stableOrders: Array<CarReservation>;
-
     public orders: Array<CarReservation>;
     public orderId: number;
     public isShowedFilterInput: boolean = false;
+    public reservationsInterval: string = 'week';
+    public states = ['Nespracovaná', 'Schválená', 'Žiada o zrušenie'];
+    public isEmpty: boolean;
 
     private cars: Array<string> = new Array<string>();
     private users: Array<string> = new Array<string>();
     private filterData: Array<any> = [false, true, true, 'all', 'all'];
     private carsData: Array<Car>;
     private usersData: Array<User>;
-
-    public states = ['Nespracovaná', 'Schválená', 'Žiada o zrušenie'];
-    public isEmpty: boolean;
 
     constructor(private router: Router, private carOrderService: CarOrderService, private carService: CarService, private userService: UserService) {
         this.carService.getCars().subscribe(
@@ -51,11 +49,13 @@ export class OrdersManagerComponent {
         )
     }
 
+    ngOnInit() {
+        $("li.active").removeClass("active");;
+        $("#liOrders").addClass("active");
+    }
 
     filterReservation() {
         var filtered: Array<CarReservation> = new Array<CarReservation>();
-
-        console.log(this.filterData);
 
         var approvedOrders = this.filterData[0] ? 2 : 0;
         var notApprovedOrders = this.filterData[1] ? 1 : 0;
@@ -123,13 +123,6 @@ export class OrdersManagerComponent {
         this.isEmpty = (filtered.length > 0) ? false : true;
     }
 
-
-
-    ngOnInit() {
-        $("li.active").removeClass("active");;
-        $("#liOrders").addClass("active");
-    }
-
     getUsers() {
         this.userService.getUsers().subscribe(
             data => {
@@ -142,8 +135,6 @@ export class OrdersManagerComponent {
             () => { this.getOrders(); }
         );
     }
-
-
 
     editOrder(id: number) {
         this.router.navigate(['/home/reservations/cars/editreservation/', id]);
@@ -201,7 +192,7 @@ export class OrdersManagerComponent {
     }
 
     getOrders() {
-        this.carOrderService.getOrders()
+        this.carOrderService.getOrders(this.reservationsInterval)
             .subscribe(
             data => {
                 this.stableOrders = data.json();
@@ -244,6 +235,4 @@ export class OrdersManagerComponent {
                 });
         });
     }
-
-
 }

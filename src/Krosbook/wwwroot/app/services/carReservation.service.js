@@ -20,15 +20,11 @@ var CarOrderService = (function () {
             return _xhr;
         };
     }
-    CarOrderService.prototype.getOrders = function () {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/reservations/cars/', { headers: headers });
+    CarOrderService.prototype.getOrders = function (interval) {
+        return this.http.get('/api/reservations/cars/interval/' + interval);
     };
     CarOrderService.prototype.getOrder = function (id) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        return this.http.get('/api/reservations/cars/' + id, { headers: headers });
+        return this.http.get('/api/reservations/cars/' + id);
     };
     CarOrderService.prototype.getUserOrders = function () {
         return this.http.get('/api/reservations/cars/byLoggedInUser');

@@ -10,11 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
+var observable_1 = require('rxjs/observable');
 var carReservation_service_1 = require('../../../../services/carReservation.service');
 var car_service_1 = require('../../../../services/car.service');
 var user_service_1 = require('../../../../services/user.service');
 var moment = require('moment');
-var observable_1 = require('rxjs/observable');
 var OrdersManagerComponent = (function () {
     function OrdersManagerComponent(router, carOrderService, carService, userService) {
         var _this = this;
@@ -23,10 +23,11 @@ var OrdersManagerComponent = (function () {
         this.carService = carService;
         this.userService = userService;
         this.isShowedFilterInput = false;
+        this.reservationsInterval = 'week';
+        this.states = ['Nespracovaná', 'Schválená', 'Žiada o zrušenie'];
         this.cars = new Array();
         this.users = new Array();
         this.filterData = [false, true, true, 'all', 'all'];
-        this.states = ['Nespracovaná', 'Schválená', 'Žiada o zrušenie'];
         this.carService.getCars().subscribe(function (data) {
             var cars = data.json();
             _this.carsData = data.json();
@@ -34,9 +35,13 @@ var OrdersManagerComponent = (function () {
                 _this.cars[cars[i].id] = cars[i].name + " : " + cars[i].plate;
         }, function (error) { return console.log(error); }, function () { _this.getUsers(); });
     }
+    OrdersManagerComponent.prototype.ngOnInit = function () {
+        $("li.active").removeClass("active");
+        ;
+        $("#liOrders").addClass("active");
+    };
     OrdersManagerComponent.prototype.filterReservation = function () {
         var filtered = new Array();
-        console.log(this.filterData);
         var approvedOrders = this.filterData[0] ? 2 : 0;
         var notApprovedOrders = this.filterData[1] ? 1 : 0;
         var toDelete = this.filterData[2] ? 3 : 0;
@@ -101,11 +106,6 @@ var OrdersManagerComponent = (function () {
         this.orders = filtered;
         this.isEmpty = (filtered.length > 0) ? false : true;
     };
-    OrdersManagerComponent.prototype.ngOnInit = function () {
-        $("li.active").removeClass("active");
-        ;
-        $("#liOrders").addClass("active");
-    };
     OrdersManagerComponent.prototype.getUsers = function () {
         var _this = this;
         this.userService.getUsers().subscribe(function (data) {
@@ -161,7 +161,7 @@ var OrdersManagerComponent = (function () {
     };
     OrdersManagerComponent.prototype.getOrders = function () {
         var _this = this;
-        this.carOrderService.getOrders()
+        this.carOrderService.getOrders(this.reservationsInterval)
             .subscribe(function (data) {
             _this.stableOrders = data.json();
             if (_this.isShowedFilterInput)

@@ -1,6 +1,3 @@
-/**
- * Created by Ondrej on 25.07.2016.
- */
 import {Component, OnInit, AfterViewInit, ViewChildren, QueryList} from '@angular/core';
 import {ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
 import {CarService} from '../../../../services/car.service';

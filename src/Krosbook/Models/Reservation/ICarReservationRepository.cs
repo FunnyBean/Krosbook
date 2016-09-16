@@ -14,6 +14,7 @@ namespace Krosbook.Models.Reservation
         IQueryable<CarReservation> GetReservationsCarByUser(int userId);
         IQueryable<CarReservation> GetReservationsByState(int reservationState);
         IQueryable<CarReservation> GetReservationsByCarInTimeInterval(int carId, DateTime from, DateTime to);
+        IQueryable<CarReservation> GetAllInInterval(string interval);
     //    bool CheckUnreservedCar(int carId, DateTime date, int length);
     }
 }

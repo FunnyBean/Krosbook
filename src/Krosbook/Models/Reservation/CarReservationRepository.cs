@@ -32,6 +32,27 @@ namespace Krosbook.Models.Reservation
             return _dbContext.Set<CarReservation>().OrderByDescending(r => r.DateTimeStart);
         }
 
+        public IQueryable<CarReservation> GetAllInInterval(string interval)
+        {
+            if (interval == "all")
+                return this.GetAll();
+            else
+            {
+                if(interval == "week")
+                {
+                    return this.Get(r => r.DateTimeStart >= DateTime.Now.AddDays(-7) || r.DateTimeEnd >= DateTime.Now.AddDays(-7)).OrderByDescending(r => r.DateTimeStart);
+                }
+                else if(interval == "month")
+                {
+                    return this.Get(r => r.DateTimeStart >= DateTime.Now.AddMonths(-1) || r.DateTimeEnd >= DateTime.Now.AddMonths(-1)).OrderByDescending(r => r.DateTimeStart);
+                }
+                else
+                {
+                    return this.Get(r => r.DateTimeStart >= DateTime.Now.AddYears(-1) || r.DateTimeEnd >= DateTime.Now.AddYears(-1)).OrderByDescending(r => r.DateTimeStart);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Edits the specified item.
