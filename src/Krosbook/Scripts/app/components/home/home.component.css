@@ -80,16 +80,24 @@ div {
   vertical-align: sub;  
 }
 
-#left_menu a {
-  padding: 5px 0px 5px 15px;
+#left_menu ul a {
+  padding: 2px 1px 3px 0px;
   margin-bottom: 5px;
-  font-size: 1.2em;
+  font-size: 0.9em;
   color: #4d4d4d;
-  }
+}
+
   #left_menu a:link {
     text-decoration: none; }
   #left_menu a:hover {
     text-decoration: none; 
+  }
+
+  #left_menu a {
+  padding: 5px 0px 5px 15px;
+  margin-bottom: 5px;
+  font-size: 1.2em;
+  color: #4d4d4d;
   }
 
 #right_menu {

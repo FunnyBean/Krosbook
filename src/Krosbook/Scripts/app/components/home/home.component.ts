@@ -1,13 +1,15 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
-import {ROUTER_DIRECTIVES} from '@angular/router';
+import {CarService} from '../../services/car.service';
+import {ROUTER_DIRECTIVES, Router} from '@angular/router';
 import {User} from '../../models/user.admin.model';
+import {Car} from '../../models/car.model';
 
 import {CarsReservationsComponent} from './carReservations/car.reservations.component';
 import {ProfileComponent} from './profile/profile.component';
 import {RoomReservationsComponent} from './roomReservations/room.reservations.component';
 import {UserInfoComponent} from './userInfo/userInfo.component';
-
+//import {PageScrollService} from '../../../../node_modules/ng2-page-scroll/src/ng2-page-scroll.service'
 declare var $:any;
 
 @Component({
@@ -21,13 +23,21 @@ declare var $:any;
 export class HomeComponent implements OnInit{
 
   public openUserInfo:boolean = false;
-  private isAdmin:boolean = false;
-
-  public openReservations:boolean = true;
   public userData:User = new User();
+
+  private isAdmin:boolean = false;
+  private carsData: Array<Car>;
   private height;
 
-  constructor(public userService:UserService) { }
+  constructor(private userService:UserService, private carService:CarService, private router:Router) { 
+    this.carService.getCars().subscribe(
+    data => {
+      this.carsData = data.json();
+    },
+    error => console.log(error),
+    () => {  }
+    ) 
+  }
 
   ngOnInit(){
     this.userService.myProfile().subscribe(
@@ -41,6 +51,8 @@ export class HomeComponent implements OnInit{
       },
       error =>{console.log(error)}
     )
+
+
   }
 
   ngAfterContentInit(){
@@ -58,17 +70,6 @@ export class HomeComponent implements OnInit{
 
   showUserInfo()
   {
-    //var str = (<HTMLTextAreaElement>document.getElementById("contentWindow"));
-   // alert(str.toString()+"" + this.isViewed);
-    //this.isViewed=!this.isViewed;
     document.getElementById('userInfo').style.display='block';
-
   }
-
-  toggleReservations(){
-    this.openReservations = this.openReservations ? false : true;
-  }
-
-
-
 }

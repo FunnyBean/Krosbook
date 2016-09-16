@@ -42,7 +42,8 @@ export class TableReservationComponent implements OnInit {
     }
 
     fillTable() {
-        var table = '<tr><td colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, carId, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg, lastCell;
+        var table = '<tr><td  colspan="6" class="officeName" style="background-color: ' + this.data.color + '"><h4>' + this.data.name + ' &nbsp &nbsp ' + this.data.plate + '</h4></td></tr>', fromRow, fromCol, length = 1, carId, isMouseDown = false, thisDocument = this, col, row, beforeRow = 0, bg, lastCell;
+        
         for (var i = 0; i < this.times.length; i++) {
             table += '<tr>';
             table += '<td class="col-md-1 time">' + this.times[i].time + '</td>';

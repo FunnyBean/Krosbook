@@ -30,18 +30,20 @@
                 <img src="../images/icon_kalendar.png " class="menu_icon">
                 <span>Kalendár</span>
             </a>
-            <!--<a class="col-md-12 col-xs-12 hvr-bounce-to-right" (click)="openReservations = !openReservations">
-              <img src="../images/icon_reservation.png" class="menu_icon">
-              <span>Rezervácie</span>
-            </a>-->
-            <a [routerLink]="['reservations', 'rooms']" class="col-md-12 col-xs-12 hvr-bounce-to-right" >
+            <a [routerLink]="['reservations', 'rooms']" class="col-md-12 col-xs-12 hvr-bounce-to-right">
                 <img src="../images/icon_reservation.png" class="menu_icon">
                 <span>Rezervácia miestností</span>
             </a>
-            <a [routerLink]="['reservations', 'cars']" class="col-md-12 col-xs-12 hvr-bounce-to-right">
+            <a [routerLink]="['reservations', 'cars']"   class="col-md-12 col-xs-12 hvr-bounce-to-right">
                 <img src="../images/icon_reservation.png" class="menu_icon">
                 <span>Rezervácia áut</span>
-            </a>
+                
+            </a>    
+             <ul id="carList" style="display: none">
+                <a href="/home/reservations/cars#{{car.id}}" class="col-md-12 col-xs-12" *ngFor="let car of carsData">
+                   {{car.name}} <br> {{ car.plate }}
+                </a>
+            </ul>   
             <a class="col-md-12 col-xs-12 hvr-bounce-to-right" [ngStyle]="{'display': 'none'}">
                 <img src="../images/icon_zabava.png" class="menu_icon">
                 <span>Zábava</span>

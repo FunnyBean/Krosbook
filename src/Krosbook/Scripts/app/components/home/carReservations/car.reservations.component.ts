@@ -42,6 +42,13 @@ export class CarsReservationsComponent  {
     $("#liOrders").addClass("active");  
 
     $("#left_menu a:nth-child(4)").addClass("active");
+
+    $("#carList").show();
+  }
+
+  ngOnDestroy()
+  {
+    $("#carList").hide();
   }
 
   setActiveClass(element)
