@@ -42,8 +42,22 @@ export class CarsReservationsComponent  {
     $("#liOrders").addClass("active");  
 
     $("#left_menu a:nth-child(4)").addClass("active");
+  }
 
-    $("#carList").show();
+  ngAfterContentInit()
+  {
+    $("#content").scroll(function(){
+      //console.log($("#content").scrollTop());
+    });
+    $("#carList").show(1, function(){
+      $("#carList > a").on("click", function(){
+        var element = $(this);
+        console.log($(".records"+element.attr("id")).position());
+        $("#content").animate({
+          scrollTop: $("#content").scrollTop() + $(".records"+element.attr("id")).offset().top - 78 - 82
+        }, 'fast');
+      });  
+    });
   }
 
   ngOnDestroy()

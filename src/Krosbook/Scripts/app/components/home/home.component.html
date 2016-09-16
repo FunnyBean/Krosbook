@@ -40,7 +40,7 @@
                 
             </a>    
              <ul id="carList" style="display: none">
-                <a href="/home/reservations/cars#{{car.id}}" class="col-md-12 col-xs-12" *ngFor="let car of carsData">
+                <a [id]="car.id" class="col-md-12 col-xs-12" *ngFor="let car of carsData">
                    {{car.name}} <br> {{ car.plate }}
                 </a>
             </ul>   
