@@ -162,3 +162,5 @@ var OrderDetailComponent = (function () {
     return OrderDetailComponent;
 }());
 exports.OrderDetailComponent = OrderDetailComponent;
+
+//# sourceMappingURL=order.detail.component.js.map

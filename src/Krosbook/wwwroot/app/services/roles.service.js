@@ -46,3 +46,5 @@ var RolesService = (function () {
     return RolesService;
 }());
 exports.RolesService = RolesService;
+
+//# sourceMappingURL=roles.service.js.map

@@ -212,3 +212,5 @@ var OrdersManagerComponent = (function () {
     return OrdersManagerComponent;
 }());
 exports.OrdersManagerComponent = OrdersManagerComponent;
+
+//# sourceMappingURL=orders.manager.component.js.map

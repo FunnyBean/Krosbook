@@ -32,3 +32,5 @@ var PasswordResetComponent = (function () {
     return PasswordResetComponent;
 }());
 exports.PasswordResetComponent = PasswordResetComponent;
+
+//# sourceMappingURL=passwordReset.component.js.map

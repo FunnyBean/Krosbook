@@ -109,3 +109,5 @@ var routes = [
 exports.APP_ROUTER_PROVIDERS = [
     router_1.provideRouter(routes), login_routes_1.authProviders
 ];
+
+//# sourceMappingURL=app.routes.js.map

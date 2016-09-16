@@ -1,0 +1,1 @@
+{"version":3,"sources":["app/models/car.model.ts"],"names":[],"mappings":";AAAA;IAAA;IAKA,CAAC;IAAD,UAAC;AAAD,CALA,AAKC,IAAA;AALY,WAAG,MAKf,CAAA","file":"app/models/car.model.js","sourcesContent":["export class Car{\r\n  public id;\r\n  public plate;\r\n  public name;\r\n  public color;\r\n}\r\n\r\n"],"sourceRoot":"/source/"}

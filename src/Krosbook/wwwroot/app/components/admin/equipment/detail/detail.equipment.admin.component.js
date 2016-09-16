@@ -80,3 +80,5 @@ var DetailEquipmentAdminComponent = (function () {
     return DetailEquipmentAdminComponent;
 }());
 exports.DetailEquipmentAdminComponent = DetailEquipmentAdminComponent;
+
+//# sourceMappingURL=detail.equipment.admin.component.js.map

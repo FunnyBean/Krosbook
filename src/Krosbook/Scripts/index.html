@@ -16,6 +16,7 @@
 
     <!-- 2. Load libraries -->
     <script src="lib/allJS.js"></script>
+    <script src="bundle.js"></script>
 </head>
 
 <body>
@@ -27,12 +28,5 @@
             </div>
         </div>
     </app-root>
-
-    <script>
-        System.import('system-config.js').then(function () {
-            System.import('main');
-        }).catch(console.error.bind(console));
-    </script>
-
 </body>
 </html>

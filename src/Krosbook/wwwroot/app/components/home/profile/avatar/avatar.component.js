@@ -69,3 +69,5 @@ var AvatarComponent = (function () {
     return AvatarComponent;
 }());
 exports.AvatarComponent = AvatarComponent;
+
+//# sourceMappingURL=avatar.component.js.map

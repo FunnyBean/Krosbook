@@ -154,3 +154,5 @@ var ReservationsComponent = (function () {
     return ReservationsComponent;
 }());
 exports.ReservationsComponent = ReservationsComponent;
+
+//# sourceMappingURL=reservations.component.js.map

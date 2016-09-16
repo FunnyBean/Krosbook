@@ -34,3 +34,5 @@ var ProfileComponent = (function () {
     return ProfileComponent;
 }());
 exports.ProfileComponent = ProfileComponent;
+
+//# sourceMappingURL=profile.component.js.map

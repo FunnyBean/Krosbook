@@ -260,3 +260,5 @@ var DetailReservationComponent = (function () {
     return DetailReservationComponent;
 }());
 exports.DetailReservationComponent = DetailReservationComponent;
+
+//# sourceMappingURL=detail.reservation.component.js.map

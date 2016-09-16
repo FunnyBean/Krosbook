@@ -92,3 +92,5 @@ var DetailCarAdminComponent = (function () {
     return DetailCarAdminComponent;
 }());
 exports.DetailCarAdminComponent = DetailCarAdminComponent;
+
+//# sourceMappingURL=detail.car.admin.component.js.map

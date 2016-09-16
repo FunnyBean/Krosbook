@@ -1,0 +1,1 @@
+{"version":3,"sources":["app/models/role.admin.model.ts"],"names":[],"mappings":";AAAA;;GAEG;AACH;IAAA;IAGA,CAAC;IAAD,WAAC;AAAD,CAHA,AAGC,IAAA;AAHY,YAAI,OAGhB,CAAA","file":"app/models/role.admin.model.js","sourcesContent":["/**\r\n * Created by Tibor Poštek on 22.07.2016.\r\n */\r\nexport class Role {\r\n public id;\r\n  public name;\r\n}\r\n"],"sourceRoot":"/source/"}

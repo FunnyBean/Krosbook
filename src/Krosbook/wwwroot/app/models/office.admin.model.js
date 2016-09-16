@@ -5,3 +5,5 @@ var Office = (function () {
     return Office;
 }());
 exports.Office = Office;
+
+//# sourceMappingURL=office.admin.model.js.map

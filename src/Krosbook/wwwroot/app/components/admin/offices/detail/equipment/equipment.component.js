@@ -62,3 +62,5 @@ var EquipmentComponent = (function () {
     return EquipmentComponent;
 }());
 exports.EquipmentComponent = EquipmentComponent;
+
+//# sourceMappingURL=equipment.component.js.map

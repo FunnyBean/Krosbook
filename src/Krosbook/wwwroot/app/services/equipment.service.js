@@ -46,3 +46,5 @@ var EquipmentService = (function () {
     return EquipmentService;
 }());
 exports.EquipmentService = EquipmentService;
+
+//# sourceMappingURL=equipment.service.js.map

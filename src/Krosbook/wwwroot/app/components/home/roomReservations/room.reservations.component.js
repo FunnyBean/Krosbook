@@ -181,3 +181,5 @@ var RoomReservationsComponent = (function () {
     return RoomReservationsComponent;
 }());
 exports.RoomReservationsComponent = RoomReservationsComponent;
+
+//# sourceMappingURL=room.reservations.component.js.map

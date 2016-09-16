@@ -9,3 +9,5 @@ var User = (function () {
     return User;
 }());
 exports.User = User;
+
+//# sourceMappingURL=user.admin.model.js.map

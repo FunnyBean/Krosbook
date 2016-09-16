@@ -228,3 +228,5 @@ var TableReservationComponent = (function () {
     return TableReservationComponent;
 }());
 exports.TableReservationComponent = TableReservationComponent;
+
+//# sourceMappingURL=table.reservations.component.js.map

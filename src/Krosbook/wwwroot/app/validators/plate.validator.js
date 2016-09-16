@@ -73,3 +73,5 @@ var PlateValidator = (function () {
     return PlateValidator;
 }());
 exports.PlateValidator = PlateValidator;
+
+//# sourceMappingURL=plate.validator.js.map

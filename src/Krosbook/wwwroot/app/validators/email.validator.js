@@ -39,3 +39,5 @@ var EmailValidator = (function () {
     return EmailValidator;
 }());
 exports.EmailValidator = EmailValidator;
+
+//# sourceMappingURL=email.validator.js.map

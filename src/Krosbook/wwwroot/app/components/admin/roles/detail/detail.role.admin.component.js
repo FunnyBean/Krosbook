@@ -79,3 +79,5 @@ var DetailRoleAdminComponent = (function () {
     return DetailRoleAdminComponent;
 }());
 exports.DetailRoleAdminComponent = DetailRoleAdminComponent;
+
+//# sourceMappingURL=detail.role.admin.component.js.map

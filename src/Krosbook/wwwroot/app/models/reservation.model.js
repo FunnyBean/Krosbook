@@ -9,3 +9,5 @@ var Reservation = (function () {
     return Reservation;
 }());
 exports.Reservation = Reservation;
+
+//# sourceMappingURL=reservation.model.js.map

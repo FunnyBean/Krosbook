@@ -8,3 +8,5 @@ var Equipment = (function () {
     return Equipment;
 }());
 exports.Equipment = Equipment;
+
+//# sourceMappingURL=equipment.admin.model.js.map

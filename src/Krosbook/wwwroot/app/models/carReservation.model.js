@@ -11,3 +11,5 @@ var CarReservation = (function () {
     return CarReservation;
 }());
 exports.CarReservation = CarReservation;
+
+//# sourceMappingURL=carReservation.model.js.map

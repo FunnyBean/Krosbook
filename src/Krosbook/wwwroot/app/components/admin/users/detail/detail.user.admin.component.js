@@ -132,3 +132,5 @@ var DetailUserAdminComponent = (function () {
     return DetailUserAdminComponent;
 }());
 exports.DetailUserAdminComponent = DetailUserAdminComponent;
+
+//# sourceMappingURL=detail.user.admin.component.js.map

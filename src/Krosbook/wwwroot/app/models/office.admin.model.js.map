@@ -1,0 +1,1 @@
+{"version":3,"sources":["app/models/office.admin.model.ts"],"names":[],"mappings":";AAAA;IAAA;IAMA,CAAC;IAAD,aAAC;AAAD,CANA,AAMC,IAAA;AANY,cAAM,SAMlB,CAAA","file":"app/models/office.admin.model.js","sourcesContent":["export class Office {\r\n  public name;\r\n  public description;\r\n  public id;\r\n  public type;\r\n  public color;\r\n}\r\n"],"sourceRoot":"/source/"}

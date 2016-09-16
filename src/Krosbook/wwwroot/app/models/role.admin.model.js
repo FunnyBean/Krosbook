@@ -8,3 +8,5 @@ var Role = (function () {
     return Role;
 }());
 exports.Role = Role;
+
+//# sourceMappingURL=role.admin.model.js.map

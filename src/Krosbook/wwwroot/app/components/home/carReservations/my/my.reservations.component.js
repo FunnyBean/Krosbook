@@ -66,3 +66,5 @@ var MyReservationsComponent = (function () {
     return MyReservationsComponent;
 }());
 exports.MyReservationsComponent = MyReservationsComponent;
+
+//# sourceMappingURL=my.reservations.component.js.map

@@ -100,3 +100,5 @@ var DetailOfficeAdminComponent = (function () {
     return DetailOfficeAdminComponent;
 }());
 exports.DetailOfficeAdminComponent = DetailOfficeAdminComponent;
+
+//# sourceMappingURL=detail.office.admin.component.js.map
