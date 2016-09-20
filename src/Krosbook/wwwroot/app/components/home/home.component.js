@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var user_service_1 = require('../../services/user.service');
+var car_service_1 = require('../../services/car.service');
 var router_1 = require('@angular/router');
 var user_admin_model_1 = require('../../models/user.admin.model');
 var car_reservations_component_1 = require('./carReservations/car.reservations.component');
@@ -17,12 +18,17 @@ var profile_component_1 = require('./profile/profile.component');
 var room_reservations_component_1 = require('./roomReservations/room.reservations.component');
 var userInfo_component_1 = require('./userInfo/userInfo.component');
 var HomeComponent = (function () {
-    function HomeComponent(userService) {
+    function HomeComponent(userService, carService, router) {
+        var _this = this;
         this.userService = userService;
+        this.carService = carService;
+        this.router = router;
         this.openUserInfo = false;
-        this.isAdmin = false;
-        this.openReservations = true;
         this.userData = new user_admin_model_1.User();
+        this.isAdmin = false;
+        this.carService.getCars().subscribe(function (data) {
+            _this.carsData = data.json();
+        }, function (error) { return console.log(error); }, function () { });
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -46,13 +52,7 @@ var HomeComponent = (function () {
         });
     };
     HomeComponent.prototype.showUserInfo = function () {
-        //var str = (<HTMLTextAreaElement>document.getElementById("contentWindow"));
-        // alert(str.toString()+"" + this.isViewed);
-        //this.isViewed=!this.isViewed;
         document.getElementById('userInfo').style.display = 'block';
-    };
-    HomeComponent.prototype.toggleReservations = function () {
-        this.openReservations = this.openReservations ? false : true;
     };
     HomeComponent = __decorate([
         core_1.Component({
@@ -62,7 +62,7 @@ var HomeComponent = (function () {
             directives: [router_1.ROUTER_DIRECTIVES, userInfo_component_1.UserInfoComponent],
             precompile: [car_reservations_component_1.CarsReservationsComponent, profile_component_1.ProfileComponent, room_reservations_component_1.RoomReservationsComponent, userInfo_component_1.UserInfoComponent]
         }), 
-        __metadata('design:paramtypes', [user_service_1.UserService])
+        __metadata('design:paramtypes', [user_service_1.UserService, car_service_1.CarService, router_1.Router])
     ], HomeComponent);
     return HomeComponent;
 }());

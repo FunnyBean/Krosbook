@@ -52,9 +52,9 @@ export class CarsReservationsComponent  {
     $("#carList").show(1, function(){
       $("#carList > a").on("click", function(){
         var element = $(this);
-        console.log($(".records"+element.attr("id")).position());
+     //   console.log($(".records"+element.attr("id")).position());
         $("#content").animate({
-          scrollTop: $("#content").scrollTop() + $(".records"+element.attr("id")).offset().top - 78 - 82
+            scrollTop: $("#content").scrollTop() + $(".records" + element.attr("id")).offset().top - $("#reservationHead").height() - $("#header").height()
         }, 'fast');
       });  
     });
@@ -62,7 +62,8 @@ export class CarsReservationsComponent  {
 
   ngOnDestroy()
   {
-    $("#carList").hide();
+      $("#carList > a").unbind("click");
+      $("#carList").hide();      
   }
 
   setActiveClass(element)

@@ -35,6 +35,24 @@ var CarsReservationsComponent = (function () {
         $("#liOrders").addClass("active");
         $("#left_menu a:nth-child(4)").addClass("active");
     };
+    CarsReservationsComponent.prototype.ngAfterContentInit = function () {
+        $("#content").scroll(function () {
+            //console.log($("#content").scrollTop());
+        });
+        $("#carList").show(1, function () {
+            $("#carList > a").on("click", function () {
+                var element = $(this);
+                //   console.log($(".records"+element.attr("id")).position());
+                $("#content").animate({
+                    scrollTop: $("#content").scrollTop() + $(".records" + element.attr("id")).offset().top - $("#reservationHead").height() - $("#header").height()
+                }, 'fast');
+            });
+        });
+    };
+    CarsReservationsComponent.prototype.ngOnDestroy = function () {
+        $("#carList > a").unbind("click");
+        $("#carList").hide();
+    };
     CarsReservationsComponent.prototype.setActiveClass = function (element) {
         $("li.active").removeClass("active");
         $(element).parent("li").addClass("active");

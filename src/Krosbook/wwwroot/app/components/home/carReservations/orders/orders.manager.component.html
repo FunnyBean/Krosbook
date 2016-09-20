@@ -4,7 +4,7 @@
 <div class="col-md-12 remove-padding">
     <button type="button" class="btn btn-default col-md-1 remove-padding" (click)="showFilterInput()" id='filterButton'><span class="glyphicon glyphicon-filter"></span> Zobraziť filter</button>
     <div class="input-group col-md-3" style="padding-left: 15px; float: left;">
-        <span class="input-group-addon" style="background: none; border: none;">Zobratiť rezervácie: </span>
+        <span class="input-group-addon" style="background: none; border: none;">Zobraziť rezervácie: </span>
         <select class="form-control" name="reservationsInterval" (change)="reservationsInterval = $event.target.value; getOrders();">
             <option value="week" selected>za posledný týždeň</option>
             <option value="month">za posledný mesiac</option>
