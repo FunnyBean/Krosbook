@@ -420,7 +420,7 @@ namespace Krosbook.Controllers.Api.v1
             }
             else
             {
-                return this.Json(_mapper.Map<RoomReservationRepeaterViewModel>(changes));
+                return this.Json(_mapper.Map<RoomReservationChangesViewModel>(changes));
             }
         }
 
