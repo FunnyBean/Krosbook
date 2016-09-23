@@ -97,7 +97,9 @@ export class ReservationsComponent implements OnInit {
                     this.usersList[usersArray[i].id] = usersArray[i].name + ' ' + usersArray[i].surname;
             },
             error => console.log(error),
-            () => { this.loadCarsData() }
+            () => {
+                this.loadCarsData()
+            }
         );
         this.userService.myProfile().subscribe(
             data => {
